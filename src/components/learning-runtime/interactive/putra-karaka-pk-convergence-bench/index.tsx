@@ -18,6 +18,7 @@ import {
   Users,
   XCircle,
 } from "lucide-react";
+import { workbenchDiagramLayoutStyle } from "../lib/layouts";
 
 type SchemeKey = "seven" | "eight";
 type PlanetKey = "sun" | "moon" | "mars" | "mercury" | "jupiter" | "venus" | "saturn" | "rahu";
@@ -150,8 +151,8 @@ export function PutraKarakaPkConvergenceBench() {
         </div>
       </section>
 
-      <div style={responsiveTwoColumnStyle}>
-        <section style={cardStyle}>
+      <div style={workbenchDiagramLayoutStyle}>
+        <section style={{ ...cardStyle, flex: "2 1 460px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", gap: "1rem", alignItems: "center", flexWrap: "wrap" }}>
             <div>
               <p style={eyebrowStyle}>Cara-kāraka ranking</p>
@@ -169,7 +170,7 @@ export function PutraKarakaPkConvergenceBench() {
           </div>
         </section>
 
-        <section style={{ display: "grid", gap: "0.85rem" }}>
+        <section style={{ display: "grid", gap: "0.85rem", flex: "1 1 280px" }}>
           <Panel title="Karaka scheme" icon={<SlidersHorizontal size={18} />} color={scheme === "seven" ? BLUE : PURPLE}>
             <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
               <button type="button" aria-pressed={scheme === "seven"} onClick={() => setScheme("seven")} style={smallChipStyle(scheme === "seven", BLUE)}>
@@ -234,7 +235,7 @@ export function PutraKarakaPkConvergenceBench() {
         </div>
       </section>
 
-      <div style={responsiveTwoColumnStyle}>
+      <div style={workbenchTwoColumnStyle}>
         <section style={cardStyle}>
           <p style={eyebrowStyle}>PK reading</p>
           <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginTop: "0.5rem" }}>
@@ -271,7 +272,7 @@ export function PutraKarakaPkConvergenceBench() {
         </section>
       </div>
 
-      <div style={responsiveTwoColumnStyle}>
+      <div style={workbenchTwoColumnStyle}>
         <section style={cardStyle}>
           <p style={eyebrowStyle}>Reading guards</p>
           <div style={{ display: "grid", gap: "0.7rem", marginTop: "0.75rem" }}>
@@ -460,7 +461,7 @@ const cardStyle: CSSProperties = {
   boxShadow: "var(--gl-shadow-soft)",
 };
 
-const responsiveTwoColumnStyle: CSSProperties = {
+const workbenchTwoColumnStyle: CSSProperties = {
   display: "grid",
   gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 340px), 1fr))",
   gap: "1rem",

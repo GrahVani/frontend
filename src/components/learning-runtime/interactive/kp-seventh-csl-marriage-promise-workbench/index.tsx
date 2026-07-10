@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import { BadgeCheck, GitCompare, HeartHandshake, RotateCcw, Scale, Settings2, ShieldCheck, SlidersHorizontal, TriangleAlert, UsersRound } from "lucide-react";
+import { workbenchTwoColumnStyle, workbenchDiagramLayoutStyle } from "../lib/layouts";
 
 type HouseNumber = 1 | 2 | 5 | 6 | 7 | 10 | 11;
 type StreamSupport = "strong" | "mixed" | "stressed";
@@ -126,8 +127,8 @@ export function KpSeventhCslMarriagePromiseWorkbench() {
         </div>
       </section>
 
-      <div style={responsiveTwoColumnStyle}>
-        <section style={cardStyle}>
+      <div style={workbenchDiagramLayoutStyle}>
+        <section style={{ ...cardStyle, flex: "2 1 460px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", gap: "1rem", alignItems: "center", flexWrap: "wrap" }}>
             <div>
               <p style={eyebrowStyle}>Promise-test verdict</p>
@@ -143,7 +144,7 @@ export function KpSeventhCslMarriagePromiseWorkbench() {
           </div>
         </section>
 
-        <section style={{ display: "grid", gap: "0.85rem" }}>
+        <section style={{ display: "grid", gap: "0.85rem", flex: "1 1 280px" }}>
           <Panel title="Worked presets" icon={<SlidersHorizontal size={18} />} color={verdictColor(verdict)}>
             <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
               {(Object.keys(PRESETS) as Array<keyof typeof PRESETS>).map((key) => (
@@ -184,7 +185,7 @@ export function KpSeventhCslMarriagePromiseWorkbench() {
         </div>
       </section>
 
-      <div style={responsiveTwoColumnStyle}>
+      <div style={workbenchTwoColumnStyle}>
         <section style={cardStyle}>
           <p style={eyebrowStyle}>Method gates</p>
           <div style={{ display: "grid", gap: "0.75rem", marginTop: "0.75rem" }}>
@@ -309,11 +310,6 @@ const cardStyle: CSSProperties = {
   boxShadow: "var(--gl-shadow-soft)",
 };
 
-const responsiveTwoColumnStyle: CSSProperties = {
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 330px), 1fr))",
-  gap: "1rem",
-};
 
 const eyebrowStyle: CSSProperties = {
   margin: 0,

@@ -12,6 +12,7 @@ import {
   SlidersHorizontal,
   UserRoundCog,
 } from "lucide-react";
+import { workbenchDiagramLayoutStyle } from "../lib/layouts";
 
 type SchemeKey = "seven" | "eight";
 type PlanetKey = "saturn" | "mercury" | "moon" | "venus" | "sun" | "jupiter" | "mars" | "rahu";
@@ -109,8 +110,8 @@ export function AmatyakarakaCareerWorkbench() {
         </div>
       </section>
 
-      <div style={responsiveTwoColumnStyle}>
-        <section style={cardStyle}>
+      <div style={workbenchDiagramLayoutStyle}>
+        <section style={{ ...cardStyle, flex: "2 1 460px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", gap: "1rem", alignItems: "center", flexWrap: "wrap" }}>
             <div>
               <p style={eyebrowStyle}>Royal court ranking</p>
@@ -128,7 +129,7 @@ export function AmatyakarakaCareerWorkbench() {
           </div>
         </section>
 
-        <section style={{ display: "grid", gap: "0.85rem" }}>
+        <section style={{ display: "grid", gap: "0.85rem", flex: "1 1 280px" }}>
           <Panel title="Karaka scheme" icon={<SlidersHorizontal size={18} />} color={scheme === "seven" ? BLUE : PURPLE}>
             <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
               <button type="button" aria-pressed={scheme === "seven"} onClick={() => setScheme("seven")} style={smallChipStyle(scheme === "seven", BLUE)}>
@@ -198,7 +199,7 @@ export function AmatyakarakaCareerWorkbench() {
         </div>
       </section>
 
-      <div style={responsiveTwoColumnStyle}>
+      <div style={workbenchTwoColumnStyle}>
         <section style={cardStyle}>
           <p style={eyebrowStyle}>Independent voice</p>
           <h3 style={{ margin: "0.15rem 0 0.75rem", color: GREEN, fontSize: "1.18rem" }}>
@@ -361,7 +362,7 @@ const cardStyle: CSSProperties = {
   padding: "1rem",
 };
 
-const responsiveTwoColumnStyle: CSSProperties = {
+const workbenchTwoColumnStyle: CSSProperties = {
   display: "grid",
   gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 340px), 1fr))",
   gap: "1rem",

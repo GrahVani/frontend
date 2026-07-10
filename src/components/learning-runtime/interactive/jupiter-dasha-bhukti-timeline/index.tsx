@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import { Calendar, Clock, HeartPulse, RefreshCcw, Scale, Sparkles, TriangleAlert } from "lucide-react";
+import { workbenchDiagramLayoutStyle } from "../lib/layouts";
 
 const INK_PRIMARY = "var(--gl-ink-on-cream-primary)";
 const INK_SECONDARY = "var(--gl-ink-on-cream-secondary)";
@@ -98,8 +99,8 @@ export function JupiterDashaBhuktiTimeline() {
         </div>
       </section>
 
-      <div style={responsiveTwoColumnStyle}>
-        <section style={cardStyle}>
+      <div style={workbenchDiagramLayoutStyle}>
+        <section style={{ ...cardStyle, flex: "2 1 460px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", gap: "1rem", alignItems: "center", flexWrap: "wrap" }}>
             <div>
               <p style={eyebrowStyle}>Timeline</p>
@@ -117,7 +118,7 @@ export function JupiterDashaBhuktiTimeline() {
           </div>
         </section>
 
-        <section style={{ display: "grid", gap: "0.85rem" }}>
+        <section style={{ display: "grid", gap: "0.85rem", flex: "1 1 280px" }}>
           <Panel title="Inputs" icon={<Scale size={18} />} color={BLUE}>
             <label style={{ display: "grid", gap: "0.35rem", color: INK_SECONDARY }}>
               <span>Jupiter mahādaśā starts at age</span>
@@ -173,7 +174,7 @@ export function JupiterDashaBhuktiTimeline() {
         </section>
       </div>
 
-      <div style={responsiveTwoColumnStyle}>
+      <div style={workbenchTwoColumnStyle}>
         <section style={{ ...cardStyle, borderColor: (careFrame ? GREEN : VERMILION) + "66", background: (careFrame ? GREEN : VERMILION) + "10" }}>
           <p style={eyebrowStyle}>Sample framing</p>
           <h3 style={{ margin: "0.15rem 0 0", color: careFrame ? GREEN : VERMILION, fontSize: "1.12rem", fontWeight: 600 }}>
@@ -302,7 +303,7 @@ const cardStyle: CSSProperties = {
   boxShadow: "var(--gl-shadow-soft)",
 };
 
-const responsiveTwoColumnStyle: CSSProperties = {
+const workbenchTwoColumnStyle: CSSProperties = {
   display: "grid",
   gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 330px), 1fr))",
   gap: "1rem",

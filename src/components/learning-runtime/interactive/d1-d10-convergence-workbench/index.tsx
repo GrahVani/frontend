@@ -13,6 +13,7 @@ import {
   Sparkles,
   Target,
 } from "lucide-react";
+import { workbenchDiagramLayoutStyle } from "../lib/layouts";
 
 type StrengthKey = "strong" | "moderate" | "weak";
 type FieldKey = "authority" | "technical" | "teaching" | "creative";
@@ -112,8 +113,8 @@ export function D1D10ConvergenceWorkbench() {
         </div>
       </section>
 
-      <div style={responsiveTwoColumnStyle}>
-        <section style={cardStyle}>
+      <div style={workbenchDiagramLayoutStyle}>
+        <section style={{ ...cardStyle, flex: "2 1 460px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", gap: "1rem", alignItems: "center", flexWrap: "wrap" }}>
             <div>
               <p style={eyebrowStyle}>Two-chart vector</p>
@@ -129,7 +130,7 @@ export function D1D10ConvergenceWorkbench() {
           </div>
         </section>
 
-        <section style={{ display: "grid", gap: "0.85rem" }}>
+        <section style={{ display: "grid", gap: "0.85rem", flex: "1 1 280px" }}>
           <Panel title="Pattern presets" icon={<GitCompare size={18} />} color={patternColor}>
             <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
               <PresetButton active={activePattern === "convergence"} color={GREEN} onClick={() => { setD1Strength("strong"); setD10Strength("strong"); setD1Field("authority"); setD10Field("authority"); setVargottama(true); setActivePattern("convergence"); }}>
@@ -164,12 +165,12 @@ export function D1D10ConvergenceWorkbench() {
         </section>
       </div>
 
-      <div style={responsiveTwoColumnStyle}>
+      <div style={workbenchTwoColumnStyle}>
         <ChartControl title="D1 foundation" icon={<Target size={18} />} color={BLUE} strength={d1Strength} field={d1Field} onStrength={setD1Strength} onField={setD1Field} />
         <ChartControl title="D10 refinement" icon={<BriefcaseBusiness size={18} />} color={GREEN} strength={d10Strength} field={d10Field} onStrength={setD10Strength} onField={setD10Field} />
       </div>
 
-      <div style={responsiveTwoColumnStyle}>
+      <div style={workbenchTwoColumnStyle}>
         <section style={cardStyle}>
           <p style={eyebrowStyle}>Convergence marker</p>
           <button type="button" aria-pressed={vargottama} onClick={() => setVargottama((value) => !value)} style={togglePanelStyle(vargottama, GOLD)}>
@@ -234,19 +235,19 @@ function ComparisonSvg({ pattern, d1Score, d10Score, vargottama, d1Field, d10Fie
       <line x1="110" y1="72" x2="450" y2="72" stroke={`${GREEN}33`} strokeWidth="2" strokeDasharray="8 8" />
       <line x1="110" y1="145" x2="450" y2="145" stroke={`${GOLD}44`} strokeWidth="2" strokeDasharray="8 8" />
       <path d={`M 160 ${d1Y} C 245 ${d1Y}, 275 ${d10Y}, 360 ${d10Y}`} fill="none" stroke={patternColor} strokeWidth="5" strokeLinecap="round" />
-      <circle cx="160" cy={d1Y} r="34" fill={BLUE} stroke="#fff" strokeWidth="3" />
-      <text x="160" y={d1Y - 4} textAnchor="middle" fill="#fff" fontSize="13" fontWeight="700">D1</text>
-      <text x="160" y={d1Y + 14} textAnchor="middle" fill="#fff" fontSize="10" fontWeight="600">promise</text>
-      <circle cx="360" cy={d10Y} r="34" fill={GREEN} stroke="#fff" strokeWidth="3" />
-      <text x="360" y={d10Y - 4} textAnchor="middle" fill="#fff" fontSize="13" fontWeight="700">D10</text>
-      <text x="360" y={d10Y + 14} textAnchor="middle" fill="#fff" fontSize="10" fontWeight="600">delivery</text>
-      <circle cx="260" cy="146" r={vargottama ? 42 : 28} fill={vargottama ? `${GOLD}22` : "#FFF9EA"} stroke={vargottama ? GOLD : HAIRLINE} strokeWidth={vargottama ? 4 : 2} strokeDasharray={vargottama ? "7 7" : undefined} />
-      <text x="260" y="142" textAnchor="middle" fill={vargottama ? GOLD : INK_MUTED} fontSize="11" fontWeight="700">VARGA</text>
-      <text x="260" y="158" textAnchor="middle" fill={vargottama ? GOLD : INK_MUTED} fontSize="11" fontWeight="700">{vargottama ? "YES" : "OFF"}</text>
-      {!sameField ? <path d="M 160 252 C 226 282, 315 282, 360 252" fill="none" stroke={PURPLE} strokeWidth="4" strokeDasharray="8 7" /> : null}
-      <text x="160" y="274" textAnchor="middle" fill={FIELDS[d1Field].color} fontSize="11" fontWeight="700">{FIELDS[d1Field].label}</text>
-      <text x="360" y="274" textAnchor="middle" fill={FIELDS[d10Field].color} fontSize="11" fontWeight="700">{FIELDS[d10Field].label}</text>
-      <text x="280" y="26" textAnchor="middle" fill={INK_MUTED} fontSize="11" fontWeight="700">D1 foundation plus D10 outcome-weight</text>
+      <circle cx="160" cy={d1Y} r="36" fill={BLUE} stroke="#fff" strokeWidth="3" />
+      <text x="160" y={d1Y - 5} textAnchor="middle" fill="#fff" fontSize="14" fontWeight="700">D1</text>
+      <text x="160" y={d1Y + 15} textAnchor="middle" fill="#fff" fontSize="13" fontWeight="600">promise</text>
+      <circle cx="360" cy={d10Y} r="36" fill={GREEN} stroke="#fff" strokeWidth="3" />
+      <text x="360" y={d10Y - 5} textAnchor="middle" fill="#fff" fontSize="14" fontWeight="700">D10</text>
+      <text x="360" y={d10Y + 15} textAnchor="middle" fill="#fff" fontSize="13" fontWeight="600">delivery</text>
+      <circle cx="260" cy="146" r={vargottama ? 44 : 30} fill={vargottama ? `${GOLD}22` : "#FFF9EA"} stroke={vargottama ? GOLD : HAIRLINE} strokeWidth={vargottama ? 4 : 2} strokeDasharray={vargottama ? "7 7" : undefined} />
+      <text x="260" y="141" textAnchor="middle" fill={vargottama ? GOLD : INK_MUTED} fontSize="13" fontWeight="700">VARGA</text>
+      <text x="260" y="159" textAnchor="middle" fill={vargottama ? GOLD : INK_MUTED} fontSize="13" fontWeight="700">{vargottama ? "YES" : "OFF"}</text>
+      {!sameField ? <path d="M 160 254 C 226 284, 315 284, 360 254" fill="none" stroke={PURPLE} strokeWidth="4" strokeDasharray="8 7" /> : null}
+      <text x="160" y="276" textAnchor="middle" fill={FIELDS[d1Field].color} fontSize="13" fontWeight="700">{FIELDS[d1Field].label}</text>
+      <text x="360" y="276" textAnchor="middle" fill={FIELDS[d10Field].color} fontSize="13" fontWeight="700">{FIELDS[d10Field].label}</text>
+      <text x="280" y="26" textAnchor="middle" fill={INK_MUTED} fontSize="13" fontWeight="700">D1 foundation plus D10 outcome-weight</text>
     </svg>
   );
 }
@@ -360,7 +361,7 @@ const cardStyle: CSSProperties = {
   padding: "1rem",
 };
 
-const responsiveTwoColumnStyle: CSSProperties = {
+const workbenchTwoColumnStyle: CSSProperties = {
   display: "grid",
   gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 340px), 1fr))",
   gap: "1rem",

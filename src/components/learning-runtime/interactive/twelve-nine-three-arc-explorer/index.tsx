@@ -9,6 +9,7 @@ import {
   RefreshCcw,
   Shuffle,
 } from "lucide-react";
+import { workbenchDiagramLayoutStyle } from "../lib/layouts";
 
 const INK_PRIMARY = "var(--gl-ink-on-cream-primary)";
 const INK_SECONDARY = "var(--gl-ink-on-cream-secondary)";
@@ -182,8 +183,8 @@ export function TwelveNineThreeArcExplorer() {
         </div>
       </section>
 
-      <div style={responsiveTwoColumnStyle}>
-        <section style={cardStyle}>
+      <div style={workbenchDiagramLayoutStyle}>
+        <section style={{ ...cardStyle, flex: "2 1 460px" }}>
           <p style={eyebrowStyle}>12-9-3 arc diagram</p>
           <ArcSvg activeThreads={activeThreads} />
           <div
@@ -206,7 +207,7 @@ export function TwelveNineThreeArcExplorer() {
           </div>
         </section>
 
-        <section style={{ display: "grid", gap: "0.85rem" }}>
+        <section style={{ display: "grid", gap: "0.85rem", flex: "1 1 280px" }}>
           <Panel title="House comparison" icon={<Layers size={18} />} color={GOLD}>
             <p
               style={{
@@ -305,7 +306,7 @@ export function TwelveNineThreeArcExplorer() {
         </section>
       </div>
 
-      <div style={responsiveTwoColumnStyle}>
+      <div style={workbenchTwoColumnStyle}>
         <section style={cardStyle}>
           <p style={eyebrowStyle}>Upachaya doctrine check</p>
           <p
@@ -731,7 +732,7 @@ const cardStyle: CSSProperties = {
   boxShadow: "var(--gl-shadow-soft)",
 };
 
-const responsiveTwoColumnStyle: CSSProperties = {
+const workbenchTwoColumnStyle: CSSProperties = {
   display: "grid",
   gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 330px), 1fr))",
   gap: "1rem",

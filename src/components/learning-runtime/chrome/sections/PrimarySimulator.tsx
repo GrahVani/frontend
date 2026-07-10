@@ -7,13 +7,12 @@
  */
 
 import { MarkdownContent } from "../MarkdownContent";
-import { INTERACTIVE_REGISTRY } from "../../interactive/registry";
+import { loadInteractive } from "../../interactive/dynamic-loader";
 import { SectionHeader } from "../SectionHeader";
 import { presentationFor } from "../../lib/section-meta";
 import { Sparkles } from "lucide-react";
-import { createElement } from "react";
 import type { LessonSection, LessonFrontMatter } from "@/lib/learning-runtime/types";
-import { LessonProvider } from "../../interactive/rashi-attribute-wheel";
+import { LessonProvider } from "@/components/learning-runtime/interactive/tier-1/module-4/rashi-attribute-wheel";
 
 interface PrimarySimulatorProps {
   section: LessonSection;
@@ -464,14 +463,88 @@ const WIDE_LAYOUT_SLUGS = new Set([
   "scope-of-competence-stock-picks-financial-planning-tax-advice",
 ]);
 
-export function PrimarySimulator({ section, frontMatter: fm }: PrimarySimulatorProps) {
-  const componentType = fm.interactive?.componentType;
+export async function PrimarySimulator({ section, frontMatter: fm }: PrimarySimulatorProps) {
+  const componentType = fm.interactive?.componentType || fm.interactive?.component;
   const specFile = fm.interactive?.specFile;
   const enabled = fm.interactive?.enabled ?? false;
 
   const overrideKey = SECTION_7_OVERRIDES[fm.slug];
   const interactiveKey = overrideKey ?? componentType;
-  const InteractiveComponent = interactiveKey ? INTERACTIVE_REGISTRY[interactiveKey] ?? null : null;
+  
+  let InteractiveComponent = null;
+
+  // Direct folder routing for Tier 1 Module 1 (bypassing the alphabetical registry)
+  if (fm.tier === 1 && fm.module === 1 && interactiveKey) {
+    try {
+      // By appending /index, Turbopack knows it's only looking for JS/TS index files, ignoring READMEs
+      const mod = await import(`../../interactive/tier-1/module-1/${interactiveKey}/index`);
+      // Find the first exported component (or default)
+      const exportName = Object.keys(mod).find(key => key !== 'default') || 'default';
+      InteractiveComponent = mod[exportName];
+    } catch (err) {
+      console.error(`Failed to load direct component for Tier 1 Module 1: ${interactiveKey}`, err);
+    }
+  }
+
+  // Direct folder routing for Tier 1 Module 2
+  if (fm.tier === 1 && fm.module === 2 && interactiveKey) {
+    try {
+      const mod = await import(`../../interactive/tier-1/module-2/${interactiveKey}/index`);
+      const exportName = Object.keys(mod).find(key => key !== 'default') || 'default';
+      InteractiveComponent = mod[exportName];
+    } catch (err) {
+      console.error(`Failed to load direct component for Tier 1 Module 2: ${interactiveKey}`, err);
+    }
+  }
+
+  // Direct folder routing for Tier 1 Module 3
+  if (fm.tier === 1 && fm.module === 3 && interactiveKey) {
+    try {
+      const mod = await import(`../../interactive/tier-1/module-3/${interactiveKey}/index`);
+      const exportName = Object.keys(mod).find(key => key !== 'default') || 'default';
+      InteractiveComponent = mod[exportName];
+    } catch (err) {
+      console.error(`Failed to load direct component for Tier 1 Module 3: ${interactiveKey}`, err);
+    }
+  }
+
+  // Direct folder routing for Tier 1 Module 4
+  if (fm.tier === 1 && fm.module === 4 && interactiveKey) {
+    try {
+      const mod = await import(`../../interactive/tier-1/module-4/${interactiveKey}/index`);
+      const exportName = Object.keys(mod).find(key => key !== 'default') || 'default';
+      InteractiveComponent = mod[exportName];
+    } catch (err) {
+      console.error(`Failed to load direct component for Tier 1 Module 4: ${interactiveKey}`, err);
+    }
+  }
+
+  // Direct folder routing for Tier 1 Module 5
+  if (fm.tier === 1 && fm.module === 5 && interactiveKey) {
+    try {
+      const mod = await import(`../../interactive/tier-1/module-5/${interactiveKey}/index`);
+      const exportName = Object.keys(mod).find(key => key !== 'default') || 'default';
+      InteractiveComponent = mod[exportName];
+    } catch (err) {
+      console.error(`Failed to load direct component for Tier 1 Module 5: ${interactiveKey}`, err);
+    }
+  }
+
+  // Direct folder routing for Tier 1 Module 6
+  if (fm.tier === 1 && fm.module === 6 && interactiveKey) {
+    try {
+      const mod = await import(`../../interactive/tier-1/module-6/${interactiveKey}/index`);
+      const exportName = Object.keys(mod).find(key => key !== 'default') || 'default';
+      InteractiveComponent = mod[exportName];
+    } catch (err) {
+      console.error(`Failed to load direct component for Tier 1 Module 6: ${interactiveKey}`, err);
+    }
+  }
+
+  // Fallback to alphabetical bucket loader
+  if (!InteractiveComponent && interactiveKey) {
+    InteractiveComponent = await loadInteractive(interactiveKey);
+  }
 
   const useWideLayout = WIDE_LAYOUT_SLUGS.has(fm.slug);
 
@@ -501,7 +574,7 @@ export function PrimarySimulator({ section, frontMatter: fm }: PrimarySimulatorP
       {enabled && InteractiveComponent ? (
         /* Wrap in LessonProvider so interactives can read the lesson slug for context-aware defaults. */
         <LessonProvider value={{ slug: fm.slug }}>
-          {createElement(InteractiveComponent)}
+          <InteractiveComponent />
         </LessonProvider>
       ) : enabled && componentType ? (
         <div

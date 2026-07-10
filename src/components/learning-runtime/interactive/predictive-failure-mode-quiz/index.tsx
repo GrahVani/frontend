@@ -10,7 +10,7 @@ import {
   RefreshCw,
   Volume2
 } from "lucide-react";
-import { useLessonSlug } from "../rashi-attribute-wheel";
+import { useLessonSlug } from "@/components/learning-runtime/interactive/tier-1/module-4/rashi-attribute-wheel";
 
 // Curated colors for parchment theme
 const GOLD = "#9c7a2f";

@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import { BadgeCheck, CalendarClock, GitCompare, HeartHandshake, HelpCircle, Layers3, RotateCcw, Scale, ShieldCheck, TriangleAlert } from "lucide-react";
+import { workbenchTwoColumnStyle, workbenchDiagramLayoutStyle } from "../lib/layouts";
 
 type StepId = "question" | "promise" | "streams" | "compatibility" | "timing" | "synthesise" | "frame" | "scope";
 type QuestionMode = "timing" | "proposal" | "quality";
@@ -168,8 +169,8 @@ export function MarriageSynthesisOverviewMap() {
         </div>
       </section>
 
-      <div style={responsiveTwoColumnStyle}>
-        <section style={cardStyle}>
+      <div style={workbenchDiagramLayoutStyle}>
+        <section style={{ ...cardStyle, flex: "2 1 460px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", gap: "1rem", alignItems: "center", flexWrap: "wrap" }}>
             <div>
               <p style={eyebrowStyle}>Eight-move method map</p>
@@ -177,7 +178,16 @@ export function MarriageSynthesisOverviewMap() {
             </div>
             <span style={{ color: confidence.color, fontWeight: 700 }}>{confidenceLabel(confidenceMode)}</span>
           </div>
-          <SynthesisMapSvg activeStep={activeStep} scopeFlag={scopeFlag} fatalisticOutput={fatalisticOutput || !agencyFrame} />
+          <SynthesisMapSvg
+            activeStep={activeStep}
+            setActiveStep={setActiveStep}
+            scopeFlag={scopeFlag}
+            fatalisticOutput={fatalisticOutput || !agencyFrame}
+            promiseFirst={promiseFirst}
+            streamsWeighted={streamsWeighted}
+            compatibilityNeeded={compatibilityNeeded}
+            timingTwoYes={timingTwoYes}
+          />
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 145px), 1fr))", gap: "0.6rem" }}>
             <MiniFact title="Question type" body={questionMode} color={questionColor(questionMode)} icon={<HelpCircle size={16} />} />
             <MiniFact title="Confidence" body={confidenceMode} color={confidenceMode === "convergent" ? GREEN : confidenceMode === "mixed" ? BLUE : GOLD} icon={<Scale size={16} />} />
@@ -185,7 +195,7 @@ export function MarriageSynthesisOverviewMap() {
           </div>
         </section>
 
-        <section style={{ display: "grid", gap: "0.85rem" }}>
+        <section style={{ display: "grid", gap: "0.85rem", flex: "1 1 280px" }}>
           <Panel title="Question router" icon={<HelpCircle size={18} />} color={questionColor(questionMode)}>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 120px), 1fr))", gap: "0.5rem" }}>
               {(["timing", "proposal", "quality"] as QuestionMode[]).map((mode) => (
@@ -199,7 +209,7 @@ export function MarriageSynthesisOverviewMap() {
         </section>
       </div>
 
-      <div style={responsiveTwoColumnStyle}>
+      <div style={workbenchTwoColumnStyle}>
         <section style={cardStyle}>
           <p style={eyebrowStyle}>Method order checks</p>
           <div style={{ display: "grid", gap: "0.7rem", marginTop: "0.75rem" }}>
@@ -238,31 +248,496 @@ export function MarriageSynthesisOverviewMap() {
   );
 }
 
-function SynthesisMapSvg({ activeStep, scopeFlag, fatalisticOutput }: { activeStep: StepId; scopeFlag: boolean; fatalisticOutput: boolean }) {
-  const ids = Object.keys(STEPS) as StepId[];
+interface SynthesisMapSvgProps {
+  activeStep: StepId;
+  setActiveStep: (step: StepId) => void;
+  scopeFlag: boolean;
+  fatalisticOutput: boolean;
+  promiseFirst: boolean;
+  streamsWeighted: boolean;
+  compatibilityNeeded: boolean;
+  timingTwoYes: boolean;
+}
+
+function SynthesisMapSvg({
+  activeStep,
+  setActiveStep,
+  scopeFlag,
+  fatalisticOutput,
+  promiseFirst,
+  streamsWeighted,
+  compatibilityNeeded,
+  timingTwoYes,
+}: SynthesisMapSvgProps) {
+  const [hoveredNode, setHoveredNode] = useState<StepId | null>(null);
+
+  const cx = 410;
+  const cy = 240;
+
+  const outerSteps: {
+    id: StepId;
+    cx: number;
+    cy: number;
+    textX: number;
+    textY: number;
+    textAnchor: "start" | "end" | "middle";
+    label: string;
+    sub: string;
+    color: string;
+  }[] = [
+    { id: "question", cx: 410, cy: 80, textX: 410, textY: 42, textAnchor: "middle", label: "1. Question", sub: "Parse query type", color: BLUE },
+    { id: "promise", cx: 549, cy: 160, textX: 580, textY: 158, textAnchor: "start", label: "2. Promise", sub: "Natal potential", color: PURPLE },
+    { id: "streams", cx: 549, cy: 320, textX: 580, textY: 318, textAnchor: "start", label: "3. Streams", sub: "Weigh 4 streams", color: GOLD },
+    { id: "compatibility", cx: 410, cy: 400, textX: 410, textY: 438, textAnchor: "middle", label: "4. Proposal", sub: "Match & Dosha", color: GREEN },
+    { id: "timing", cx: 271, cy: 320, textX: 238, textY: 318, textAnchor: "end", label: "5. Timing", sub: "Dasha & Gochara", color: BLUE },
+    { id: "scope", cx: 271, cy: 160, textX: 238, textY: 158, textAnchor: "end", label: "8. Scope", sub: "Safety checks", color: VERMILION },
+  ];
+
+  // Colors for Core Hub
+  const synthesisColor = PURPLE;
+  const frameColor = fatalisticOutput ? VERMILION : GREEN;
+
   return (
-    <svg viewBox="0 0 820 430" role="img" aria-label="Eight move marriage synthesis method map" style={{ width: "100%", minHeight: 320, margin: "0.7rem 0" }}>
-      <rect x="18" y="18" width="784" height="394" rx="8" fill={SURFACE} stroke={HAIRLINE} />
-      <text x="410" y="52" textAnchor="middle" fill={GOLD} fontSize="13" fontWeight="700">ONE ORDERED FLOW, NOT A PILE OF TECHNIQUES</text>
-      {ids.map((id, index) => {
-        const row = index < 4 ? 0 : 1;
-        const column = index % 4;
-        const x = 105 + column * 202;
-        const y = row === 0 ? 140 : 280;
-        const selected = id === activeStep;
-        const color = id === "scope" && scopeFlag ? VERMILION : id === "frame" && fatalisticOutput ? VERMILION : STEPS[id].color;
-        const next = ids[index + 1];
-        return (
-          <g key={id}>
-            {next && index !== 3 ? <path d={`M ${x + 54} ${y} L ${x + 148} ${y}`} stroke={color} strokeWidth={selected ? 4 : 2.5} opacity={selected ? 1 : 0.45} /> : null}
-            {index === 3 ? <path d={`M ${x} ${y + 54} C ${x} ${y + 98}, ${105} ${y + 98}, ${105} ${y + 86}`} fill="none" stroke={HAIRLINE} strokeWidth="2.5" strokeDasharray="7 7" /> : null}
-            <rect x={x - 54} y={y - 38} width="108" height="76" rx="8" fill={OPAQUE_LIGHT_FILL[color]} stroke={color} strokeWidth={selected ? 4 : 2} />
-            <text x={x} y={y - 5} textAnchor="middle" fill={color} fontSize="11" fontWeight="700">{index + 1}. {STEPS[id].label}</text>
-            <text x={x} y={y + 17} textAnchor="middle" fill={INK_MUTED} fontSize="9.5">{id === "scope" && scopeFlag ? "route" : id === "frame" && fatalisticOutput ? "repair" : "move"}</text>
+    <svg
+      viewBox="0 0 820 480"
+      role="img"
+      aria-label="Eight-move Vedic Synthesis Mandala Map"
+      style={{ width: "100%", minHeight: 380, margin: "0.5rem 0" }}
+    >
+      <style>{`
+        .mandala-node-group {
+          cursor: pointer;
+          transition: filter 0.25s ease;
+        }
+        .pulse-warning {
+          animation: warning-pulse 2s infinite ease-in-out;
+          transform-origin: 410px 240px;
+        }
+        @keyframes warning-pulse {
+          0% { transform: scale(1); opacity: 0.25; }
+          50% { transform: scale(1.03); opacity: 0.6; }
+          100% { transform: scale(1); opacity: 0.25; }
+        }
+        .pulse-scope {
+          animation: scope-pulse 1.8s infinite ease-in-out;
+          transform-origin: 271px 160px;
+        }
+        @keyframes scope-pulse {
+          0% { transform: scale(1); opacity: 0.4; }
+          50% { transform: scale(1.15); opacity: 0.8; }
+          100% { transform: scale(1); opacity: 0.4; }
+        }
+      `}</style>
+
+      <defs>
+        {/* Glow Filters */}
+        <filter id="glow-blue" x="-30%" y="-30%" width="160%" height="160%">
+          <feDropShadow dx="0" dy="0" stdDeviation="6" floodColor="#356CAB" floodOpacity="0.65" />
+        </filter>
+        <filter id="glow-purple" x="-30%" y="-30%" width="160%" height="160%">
+          <feDropShadow dx="0" dy="0" stdDeviation="6" floodColor="#6B5AA8" floodOpacity="0.65" />
+        </filter>
+        <filter id="glow-gold" x="-30%" y="-30%" width="160%" height="160%">
+          <feDropShadow dx="0" dy="0" stdDeviation="6" floodColor="#B88421" floodOpacity="0.65" />
+        </filter>
+        <filter id="glow-green" x="-30%" y="-30%" width="160%" height="160%">
+          <feDropShadow dx="0" dy="0" stdDeviation="6" floodColor="#2F7D55" floodOpacity="0.65" />
+        </filter>
+        <filter id="glow-vermilion" x="-30%" y="-30%" width="160%" height="160%">
+          <feDropShadow dx="0" dy="0" stdDeviation="8" floodColor="#A23A1E" floodOpacity="0.85" />
+        </filter>
+
+        {/* Planet Radial Gradients (Normal state) */}
+        <radialGradient id="grad-blue" cx="35%" cy="35%" r="65%">
+          <stop offset="0%" stopColor="#F0F4FA" />
+          <stop offset="40%" stopColor="#7DA4D1" />
+          <stop offset="100%" stopColor="#356CAB" />
+        </radialGradient>
+        <radialGradient id="grad-purple" cx="35%" cy="35%" r="65%">
+          <stop offset="0%" stopColor="#F6F4FA" />
+          <stop offset="40%" stopColor="#9C8ECB" />
+          <stop offset="100%" stopColor="#6B5AA8" />
+        </radialGradient>
+        <radialGradient id="grad-gold" cx="35%" cy="35%" r="65%">
+          <stop offset="0%" stopColor="#FDFBF7" />
+          <stop offset="40%" stopColor="#DCB86A" />
+          <stop offset="100%" stopColor="#B88421" />
+        </radialGradient>
+        <radialGradient id="grad-green" cx="35%" cy="35%" r="65%">
+          <stop offset="0%" stopColor="#F4FAF6" />
+          <stop offset="40%" stopColor="#66B386" />
+          <stop offset="100%" stopColor="#2F7D55" />
+        </radialGradient>
+        <radialGradient id="grad-vermilion" cx="35%" cy="35%" r="65%">
+          <stop offset="0%" stopColor="#FAF5F4" />
+          <stop offset="40%" stopColor="#CC7B66" />
+          <stop offset="100%" stopColor="#A23A1E" />
+        </radialGradient>
+
+        {/* Active Node Gradients */}
+        <radialGradient id="grad-blue-active" cx="30%" cy="30%" r="70%">
+          <stop offset="0%" stopColor="#FFFFFF" />
+          <stop offset="25%" stopColor="#AECBEF" />
+          <stop offset="70%" stopColor="#356CAB" />
+          <stop offset="100%" stopColor="#1E4472" />
+        </radialGradient>
+        <radialGradient id="grad-purple-active" cx="30%" cy="30%" r="70%">
+          <stop offset="0%" stopColor="#FFFFFF" />
+          <stop offset="25%" stopColor="#C9BFE9" />
+          <stop offset="70%" stopColor="#6B5AA8" />
+          <stop offset="100%" stopColor="#413470" />
+        </radialGradient>
+        <radialGradient id="grad-gold-active" cx="30%" cy="30%" r="70%">
+          <stop offset="0%" stopColor="#FFFFFF" />
+          <stop offset="25%" stopColor="#EED9AC" />
+          <stop offset="70%" stopColor="#B88421" />
+          <stop offset="100%" stopColor="#7E5811" />
+        </radialGradient>
+        <radialGradient id="grad-green-active" cx="30%" cy="30%" r="70%">
+          <stop offset="0%" stopColor="#FFFFFF" />
+          <stop offset="25%" stopColor="#9CD5B4" />
+          <stop offset="70%" stopColor="#2F7D55" />
+          <stop offset="100%" stopColor="#194B31" />
+        </radialGradient>
+        <radialGradient id="grad-vermilion-active" cx="30%" cy="30%" r="70%">
+          <stop offset="0%" stopColor="#FFFFFF" />
+          <stop offset="25%" stopColor="#EDBAB0" />
+          <stop offset="70%" stopColor="#A23A1E" />
+          <stop offset="100%" stopColor="#691F0B" />
+        </radialGradient>
+
+        {/* Synthesis Hub Gradients */}
+        <radialGradient id="synthesisGrad" cx="35%" cy="35%" r="65%">
+          <stop offset="0%" stopColor="#F9F6FF" />
+          <stop offset="60%" stopColor="#D4C8FA" />
+          <stop offset="100%" stopColor="#8A75D3" />
+        </radialGradient>
+        <radialGradient id="synthesisGradActive" cx="30%" cy="30%" r="70%">
+          <stop offset="0%" stopColor="#FFFFFF" />
+          <stop offset="40%" stopColor="#BBA9FF" />
+          <stop offset="80%" stopColor="#6C53C7" />
+          <stop offset="100%" stopColor="#3C2A8A" />
+        </radialGradient>
+      </defs>
+
+      {/* Card Border & Faint Grid Background */}
+      <rect x="18" y="18" width="784" height="444" rx="8" fill={SURFACE} stroke={HAIRLINE} />
+      
+      {/* Astrological Chart Geometrical Division Lines (Faint aspect grid) */}
+      <line x1={cx - 190} y1={cy} x2={cx + 190} y2={cy} stroke={GOLD} strokeWidth="0.8" opacity="0.12" />
+      <line x1={cx} y1={cy - 190} x2={cx} y2={cy + 190} stroke={GOLD} strokeWidth="0.8" opacity="0.12" />
+      <line x1={cx - 134} y1={cy - 134} x2={cx + 134} y2={cy + 134} stroke={GOLD} strokeWidth="0.8" opacity="0.08" />
+      <line x1={cx - 134} y1={cy + 134} x2={cx + 134} y2={cy - 134} stroke={GOLD} strokeWidth="0.8" opacity="0.08" />
+
+      {/* Faint Starry Details for Vedic Aesthetic */}
+      <path d="M 300 100 L 302 105 L 307 107 L 302 109 L 300 114 L 298 109 L 293 107 L 298 105 Z" fill={GOLD} opacity="0.25" />
+      <path d="M 520 100 L 522 105 L 527 107 L 522 109 L 520 114 L 518 109 L 513 107 L 518 105 Z" fill={GOLD} opacity="0.25" />
+      <path d="M 520 380 L 522 385 L 527 387 L 522 389 L 520 394 L 518 389 L 513 387 L 518 385 Z" fill={GOLD} opacity="0.25" />
+      <path d="M 300 380 L 302 385 L 307 387 L 302 389 L 300 394 L 298 389 L 293 387 L 298 385 Z" fill={GOLD} opacity="0.25" />
+
+      {/* Orbit Rings */}
+      <circle cx={cx} cy={cy} r={160} fill="none" stroke={HAIRLINE} strokeWidth="1.5" strokeDasharray="6 4" opacity="0.25" />
+      <circle cx={cx} cy={cy} r={120} fill="none" stroke={HAIRLINE} strokeWidth="1" strokeDasharray="4 6" opacity="0.15" />
+
+      {/* Chart Title */}
+      <text x="410" y="48" textAnchor="middle" fill={GOLD} fontSize="11" fontWeight="700" letterSpacing="0.1em">
+        VEDIC SYNTHESIS MANDALA
+      </text>
+
+      {/* Sequential Flow Paths (Outer Rings) */}
+      <g>
+        {/* Arc 1 -> 2 (Question to Promise) */}
+        <path d="M 410 80 A 160 160 0 0 1 549 160" fill="none" stroke={BLUE} strokeWidth={activeStep === 'question' ? 4.5 : 2} opacity={activeStep === 'question' ? 0.9 : 0.4} filter={activeStep === 'question' ? "url(#glow-blue)" : ""} />
+        {/* Arc 2 -> 3 (Promise to Streams) */}
+        <path d="M 549 160 A 160 160 0 0 1 549 320" fill="none" stroke={PURPLE} strokeWidth={activeStep === 'promise' ? 4.5 : 2} opacity={activeStep === 'promise' ? 0.9 : 0.4} filter={activeStep === 'promise' ? "url(#glow-purple)" : ""} />
+        {/* Arc 3 -> 4 (Streams to Proposal) */}
+        <path d="M 549 320 A 160 160 0 0 1 410 400" fill="none" stroke={GOLD} strokeWidth={activeStep === 'streams' ? 4.5 : 2} opacity={activeStep === 'streams' ? 0.9 : 0.4} filter={activeStep === 'streams' ? "url(#glow-gold)" : ""} />
+        {/* Arc 4 -> 5 (Proposal to Timing) */}
+        <path d="M 410 400 A 160 160 0 0 1 271 320" fill="none" stroke={GREEN} strokeWidth={activeStep === 'compatibility' ? 4.5 : 2} opacity={activeStep === 'compatibility' ? 0.9 : 0.4} filter={activeStep === 'compatibility' ? "url(#glow-green)" : ""} />
+        {/* Arc 5 -> 8 (Timing to Scope) */}
+        <path d="M 271 320 A 160 160 0 0 1 271 160" fill="none" stroke={BLUE} strokeWidth={activeStep === 'timing' ? 4.5 : 1.5} opacity={activeStep === 'timing' ? 0.8 : 0.3} />
+        {/* Arc 8 -> 1 (Scope to Question) */}
+        <path d="M 271 160 A 160 160 0 0 1 410 80" fill="none" stroke={VERMILION} strokeWidth={activeStep === 'scope' ? 4.5 : 2} opacity={activeStep === 'scope' ? 0.9 : 0.4} filter={activeStep === 'scope' ? "url(#glow-vermilion)" : ""} />
+      </g>
+
+      {/* Dynamic Analytical Connections (Inward Flows) */}
+      <g>
+        {/* 1. Streams to Synthesis Core */}
+        <line 
+          x1={549} y1={320} x2={410 + 64 * Math.cos(Math.PI / 6)} y2={240 + 64 * Math.sin(Math.PI / 6)}
+          stroke={GOLD} 
+          strokeWidth={streamsWeighted ? 3.5 : 1.5} 
+          strokeDasharray={streamsWeighted ? "none" : "4 4"}
+          opacity={streamsWeighted ? 0.9 : 0.5} 
+        />
+        {!streamsWeighted && (
+          <g transform="translate(508, 296) rotate(30)">
+            <rect x="-24" y="-7" width="48" height="14" rx="2" fill="#FAF3E0" stroke={GOLD} strokeWidth="0.5" />
+            <text x="0" y="3" fill={GOLD} fontSize="7" fontWeight="700" textAnchor="middle">AVERAGED</text>
           </g>
-        );
-      })}
-      <text x="410" y="370" textAnchor="middle" fill={INK_SECONDARY} fontSize="12">Promise first, weigh streams, name divergence, frame with agency, and route what exceeds astrology.</text>
+        )}
+
+        {/* 2. Proposal to Synthesis Core */}
+        <line 
+          x1={410} y1={400} x2={410} y2={240 + 74}
+          stroke={GREEN} 
+          strokeWidth={compatibilityNeeded ? 3.5 : 1} 
+          strokeDasharray={compatibilityNeeded ? "none" : "3 3"}
+          opacity={compatibilityNeeded ? 0.9 : 0.4} 
+        />
+
+        {/* 3. Timing to Synthesis Core */}
+        <line 
+          x1={271} y1={320} x2={410 - 64 * Math.cos(Math.PI / 6)} y2={240 + 64 * Math.sin(Math.PI / 6)}
+          stroke={BLUE} 
+          strokeWidth={timingTwoYes ? 3.5 : 1.5} 
+          strokeDasharray={timingTwoYes ? "none" : "4 4"}
+          opacity={timingTwoYes ? 0.9 : 0.5} 
+        />
+        {!timingTwoYes && (
+          <g transform="translate(312, 296) rotate(-30)">
+            <rect x="-30" y="-7" width="60" height="14" rx="2" fill="#E8EEF5" stroke={BLUE} strokeWidth="0.5" />
+            <text x="0" y="3" fill={BLUE} fontSize="7" fontWeight="700" textAnchor="middle">NO TRANSIT</text>
+          </g>
+        )}
+
+        {/* 4. Scope Interruptor Line */}
+        <line 
+          x1={271} y1={160} x2={410 - 64 * Math.cos(Math.PI / 6)} y2={240 - 64 * Math.sin(Math.PI / 6)}
+          stroke={VERMILION} 
+          strokeWidth={scopeFlag ? 4.5 : 1} 
+          strokeDasharray={scopeFlag ? "none" : "5 5"}
+          opacity={scopeFlag ? 1 : 0.25} 
+        />
+      </g>
+
+      {/* Promise to Timing Wide Aspect Arch (Sequential Check) */}
+      <g>
+        <path 
+          d="M 549 160 A 175 175 0 0 1 271 320" 
+          fill="none" 
+          stroke={promiseFirst ? "#319795" : VERMILION} 
+          strokeWidth={promiseFirst ? 2 : 4} 
+          strokeDasharray={promiseFirst ? "4 4" : "none"} 
+          opacity={promiseFirst ? 0.8 : 0.95} 
+        />
+        {!promiseFirst && (
+          <g transform="translate(467, 338)">
+            <filter id="badge-shadow">
+              <feDropShadow dx="0" dy="1" stdDeviation="2" floodColor="#000" floodOpacity="0.25" />
+            </filter>
+            <rect x="-44" y="-10" width="88" height="20" rx="4" fill={VERMILION} stroke="#FDFBF7" strokeWidth="1.2" filter="url(#badge-shadow)" />
+            <text x="0" y="3.5" textAnchor="middle" fill="#FFFFFF" fontSize="8.5" fontWeight="700">PROMISE MISSING</text>
+          </g>
+        )}
+      </g>
+
+      {/* CENTRAL CORE: Synthesis & Counseling Frame */}
+      <g>
+        {/* Fatalistic Pulsing Ring */}
+        {fatalisticOutput && (
+          <circle cx={cx} cy={cy} r={60} fill="none" stroke={VERMILION} strokeWidth="26" className="pulse-warning" />
+        )}
+
+        {/* Scope Interruption Shield Block */}
+        {scopeFlag && (
+          <>
+            <circle cx={cx} cy={cy} r={82} fill="none" stroke={VERMILION} strokeWidth="6" strokeDasharray="6 3" filter="url(#glow-vermilion)" />
+            <g transform="translate(410, 142)">
+              <rect x="-45" y="-10" width="90" height="20" rx="4" fill={VERMILION} stroke="#FDFBF7" strokeWidth="1" />
+              <text x="0" y="3.5" textAnchor="middle" fill="#FFFFFF" fontSize="8.5" fontWeight="800" letterSpacing="0.05em">CRITICAL ROUTE</text>
+            </g>
+          </>
+        )}
+
+        {/* STEP 7: Frame Ring */}
+        <g
+          className="mandala-node-center"
+          onClick={() => setActiveStep("frame")}
+          onMouseEnter={() => setHoveredNode("frame")}
+          onMouseLeave={() => setHoveredNode(null)}
+          style={{ cursor: "pointer" }}
+        >
+          {/* Active Highlight Border */}
+          <circle 
+            cx={cx} 
+            cy={cy} 
+            r={60} 
+            fill="none" 
+            stroke={activeStep === 'frame' ? (fatalisticOutput ? VERMILION : GREEN) : "transparent"} 
+            strokeWidth={activeStep === 'frame' ? 28 : 0} 
+            opacity={0.25}
+          />
+          {/* Main Frame Ring */}
+          <circle 
+            cx={cx} 
+            cy={cy} 
+            r={60} 
+            fill="none" 
+            stroke={frameColor} 
+            strokeWidth={activeStep === 'frame' ? 24 : 18} 
+            opacity={activeStep === 'frame' ? 1 : 0.8}
+            style={{ transition: "stroke-width 0.2s, opacity 0.2s" }}
+            filter={activeStep === 'frame' ? (fatalisticOutput ? "url(#glow-vermilion)" : "url(#glow-green)") : ""}
+          />
+          {/* Frame Ring Text */}
+          <text 
+            x={cx} 
+            y={cy - 57} 
+            textAnchor="middle" 
+            fill="#FFFFFF" 
+            fontSize="9" 
+            fontWeight="800"
+            style={{ pointerEvents: "none" }}
+          >
+            7. FRAME
+          </text>
+        </g>
+
+        {/* STEP 6: Synthesis Center Sphere (The core Bindu) */}
+        <g
+          className="mandala-node-center"
+          onClick={() => setActiveStep("synthesise")}
+          onMouseEnter={() => setHoveredNode("synthesise")}
+          onMouseLeave={() => setHoveredNode(null)}
+          style={{ cursor: "pointer" }}
+        >
+          <circle 
+            cx={cx} 
+            cy={cy} 
+            r={36} 
+            fill={activeStep === 'synthesise' ? "url(#synthesisGradActive)" : "url(#synthesisGrad)"} 
+            stroke={synthesisColor} 
+            strokeWidth={activeStep === 'synthesise' ? 3 : 1.5} 
+            filter={activeStep === 'synthesise' ? "url(#glow-purple)" : ""}
+            style={{ transition: "stroke-width 0.2s, fill 0.2s" }}
+          />
+          <text 
+            x={cx} 
+            y={cy - 2} 
+            textAnchor="middle" 
+            fill={activeStep === 'synthesise' ? "#1E1B4B" : "#4A3E7D"} 
+            fontSize="10" 
+            fontWeight="800"
+            style={{ pointerEvents: "none" }}
+          >
+            6. FUSION
+          </text>
+          <text 
+            x={cx} 
+            y={cy + 10} 
+            textAnchor="middle" 
+            fill={activeStep === 'synthesise' ? "#312E81" : "#5C4E9C"} 
+            fontSize="8.5" 
+            fontWeight="600"
+            style={{ pointerEvents: "none" }}
+          >
+            Synthesis
+          </text>
+        </g>
+      </g>
+
+      {/* OUTER STATIONS (6 Nodes) */}
+      <g>
+        {outerSteps.map((node) => {
+          const active = activeStep === node.id;
+          const isHovered = hoveredNode === node.id;
+          const scale = isHovered ? 1.08 : 1;
+          const transformStr = `translate(${node.cx}, ${node.cy}) scale(${scale}) translate(${-node.cx}, ${-node.cy})`;
+          
+          let fillVal = `url(#grad-${node.id === "compatibility" ? "green" : node.id === "scope" ? "vermilion" : node.id === "streams" ? "gold" : node.id === "question" ? "blue" : node.id === "promise" ? "purple" : "blue"})`;
+          if (active) {
+            fillVal = `url(#grad-${node.id === "compatibility" ? "green" : node.id === "scope" ? "vermilion" : node.id === "streams" ? "gold" : node.id === "question" ? "blue" : node.id === "promise" ? "purple" : "blue"}-active)`;
+          }
+
+          let strokeColor = node.color;
+          if (node.id === "scope" && scopeFlag) {
+            strokeColor = VERMILION;
+          }
+
+          const hasGlow = active ? `url(#glow-${node.id === "compatibility" ? "green" : node.id === "scope" ? "vermilion" : node.id === "streams" ? "gold" : node.id === "question" ? "blue" : node.id === "promise" ? "purple" : "blue"})` : "";
+
+          return (
+            <g 
+              key={node.id} 
+              className={`mandala-node-group ${node.id === "scope" && scopeFlag ? "pulse-scope" : ""}`}
+              onClick={() => setActiveStep(node.id)}
+              onMouseEnter={() => setHoveredNode(node.id)}
+              onMouseLeave={() => setHoveredNode(null)}
+              transform={transformStr}
+              style={{ transition: "transform 0.15s ease" }}
+            >
+              {/* Generous Hit-Detector Circle */}
+              <circle cx={node.cx} cy={node.cy} r={32} fill="transparent" />
+
+              {/* Main Sphere Node */}
+              <circle 
+                cx={node.cx} 
+                cy={node.cy} 
+                r={22} 
+                fill={fillVal} 
+                stroke={strokeColor} 
+                strokeWidth={active ? 3.5 : 1.5}
+                filter={hasGlow}
+                style={{ transition: "stroke-width 0.2s, stroke 0.2s" }}
+              />
+
+              {/* Lucide Icon via foreignObject */}
+              <foreignObject 
+                x={node.cx - 9} 
+                y={node.cy - 9} 
+                width={18} 
+                height={18} 
+                style={{ pointerEvents: "none" }}
+              >
+                <div style={{ 
+                  color: active ? "#0F172A" : node.color, 
+                  display: "flex", 
+                  alignItems: "center", 
+                  justifyContent: "center",
+                  width: "100%",
+                  height: "100%"
+                }}>
+                  {STEPS[node.id].icon}
+                </div>
+              </foreignObject>
+
+              {/* Node Labels */}
+              <g style={{ pointerEvents: "none" }}>
+                <text 
+                  x={node.textX} 
+                  y={node.textY} 
+                  textAnchor={node.textAnchor} 
+                  fill={active ? strokeColor : INK_PRIMARY} 
+                  fontSize="11.5" 
+                  fontWeight="700"
+                >
+                  {node.label}
+                </text>
+                <text 
+                  x={node.textX} 
+                  y={node.textY + 12} 
+                  textAnchor={node.textAnchor} 
+                  fill={active ? `${strokeColor}bb` : INK_MUTED} 
+                  fontSize="9.2"
+                >
+                  {node.sub}
+                </text>
+              </g>
+            </g>
+          );
+        })}
+      </g>
+      
+      {/* Central Guide Footer Text inside the SVG */}
+      <text x="410" y="450" textAnchor="middle" fill={INK_MUTED} fontSize="11" style={{ letterSpacing: "0.02em" }}>
+        {scopeFlag 
+          ? "CRITICAL HALT: Ethical routing triggered. Pausing astrological workflow."
+          : fatalisticOutput 
+            ? "WARNING: deterministic decree active. Repair the frame to open counseling channels."
+            : "Question → Promise → Streams → Proposal → Timing → Fusion core. Tap nodes to explore."
+        }
+      </text>
     </svg>
   );
 }
@@ -311,11 +786,6 @@ const cardStyle: CSSProperties = {
   boxShadow: "var(--gl-shadow-soft)",
 };
 
-const responsiveTwoColumnStyle: CSSProperties = {
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 330px), 1fr))",
-  gap: "1rem",
-};
 
 const eyebrowStyle: CSSProperties = {
   margin: 0,

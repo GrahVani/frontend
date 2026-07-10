@@ -15,7 +15,7 @@
 
 import { useState, useMemo, useCallback } from "react";
 import { IAST, Devanagari } from "../../chrome/typography";
-import { useLessonSlug } from "../rashi-attribute-wheel";
+import { useLessonSlug } from "@/components/learning-runtime/interactive/tier-1/module-4/rashi-attribute-wheel";
 import {
   DASHA_LORDS,
   TOTAL_CYCLE_YEARS,

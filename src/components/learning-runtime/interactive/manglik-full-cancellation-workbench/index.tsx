@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import { BadgeCheck, Flame, HeartHandshake, MessageSquareQuote, RotateCcw, Scale, ShieldCheck, TriangleAlert, Users } from "lucide-react";
+import { workbenchTwoColumnStyle, workbenchDiagramLayoutStyle } from "../lib/layouts";
 
 type ScenarioId = "cancelledSeventh" | "mutualManglik" | "uncancelledFriction" | "fearSelling";
 type FocusId = "reckon" | "cancel" | "mutual" | "language" | "ethics";
@@ -263,8 +264,8 @@ export function ManglikFullCancellationWorkbench() {
         </div>
       </section>
 
-      <div style={responsiveTwoColumnStyle}>
-        <section style={cardStyle}>
+      <div style={workbenchDiagramLayoutStyle}>
+        <section style={{ ...cardStyle, flex: "2 1 460px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", gap: "1rem", alignItems: "center", flexWrap: "wrap" }}>
             <div>
               <p style={eyebrowStyle}>Detection and cancellation vector</p>
@@ -280,7 +281,7 @@ export function ManglikFullCancellationWorkbench() {
           </div>
         </section>
 
-        <section style={{ display: "grid", gap: "0.85rem" }}>
+        <section style={{ display: "grid", gap: "0.85rem", flex: "1 1 280px" }}>
           <Panel title="Reference points" icon={<Scale size={18} />} color={referencesComplete ? GREEN : GOLD}>
             <Toggle active={lagnaChecked} color={lagnaChecked ? GREEN : VERMILION} icon={<Scale size={18} />} title={`Lagna: Mars H${scenario.lagnaHouse}`} body={DOSHA_HOUSES.includes(scenario.lagnaHouse) ? "Dosha house from Lagna." : "No dosha from Lagna."} onClick={() => setLagnaChecked((value) => !value)} />
             <Toggle active={moonChecked} color={moonChecked ? GREEN : VERMILION} icon={<Scale size={18} />} title={`Moon: Mars H${scenario.moonHouse}`} body={DOSHA_HOUSES.includes(scenario.moonHouse) ? "Dosha house from Moon." : "No dosha from Moon."} onClick={() => setMoonChecked((value) => !value)} />
@@ -289,7 +290,7 @@ export function ManglikFullCancellationWorkbench() {
         </section>
       </div>
 
-      <div style={responsiveTwoColumnStyle}>
+      <div style={workbenchTwoColumnStyle}>
         <section style={cardStyle}>
           <p style={eyebrowStyle}>Cancellation-first guards</p>
           <div style={{ display: "grid", gap: "0.7rem", marginTop: "0.75rem" }}>
@@ -345,27 +346,27 @@ function ManglikVectorSvg({
   return (
     <svg viewBox="0 0 780 390" role="img" aria-label="Manglik cancellation-first workflow diagram" style={{ width: "100%", minHeight: 300, margin: "0.7rem 0" }}>
       <rect x="18" y="18" width="744" height="354" rx="8" fill={SURFACE} stroke={HAIRLINE} />
-      <text x="390" y="52" textAnchor="middle" fill={GOLD} fontSize="13" fontWeight="700">DO NOT SPEAK THE LABEL BEFORE THE CANCELLATION CHECK</text>
+      <text x="390" y="52" textAnchor="middle" fill={GOLD} fontSize="15" fontWeight="700">DO NOT SPEAK THE LABEL BEFORE THE CANCELLATION CHECK</text>
       <line x1="94" y1="145" x2="695" y2="145" stroke={HAIRLINE} strokeWidth="4" />
       {steps.map((step, index) => {
         const active = focus === step.id;
         return (
           <g key={step.id}>
-            {index < steps.length - 1 ? <path d={`M ${step.x + 42} 145 L ${steps[index + 1].x - 48} 145`} stroke={step.color} strokeWidth={active ? 5 : 3} opacity={active ? 1 : 0.45} /> : null}
-            <circle cx={step.x} cy="145" r={active ? 43 : 36} fill={OPAQUE_LIGHT_FILL[step.color]} stroke={step.color} strokeWidth={active ? 4 : 2.5} />
-            <text x={step.x} y="141" textAnchor="middle" fill={step.color} fontSize="11" fontWeight="700">{step.label}</text>
-            <text x={step.x} y="162" textAnchor="middle" fill={INK_MUTED} fontSize="10">{index + 1}</text>
+            {index < steps.length - 1 ? <path d={`M ${step.x + 46} 145 L ${steps[index + 1].x - 52} 145`} stroke={step.color} strokeWidth={active ? 5 : 3} opacity={active ? 1 : 0.45} /> : null}
+            <circle cx={step.x} cy="145" r={active ? 47 : 41} fill={OPAQUE_LIGHT_FILL[step.color]} stroke={step.color} strokeWidth={active ? 4 : 2.5} />
+            <text x={step.x} y="140" textAnchor="middle" fill={step.color} fontSize="14" fontWeight="700">{step.label}</text>
+            <text x={step.x} y="162" textAnchor="middle" fill={INK_MUTED} fontSize="13">{index + 1}</text>
           </g>
         );
       })}
-      <path d="M 284 264 C 344 218, 435 218, 496 264" fill="none" stroke={methodOk ? GREEN : VERMILION} strokeWidth="4" strokeDasharray="8 7" />
-      <rect x="82" y="235" width="190" height="58" rx="8" fill={OPAQUE_LIGHT_FILL[scenario.color]} stroke={scenario.color} />
-      <text x="177" y="258" textAnchor="middle" fill={scenario.color} fontSize="12" fontWeight="700">Mars dosha hits</text>
-      <text x="177" y="279" textAnchor="middle" fill={INK_MUTED} fontSize="11">{referenceHits}/3 references</text>
-      <rect x="508" y="235" width="190" height="58" rx="8" fill={OPAQUE_LIGHT_FILL[methodOk ? GREEN : VERMILION]} stroke={methodOk ? GREEN : VERMILION} />
-      <text x="603" y="258" textAnchor="middle" fill={methodOk ? GREEN : VERMILION} fontSize="12" fontWeight="700">Cancellation filter</text>
-      <text x="603" y="279" textAnchor="middle" fill={INK_MUTED} fontSize="11">{cancellations} condition(s)</text>
-      <text x="390" y="330" textAnchor="middle" fill={INK_SECONDARY} fontSize="12">If it cancels, defuse with doctrine. If it stands, frame friction without fear.</text>
+      <path d="M 284 268 C 344 222, 435 222, 496 268" fill="none" stroke={methodOk ? GREEN : VERMILION} strokeWidth="4" strokeDasharray="8 7" />
+      <rect x="82" y="235" width="190" height="60" rx="8" fill={OPAQUE_LIGHT_FILL[scenario.color]} stroke={scenario.color} />
+      <text x="177" y="258" textAnchor="middle" fill={scenario.color} fontSize="15" fontWeight="700">Mars dosha hits</text>
+      <text x="177" y="281" textAnchor="middle" fill={INK_MUTED} fontSize="13">{referenceHits}/3 references</text>
+      <rect x="508" y="235" width="190" height="60" rx="8" fill={OPAQUE_LIGHT_FILL[methodOk ? GREEN : VERMILION]} stroke={methodOk ? GREEN : VERMILION} />
+      <text x="603" y="258" textAnchor="middle" fill={methodOk ? GREEN : VERMILION} fontSize="15" fontWeight="700">Cancellation filter</text>
+      <text x="603" y="281" textAnchor="middle" fill={INK_MUTED} fontSize="13">{cancellations} condition(s)</text>
+      <text x="390" y="332" textAnchor="middle" fill={INK_SECONDARY} fontSize="14">If it cancels, defuse with doctrine. If it stands, frame friction without fear.</text>
     </svg>
   );
 }
@@ -385,10 +386,10 @@ function Panel({ title, icon, color, children }: { title: string; icon: ReactNod
 function Toggle({ active, color, icon, title, body, onClick }: { active: boolean; color: string; icon: ReactNode; title: string; body: string; onClick: () => void }) {
   return (
     <button type="button" aria-pressed={active} onClick={onClick} style={toggleStyle(active, color)}>
-      <span style={{ color }}>{icon}</span>
+      <span style={{ color, flexShrink: 0 }}>{icon}</span>
       <span>
-        <strong style={{ fontWeight: 700 }}>{title}</strong>
-        <span>{body}</span>
+        <strong style={{ display: "block", fontWeight: 700, marginBottom: "0.15rem" }}>{title}</strong>
+        <span style={{ color: INK_SECONDARY, lineHeight: 1.45 }}>{body}</span>
       </span>
     </button>
   );
@@ -421,12 +422,6 @@ const cardStyle: CSSProperties = {
   background: SURFACE,
   padding: "1rem",
   boxShadow: "var(--gl-shadow-soft)",
-};
-
-const responsiveTwoColumnStyle: CSSProperties = {
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 330px), 1fr))",
-  gap: "1rem",
 };
 
 const eyebrowStyle: CSSProperties = {

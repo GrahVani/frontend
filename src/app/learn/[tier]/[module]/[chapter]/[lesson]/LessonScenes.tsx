@@ -9,17 +9,17 @@
 
 "use client";
 
-import { VedangaBodyMap } from "@/components/learning-runtime/interactive/vedanga-body-map";
+import { VedangaBodyMap } from "@/components/learning-runtime/interactive/tier-1/module-1/vedanga-body-map";
 import { VedangaVsVedantaComparator } from "@/components/learning-runtime/interactive/vedanga-vs-vedanta-comparator";
-import { VedangaRelationshipDiagram } from "@/components/learning-runtime/interactive/vedanga-relationship-diagram";
-import { JyotishaVsWesternVsPopComparator } from "@/components/learning-runtime/interactive/jyotisha-vs-western-vs-pop-comparator";
-import { KarmaTypologyExplorer } from "@/components/learning-runtime/interactive/karma-typology-explorer";
-import { HistoricalTimeline } from "@/components/learning-runtime/interactive/historical-timeline";
-import { BphsRecensionComparator } from "@/components/learning-runtime/interactive/bphs-recension-comparator";
-import { VarahamihiraSkandhaCoverageExplorer } from "@/components/learning-runtime/interactive/varahamihira-skandha-coverage-explorer";
-import { MedievalCodifierRelativeDatingExplorer } from "@/components/learning-runtime/interactive/medieval-codifier-relative-dating-explorer";
-import { ParashariJaiminiParallelTraditionExplorer } from "@/components/learning-runtime/interactive/parashari-jaimini-parallel-tradition-explorer";
-import { FourStreamLandscapeExplorer } from "@/components/learning-runtime/interactive/four-stream-landscape-explorer";
+import { VedangaRelationshipDiagram } from "@/components/learning-runtime/interactive/tier-1/module-1/vedanga-relationship-diagram";
+import { JyotishaVsWesternVsPopComparator } from "@/components/learning-runtime/interactive/tier-1/module-1/jyotisha-vs-western-vs-pop-comparator";
+import { KarmaTypologyExplorer } from "@/components/learning-runtime/interactive/tier-1/module-1/karma-typology-explorer";
+import { HistoricalTimeline } from "@/components/learning-runtime/interactive/tier-1/module-1/historical-timeline";
+import { BphsRecensionComparator } from "@/components/learning-runtime/interactive/tier-1/module-1/bphs-recension-comparator";
+import { VarahamihiraSkandhaCoverageExplorer } from "@/components/learning-runtime/interactive/tier-1/module-1/varahamihira-skandha-coverage-explorer";
+import { MedievalCodifierRelativeDatingExplorer } from "@/components/learning-runtime/interactive/tier-1/module-1/medieval-codifier-relative-dating-explorer";
+import { ParashariJaiminiParallelTraditionExplorer } from "@/components/learning-runtime/interactive/tier-1/module-1/parashari-jaimini-parallel-tradition-explorer";
+import { FourStreamLandscapeExplorer } from "@/components/learning-runtime/interactive/tier-1/module-1/four-stream-landscape-explorer";
 import { ShuklaTithiStrip } from "@/components/learning-runtime/interactive/shukla-tithi-strip";
 import type { ReactNode } from "react";
 

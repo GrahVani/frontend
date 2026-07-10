@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import { BadgeCheck, GitCompare, HeartHandshake, Layers3, RotateCcw, Scale, ShieldCheck, TriangleAlert, Users } from "lucide-react";
+import { workbenchTwoColumnStyle, workbenchDiagramLayoutStyle } from "../lib/layouts";
 
 type ScenarioId = "soundProposal" | "divergentConcern" | "singleNumberError" | "manglikScare" | "scopeRoute";
 type ViewMode = "promises" | "compatibility" | "manglik" | "divergence" | "frame";
@@ -236,8 +237,8 @@ export function ProposalEvaluationSynthesisLab() {
         </div>
       </section>
 
-      <div style={responsiveTwoColumnStyle}>
-        <section style={cardStyle}>
+      <div style={workbenchDiagramLayoutStyle}>
+        <section style={{ ...cardStyle, flex: "2 1 460px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", gap: "1rem", alignItems: "center", flexWrap: "wrap" }}>
             <div>
               <p style={eyebrowStyle}>Proposal synthesis</p>
@@ -253,7 +254,7 @@ export function ProposalEvaluationSynthesisLab() {
           </div>
         </section>
 
-        <section style={{ display: "grid", gap: "0.85rem" }}>
+        <section style={{ display: "grid", gap: "0.85rem", flex: "1 1 280px" }}>
           <Panel title="Worked-case layers" icon={<Layers3 size={18} />} color={verdict.color}>
             <LayerRow label="Her promise" body="Strong, as established in the prior timing synthesis." color={GREEN} />
             <LayerRow label="His promise" body="Sound: 7th-lord well placed, Venus reasonable, D9 7th supported." color={GREEN} />
@@ -263,7 +264,7 @@ export function ProposalEvaluationSynthesisLab() {
         </section>
       </div>
 
-      <div style={responsiveTwoColumnStyle}>
+      <div style={workbenchTwoColumnStyle}>
         <section style={cardStyle}>
           <p style={eyebrowStyle}>Method controls</p>
           <div style={{ display: "grid", gap: "0.7rem", marginTop: "0.75rem" }}>
@@ -305,26 +306,26 @@ function ProposalSynthesisSvg({ bothPromises, readDistribution, bhakutaCancelled
   return (
     <svg viewBox="0 0 790 390" role="img" aria-label="Proposal evaluation synthesis flow" style={{ width: "100%", minHeight: 300, margin: "0.7rem 0" }}>
       <rect x="18" y="18" width="754" height="354" rx="8" fill={SURFACE} stroke={HAIRLINE} />
-      <text x="395" y="52" textAnchor="middle" fill={GOLD} fontSize="13" fontWeight="700">BOTH PROMISES PLUS CANCELLATIONS BEFORE ASSESSMENT</text>
+      <text x="395" y="52" textAnchor="middle" fill={GOLD} fontSize="15" fontWeight="700">BOTH PROMISES PLUS CANCELLATIONS BEFORE ASSESSMENT</text>
       <line x1="95" y1="145" x2="695" y2="145" stroke={HAIRLINE} strokeWidth="4" />
       {nodes.map((node, index) => {
         const stroke = node.active ? node.color : VERMILION;
         return (
           <g key={node.label}>
-            {index < nodes.length - 1 ? <path d={`M ${node.x + 42} 145 L ${nodes[index + 1].x - 48} 145`} stroke={stroke} strokeWidth="3" opacity="0.55" /> : null}
-            <circle cx={node.x} cy="145" r="38" fill={OPAQUE_LIGHT_FILL[stroke]} stroke={stroke} strokeWidth="2.5" />
-            <text x={node.x} y="142" textAnchor="middle" fill={stroke} fontSize="11" fontWeight="700">{node.label}</text>
-            <text x={node.x} y="162" textAnchor="middle" fill={INK_MUTED} fontSize="10">{node.active ? "read" : "repair"}</text>
+            {index < nodes.length - 1 ? <path d={`M ${node.x + 46} 145 L ${nodes[index + 1].x - 52} 145`} stroke={stroke} strokeWidth="3" opacity="0.55" /> : null}
+            <circle cx={node.x} cy="145" r="42" fill={OPAQUE_LIGHT_FILL[stroke]} stroke={stroke} strokeWidth="2.5" />
+            <text x={node.x} y="141" textAnchor="middle" fill={stroke} fontSize="14" fontWeight="700">{node.label}</text>
+            <text x={node.x} y="162" textAnchor="middle" fill={INK_MUTED} fontSize="13">{node.active ? "read" : "repair"}</text>
           </g>
         );
       })}
-      <rect x="92" y="240" width="250" height="56" rx="8" fill={OPAQUE_LIGHT_FILL[readDistribution ? GREEN : VERMILION]} stroke={readDistribution ? GREEN : VERMILION} />
-      <text x="217" y="263" textAnchor="middle" fill={readDistribution ? GREEN : VERMILION} fontSize="12" fontWeight="700">Compatibility layer</text>
-      <text x="217" y="283" textAnchor="middle" fill={INK_MUTED} fontSize="11">{readDistribution && bhakutaCancelled ? "effective reading is strong" : "raw score is misleading"}</text>
-      <rect x="452" y="240" width="250" height="56" rx="8" fill={OPAQUE_LIGHT_FILL[methodOk ? GREEN : GOLD]} stroke={methodOk ? GREEN : GOLD} />
-      <text x="577" y="263" textAnchor="middle" fill={methodOk ? GREEN : GOLD} fontSize="12" fontWeight="700">Final output</text>
-      <text x="577" y="283" textAnchor="middle" fill={INK_MUTED} fontSize="11">{methodOk ? "sound workable match" : "confidence adjusted"}</text>
-      <text x="395" y="330" textAnchor="middle" fill={INK_SECONDARY} fontSize="12">The decision is returned to the couple; astrology supplies dimensions, not a decree.</text>
+      <rect x="92" y="240" width="250" height="60" rx="8" fill={OPAQUE_LIGHT_FILL[readDistribution ? GREEN : VERMILION]} stroke={readDistribution ? GREEN : VERMILION} />
+      <text x="217" y="263" textAnchor="middle" fill={readDistribution ? GREEN : VERMILION} fontSize="15" fontWeight="700">Compatibility layer</text>
+      <text x="217" y="285" textAnchor="middle" fill={INK_MUTED} fontSize="13">{readDistribution && bhakutaCancelled ? "effective reading is strong" : "raw score is misleading"}</text>
+      <rect x="452" y="240" width="250" height="60" rx="8" fill={OPAQUE_LIGHT_FILL[methodOk ? GREEN : GOLD]} stroke={methodOk ? GREEN : GOLD} />
+      <text x="577" y="263" textAnchor="middle" fill={methodOk ? GREEN : GOLD} fontSize="15" fontWeight="700">Final output</text>
+      <text x="577" y="285" textAnchor="middle" fill={INK_MUTED} fontSize="13">{methodOk ? "sound workable match" : "confidence adjusted"}</text>
+      <text x="395" y="332" textAnchor="middle" fill={INK_SECONDARY} fontSize="14">The decision is returned to the couple; astrology supplies dimensions, not a decree.</text>
     </svg>
   );
 }
@@ -382,11 +383,6 @@ const cardStyle: CSSProperties = {
   boxShadow: "var(--gl-shadow-soft)",
 };
 
-const responsiveTwoColumnStyle: CSSProperties = {
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 330px), 1fr))",
-  gap: "1rem",
-};
 
 const eyebrowStyle: CSSProperties = {
   margin: 0,

@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import { CalendarClock, Clock3, GitMerge, HeartHandshake, Layers3, RotateCcw, SatelliteDish, ShieldCheck, TriangleAlert } from "lucide-react";
+import { workbenchTwoColumnStyle, workbenchDiagramLayoutStyle } from "../lib/layouts";
 
 type ScenarioId = "convergentCase" | "singleYesVariation" | "promiseSkipped" | "exactDateError" | "scopeRoute";
 type ViewMode = "chart" | "promise" | "timing" | "synthesis" | "frame";
@@ -248,8 +249,8 @@ export function WhenWillIMarrySynthesisLab() {
         </div>
       </section>
 
-      <div style={responsiveTwoColumnStyle}>
-        <section style={cardStyle}>
+      <div style={workbenchDiagramLayoutStyle}>
+        <section style={{ ...cardStyle, flex: "2 1 460px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", gap: "1rem", alignItems: "center", flexWrap: "wrap" }}>
             <div>
               <p style={eyebrowStyle}>Promise and timing confidence</p>
@@ -265,7 +266,7 @@ export function WhenWillIMarrySynthesisLab() {
           </div>
         </section>
 
-        <section style={{ display: "grid", gap: "0.85rem" }}>
+        <section style={{ display: "grid", gap: "0.85rem", flex: "1 1 280px" }}>
           <Panel title="Four-stream promise" icon={<Layers3 size={18} />} color={promiseChecked ? GREEN : VERMILION}>
             {STREAMS.map((stream) => (
               <StreamRow key={stream.label} label={stream.label} reading={stream.reading} confidence={stream.confidence} color={stream.color} />
@@ -274,7 +275,7 @@ export function WhenWillIMarrySynthesisLab() {
         </section>
       </div>
 
-      <div style={responsiveTwoColumnStyle}>
+      <div style={workbenchTwoColumnStyle}>
         <section style={cardStyle}>
           <p style={eyebrowStyle}>Timing layer</p>
           <div style={{ display: "grid", gap: "0.7rem", marginTop: "0.75rem" }}>
@@ -317,26 +318,26 @@ function MarriageCaseSvg({ promiseChecked, dashaYes, transitYes, annualYes, meth
   return (
     <svg viewBox="0 0 800 390" role="img" aria-label="When will I marry synthesis flow" style={{ width: "100%", minHeight: 300, margin: "0.7rem 0" }}>
       <rect x="18" y="18" width="764" height="354" rx="8" fill={SURFACE} stroke={HAIRLINE} />
-      <text x="400" y="52" textAnchor="middle" fill={GOLD} fontSize="13" fontWeight="700">PROMISE FIRST, THEN TIMING CONFIDENCE</text>
+      <text x="400" y="52" textAnchor="middle" fill={GOLD} fontSize="15" fontWeight="700">PROMISE FIRST, THEN TIMING CONFIDENCE</text>
       <line x1="100" y1="145" x2="700" y2="145" stroke={HAIRLINE} strokeWidth="4" />
       {nodes.map((node, index) => {
         const stroke = node.active ? node.color : VERMILION;
         return (
           <g key={node.label}>
-            {index < nodes.length - 1 ? <path d={`M ${node.x + 42} 145 L ${nodes[index + 1].x - 48} 145`} stroke={stroke} strokeWidth="3" opacity="0.55" /> : null}
-            <circle cx={node.x} cy="145" r="38" fill={OPAQUE_LIGHT_FILL[stroke]} stroke={stroke} strokeWidth="2.5" />
-            <text x={node.x} y="142" textAnchor="middle" fill={stroke} fontSize="11" fontWeight="700">{node.label}</text>
-            <text x={node.x} y="162" textAnchor="middle" fill={INK_MUTED} fontSize="10">{node.active ? "yes" : "no"}</text>
+            {index < nodes.length - 1 ? <path d={`M ${node.x + 46} 145 L ${nodes[index + 1].x - 52} 145`} stroke={stroke} strokeWidth="3" opacity="0.55" /> : null}
+            <circle cx={node.x} cy="145" r="42" fill={OPAQUE_LIGHT_FILL[stroke]} stroke={stroke} strokeWidth="2.5" />
+            <text x={node.x} y="141" textAnchor="middle" fill={stroke} fontSize="14" fontWeight="700">{node.label}</text>
+            <text x={node.x} y="162" textAnchor="middle" fill={INK_MUTED} fontSize="13">{node.active ? "yes" : "no"}</text>
           </g>
         );
       })}
-      <rect x="100" y="240" width="250" height="56" rx="8" fill={OPAQUE_LIGHT_FILL[promiseChecked ? GREEN : VERMILION]} stroke={promiseChecked ? GREEN : VERMILION} />
-      <text x="225" y="263" textAnchor="middle" fill={promiseChecked ? GREEN : VERMILION} fontSize="12" fontWeight="700">Promise confidence</text>
-      <text x="225" y="283" textAnchor="middle" fill={INK_MUTED} fontSize="11">{promiseChecked ? "strong across streams" : "not established"}</text>
-      <rect x="455" y="240" width="250" height="56" rx="8" fill={OPAQUE_LIGHT_FILL[methodOk ? GREEN : GOLD]} stroke={methodOk ? GREEN : GOLD} />
-      <text x="580" y="263" textAnchor="middle" fill={methodOk ? GREEN : GOLD} fontSize="12" fontWeight="700">Timing confidence</text>
-      <text x="580" y="283" textAnchor="middle" fill={INK_MUTED} fontSize="11">{[dashaYes, transitYes, annualYes].filter(Boolean).length} timing confirmation(s)</text>
-      <text x="400" y="330" textAnchor="middle" fill={INK_SECONDARY} fontSize="12">A strong promise with fewer timing confirmations becomes a broader window, not a fatalistic answer.</text>
+      <rect x="100" y="240" width="250" height="60" rx="8" fill={OPAQUE_LIGHT_FILL[promiseChecked ? GREEN : VERMILION]} stroke={promiseChecked ? GREEN : VERMILION} />
+      <text x="225" y="263" textAnchor="middle" fill={promiseChecked ? GREEN : VERMILION} fontSize="15" fontWeight="700">Promise confidence</text>
+      <text x="225" y="285" textAnchor="middle" fill={INK_MUTED} fontSize="13">{promiseChecked ? "strong across streams" : "not established"}</text>
+      <rect x="455" y="240" width="250" height="60" rx="8" fill={OPAQUE_LIGHT_FILL[methodOk ? GREEN : GOLD]} stroke={methodOk ? GREEN : GOLD} />
+      <text x="580" y="263" textAnchor="middle" fill={methodOk ? GREEN : GOLD} fontSize="15" fontWeight="700">Timing confidence</text>
+      <text x="580" y="285" textAnchor="middle" fill={INK_MUTED} fontSize="13">{[dashaYes, transitYes, annualYes].filter(Boolean).length} timing confirmation(s)</text>
+      <text x="400" y="332" textAnchor="middle" fill={INK_SECONDARY} fontSize="14">A strong promise with fewer timing confirmations becomes a broader window, not a fatalistic answer.</text>
     </svg>
   );
 }
@@ -397,11 +398,6 @@ const cardStyle: CSSProperties = {
   boxShadow: "var(--gl-shadow-soft)",
 };
 
-const responsiveTwoColumnStyle: CSSProperties = {
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 330px), 1fr))",
-  gap: "1rem",
-};
 
 const eyebrowStyle: CSSProperties = {
   margin: 0,

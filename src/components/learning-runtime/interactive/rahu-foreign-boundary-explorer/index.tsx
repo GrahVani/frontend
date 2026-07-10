@@ -12,6 +12,7 @@ import {
   RefreshCcw,
   Sparkles,
 } from "lucide-react";
+import { workbenchDiagramLayoutStyle } from "../lib/layouts";
 
 const INK_PRIMARY = "var(--gl-ink-on-cream-primary)";
 const INK_SECONDARY = "var(--gl-ink-on-cream-secondary)";
@@ -209,8 +210,8 @@ export function RahuForeignBoundaryExplorer() {
         </div>
       </section>
 
-      <div style={responsiveTwoColumnStyle}>
-        <section style={cardStyle}>
+      <div style={workbenchDiagramLayoutStyle}>
+        <section style={{ ...cardStyle, flex: "2 1 460px" }}>
           <p style={eyebrowStyle}>Rāhu placement</p>
           <BoundarySvg />
           <div
@@ -227,7 +228,7 @@ export function RahuForeignBoundaryExplorer() {
           </div>
         </section>
 
-        <section style={{ display: "grid", gap: "0.85rem" }}>
+        <section style={{ display: "grid", gap: "0.85rem", flex: "1 1 280px" }}>
           <Panel title="Company selector" icon={<Layers size={18} />} color={BLUE}>
             <p
               style={{
@@ -335,7 +336,7 @@ export function RahuForeignBoundaryExplorer() {
         </section>
       </div>
 
-      <div style={responsiveTwoColumnStyle}>
+      <div style={workbenchTwoColumnStyle}>
         <section style={cardStyle}>
           <p style={eyebrowStyle}>Significations to amplify</p>
           <p
@@ -533,25 +534,25 @@ function BoundarySvg() {
 
       {/* Familiar side */}
       <rect x="30" y="30" width="150" height="140" rx="8" fill={`${GREEN}${"10"}`} stroke={GREEN} strokeWidth="2" />
-      <text x="105" y="60" textAnchor="middle" fill={GREEN} fontSize="13" fontWeight="600">
+      <text x="105" y="60" textAnchor="middle" fill={GREEN} fontSize="14" fontWeight="600">
         Familiar context
       </text>
-      <text x="105" y="85" textAnchor="middle" fill={INK_SECONDARY} fontSize="11" fontWeight="600">
+      <text x="105" y="86" textAnchor="middle" fill={INK_SECONDARY} fontSize="12" fontWeight="600">
         home, native language,
       </text>
-      <text x="105" y="102" textAnchor="middle" fill={INK_SECONDARY} fontSize="11" fontWeight="600">
+      <text x="105" y="104" textAnchor="middle" fill={INK_SECONDARY} fontSize="12" fontWeight="600">
         known social fabric
       </text>
 
       {/* Foreign side */}
       <rect x="240" y="30" width="150" height="140" rx="8" fill={`${BLUE}${"10"}`} stroke={BLUE} strokeWidth="2" />
-      <text x="315" y="60" textAnchor="middle" fill={BLUE} fontSize="13" fontWeight="600">
+      <text x="315" y="60" textAnchor="middle" fill={BLUE} fontSize="14" fontWeight="600">
         Unfamiliar context
       </text>
-      <text x="315" y="85" textAnchor="middle" fill={INK_SECONDARY} fontSize="11" fontWeight="600">
+      <text x="315" y="86" textAnchor="middle" fill={INK_SECONDARY} fontSize="12" fontWeight="600">
         foreign land, language,
       </text>
-      <text x="315" y="102" textAnchor="middle" fill={INK_SECONDARY} fontSize="11" fontWeight="600">
+      <text x="315" y="104" textAnchor="middle" fill={INK_SECONDARY} fontSize="12" fontWeight="600">
         new social fabric
       </text>
 
@@ -560,15 +561,15 @@ function BoundarySvg() {
 
       {/* Rahu figure crossing */}
       <g transform="translate(210 100)">
-        <circle cx="0" cy="-18" r="16" fill={PURPLE} />
-        <text x="0" y="-13" textAnchor="middle" fill="#fff" fontSize="11" fontWeight="600">
+        <circle cx="0" cy="-18" r="17" fill={PURPLE} />
+        <text x="0" y="-13" textAnchor="middle" fill="#fff" fontSize="12" fontWeight="600">
           Rā
         </text>
         <path d="M -30 -5 L 30 -5" stroke={PURPLE} strokeWidth="3" strokeLinecap="round" />
         <path d="M 18 -12 L 30 -5 L 18 2" fill="none" stroke={PURPLE} strokeWidth="3" strokeLinecap="round" />
       </g>
 
-      <text x="210" y="185" textAnchor="middle" fill={INK_MUTED} fontSize="10" fontWeight="600">
+      <text x="210" y="185" textAnchor="middle" fill={INK_MUTED} fontSize="12" fontWeight="600">
         Boundary-crossing identity: neither fully insider nor fully outsider
       </text>
     </svg>
@@ -694,7 +695,7 @@ const cardStyle: CSSProperties = {
   boxShadow: "var(--gl-shadow-soft)",
 };
 
-const responsiveTwoColumnStyle: CSSProperties = {
+const workbenchTwoColumnStyle: CSSProperties = {
   display: "grid",
   gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 330px), 1fr))",
   gap: "1rem",

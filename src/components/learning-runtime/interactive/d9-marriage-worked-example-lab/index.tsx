@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import { BadgeCheck, Calculator, CircleDot, ClipboardCheck, FileText, GitCompare, HeartHandshake, Orbit, RotateCcw, Scale, ShieldCheck, Sparkles, TriangleAlert, Venus } from "lucide-react";
+import { workbenchTwoColumnStyle, workbenchDiagramLayoutStyle } from "../lib/layouts";
 
 type Step = "construct" | "read" | "combine" | "writeup";
 type Scenario = "supportive" | "divergence";
@@ -163,8 +164,8 @@ export function D9MarriageWorkedExampleLab() {
         </div>
       </section>
 
-      <div style={responsiveTwoColumnStyle}>
-        <section style={cardStyle}>
+      <div style={workbenchDiagramLayoutStyle}>
+        <section style={{ ...cardStyle, flex: "2 1 460px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem", flexWrap: "wrap" }}>
             <div>
               <p style={eyebrowStyle}>Case verdict</p>
@@ -180,7 +181,7 @@ export function D9MarriageWorkedExampleLab() {
           </div>
         </section>
 
-        <section style={{ display: "grid", gap: "0.85rem" }}>
+        <section style={{ display: "grid", gap: "0.85rem", flex: "1 1 280px" }}>
           <Panel title="Scenario mode" icon={<Scale size={18} />} color={scenario === "supportive" ? GREEN : GOLD}>
             <div style={{ display: "flex", flexWrap: "wrap", gap: "0.45rem" }}>
               <button type="button" aria-pressed={scenario === "supportive"} onClick={() => setScenario("supportive")} style={buttonStyle(scenario === "supportive", GREEN)}>Main case</button>
@@ -203,7 +204,7 @@ export function D9MarriageWorkedExampleLab() {
         </section>
       </div>
 
-      <div style={responsiveTwoColumnStyle}>
+      <div style={workbenchTwoColumnStyle}>
         <section style={cardStyle}>
           <p style={eyebrowStyle}>Combine and document</p>
           <div style={{ display: "grid", gap: "0.75rem", marginTop: "0.75rem" }}>
@@ -327,11 +328,6 @@ const cardStyle: CSSProperties = {
   boxShadow: "var(--gl-shadow-soft)",
 };
 
-const responsiveTwoColumnStyle: CSSProperties = {
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 330px), 1fr))",
-  gap: "1rem",
-};
 
 const eyebrowStyle: CSSProperties = {
   margin: 0,

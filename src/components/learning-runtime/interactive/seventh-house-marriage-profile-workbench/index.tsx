@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import { BadgeCheck, CircleDot, FileText, Heart, HeartHandshake, Moon, Orbit, RotateCcw, ShieldCheck, Sparkles, TriangleAlert, Venus } from "lucide-react";
+import { workbenchDiagramLayoutStyle } from "../lib/layouts";
 
 type ViewMode = "questions" | "references" | "anchor" | "ethics";
 type SubQuestion = "promise" | "nature" | "quality" | "partnership";
@@ -172,8 +173,8 @@ export function SeventhHouseMarriageProfileWorkbench() {
         </div>
       </section>
 
-      <div style={responsiveTwoColumnStyle}>
-        <section style={cardStyle}>
+      <div style={workbenchDiagramLayoutStyle}>
+        <section style={{ ...cardStyle, flex: "2 1 460px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem", flexWrap: "wrap" }}>
             <div>
               <p style={eyebrowStyle}>Reading confidence</p>
@@ -189,7 +190,7 @@ export function SeventhHouseMarriageProfileWorkbench() {
           </div>
         </section>
 
-        <section style={{ display: "grid", gap: "0.85rem" }}>
+        <section style={{ display: "grid", gap: "0.85rem", flex: "1 1 280px" }}>
           <Panel title="Sub-question chooser" icon={<FileText size={18} />} color={SUB_QUESTIONS[subQuestion].color}>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 145px), 1fr))", gap: "0.55rem" }}>
               {(Object.keys(SUB_QUESTIONS) as SubQuestion[]).map((key) => (
@@ -208,7 +209,7 @@ export function SeventhHouseMarriageProfileWorkbench() {
         </section>
       </div>
 
-      <div style={responsiveTwoColumnStyle}>
+      <div style={workbenchTwoColumnStyle}>
         <section style={cardStyle}>
           <p style={eyebrowStyle}>Reference points</p>
           <div style={{ display: "grid", gap: "0.75rem", marginTop: "0.75rem" }}>
@@ -272,13 +273,13 @@ function SeventhHouseSvg({ lagnaRef, moonRef, venusRef, d1Anchored, stressPresen
           <path d={edgeLine(ref.x, 102, 42, 380, 204, 56)} stroke={ref.active ? ref.color : HAIRLINE} strokeWidth={ref.active ? 3 : 1.5} strokeDasharray={ref.active ? "0" : "6 8"} />
           <circle cx={ref.x} cy="102" r="42" fill={ref.active ? OPAQUE_LIGHT_FILL[ref.color] : "transparent"} stroke={ref.active ? ref.color : HAIRLINE} strokeWidth={ref.active ? 3 : 1.5} />
           <text x={ref.x} y="99" textAnchor="middle" fill={ref.active ? ref.color : INK_MUTED} fontSize="14" fontWeight="600">{ref.label}</text>
-          <text x={ref.x} y="117" textAnchor="middle" fill={INK_MUTED} fontSize="11">7th from</text>
+          <text x={ref.x} y="117" textAnchor="middle" fill={INK_MUTED} fontSize="13">7th from</text>
         </g>
       ))}
       <path d="M 380 260 L 380 268" stroke={HAIRLINE} strokeWidth="3" />
       <circle cx="380" cy="310" r="42" fill={OPAQUE_LIGHT_FILL[finalColor]} stroke={finalColor} strokeWidth="3" />
       <text x="380" y="305" textAnchor="middle" fill={finalColor} fontSize="15" fontWeight="600">{ethicalOk ? "FRAME" : "WARNING"}</text>
-      <text x="380" y="323" textAnchor="middle" fill={INK_MUTED} fontSize="10">{stressPresent ? "care, not doom" : "not decree"}</text>
+      <text x="380" y="323" textAnchor="middle" fill={INK_MUTED} fontSize="13">{stressPresent ? "care, not doom" : "not decree"}</text>
       <rect x="90" y="374" width="580" height="34" rx="8" fill={OPAQUE_LIGHT_FILL[GOLD]} stroke={HAIRLINE} />
       <text x="380" y="396" textAnchor="middle" fill={INK_MUTED} fontSize="14" fontWeight="600">Promise, nature, and quality use different factors.</text>
     </svg>
@@ -341,7 +342,7 @@ const cardStyle: CSSProperties = {
   boxShadow: "var(--gl-shadow-soft)",
 };
 
-const responsiveTwoColumnStyle: CSSProperties = {
+const workbenchTwoColumnStyle: CSSProperties = {
   display: "grid",
   gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 320px), 1fr))",
   gap: "1rem",

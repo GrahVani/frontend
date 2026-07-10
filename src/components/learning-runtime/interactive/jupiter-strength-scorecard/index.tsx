@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import { Baby, Eye, Flame, Heart, HeartPulse, Moon, RefreshCcw, Scale, ShieldCheck, Sparkles, Sun, TriangleAlert } from "lucide-react";
+import { workbenchDiagramLayoutStyle } from "../lib/layouts";
 
 const INK_PRIMARY = "var(--gl-ink-on-cream-primary)";
 const INK_SECONDARY = "var(--gl-ink-on-cream-secondary)";
@@ -109,8 +110,8 @@ export function JupiterStrengthScorecard() {
         </div>
       </section>
 
-      <div style={responsiveTwoColumnStyle}>
-        <section style={cardStyle}>
+      <div style={workbenchDiagramLayoutStyle}>
+        <section style={{ ...cardStyle, flex: "2 1 460px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", gap: "1rem", alignItems: "center", flexWrap: "wrap" }}>
             <div>
               <p style={eyebrowStyle}>Scorecard diagram</p>
@@ -126,7 +127,7 @@ export function JupiterStrengthScorecard() {
           </div>
         </section>
 
-        <section style={{ display: "grid", gap: "0.85rem" }}>
+        <section style={{ display: "grid", gap: "0.85rem", flex: "1 1 280px" }}>
           <Panel title="1. Dignity" icon={<Sparkles size={18} />} color={dignityState.color}>
             <div style={{ display: "flex", flexWrap: "wrap", gap: "0.45rem" }}>
               {(Object.keys(DIGNITIES) as DignityKey[]).map((key) => (
@@ -162,7 +163,7 @@ export function JupiterStrengthScorecard() {
         </section>
       </div>
 
-      <div style={responsiveTwoColumnStyle}>
+      <div style={workbenchTwoColumnStyle}>
         <section style={{ ...cardStyle, borderColor: verdict.color + "66", background: verdict.color + "10" }}>
           <p style={eyebrowStyle}>5. Synthesis</p>
           <h3 style={{ margin: "0.15rem 0 0", color: verdict.color, fontSize: "1.12rem", fontWeight: 600 }}>{verdict.label}</h3>
@@ -314,7 +315,7 @@ const cardStyle: CSSProperties = {
   boxShadow: "var(--gl-shadow-soft)",
 };
 
-const responsiveTwoColumnStyle: CSSProperties = {
+const workbenchTwoColumnStyle: CSSProperties = {
   display: "grid",
   gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 330px), 1fr))",
   gap: "1rem",

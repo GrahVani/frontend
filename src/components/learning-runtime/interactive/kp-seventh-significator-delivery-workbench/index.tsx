@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import { BadgeCheck, CalendarClock, GitCompare, HeartHandshake, ListChecks, RotateCcw, Scale, ShieldCheck, Sparkles, Star, TriangleAlert, UsersRound } from "lucide-react";
+import { workbenchTwoColumnStyle, workbenchDiagramLayoutStyle } from "../lib/layouts";
 
 type ViewMode = "hierarchy" | "marriage" | "nodes" | "roles";
 type LevelId = "level1" | "level2" | "level3" | "level4" | "node";
@@ -199,8 +200,8 @@ export function KpSeventhSignificatorDeliveryWorkbench() {
         </div>
       </section>
 
-      <div style={responsiveTwoColumnStyle}>
-        <section style={cardStyle}>
+      <div style={workbenchDiagramLayoutStyle}>
+        <section style={{ ...cardStyle, flex: "2 1 460px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem", flexWrap: "wrap" }}>
             <div>
               <p style={eyebrowStyle}>Delivery agent signal</p>
@@ -216,7 +217,7 @@ export function KpSeventhSignificatorDeliveryWorkbench() {
           </div>
         </section>
 
-        <section style={{ display: "grid", gap: "0.85rem" }}>
+        <section style={{ display: "grid", gap: "0.85rem", flex: "1 1 280px" }}>
           <Panel title="Inspect hierarchy" icon={<ListChecks size={18} />} color={selected?.color ?? PURPLE}>
             <div style={{ display: "grid", gap: "0.55rem" }}>
               {LEVELS.map((level) => (
@@ -256,7 +257,7 @@ export function KpSeventhSignificatorDeliveryWorkbench() {
         </div>
       </section>
 
-      <div style={responsiveTwoColumnStyle}>
+      <div style={workbenchTwoColumnStyle}>
         <section style={cardStyle}>
           <p style={eyebrowStyle}>Method gates</p>
           <div style={{ display: "grid", gap: "0.75rem", marginTop: "0.75rem" }}>
@@ -401,11 +402,6 @@ const cardStyle: CSSProperties = {
   boxShadow: "var(--gl-shadow-soft)",
 };
 
-const responsiveTwoColumnStyle: CSSProperties = {
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 330px), 1fr))",
-  gap: "1rem",
-};
 
 const eyebrowStyle: CSSProperties = {
   margin: 0,

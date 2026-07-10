@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import { Baby, CheckCircle2, Clock, Heart, HeartPulse, ListChecks, RefreshCcw, Scale, ShieldCheck, Sparkles, TriangleAlert } from "lucide-react";
+import { workbenchDiagramLayoutStyle } from "../lib/layouts";
 
 const INK_PRIMARY = "var(--gl-ink-on-cream-primary)";
 const INK_SECONDARY = "var(--gl-ink-on-cream-secondary)";
@@ -136,8 +137,8 @@ export function D7SantanaProtocolRunner() {
         </div>
       </section>
 
-      <div style={responsiveTwoColumnStyle}>
-        <section style={cardStyle}>
+      <div style={workbenchDiagramLayoutStyle}>
+        <section style={{ ...cardStyle, flex: "2 1 460px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", gap: "1rem", alignItems: "center", flexWrap: "wrap" }}>
             <div>
               <p style={eyebrowStyle}>Protocol tracker</p>
@@ -174,7 +175,7 @@ export function D7SantanaProtocolRunner() {
           </div>
         </section>
 
-        <section style={{ display: "grid", gap: "0.85rem" }}>
+        <section style={{ display: "grid", gap: "0.85rem", flex: "1 1 280px" }}>
           <Panel title="D1–D7 convergence" icon={<Scale size={18} />} color={BLUE}>
             <div style={{ display: "grid", gap: "0.55rem" }}>
               <Toggle active={convergence.d1Supportive} color={convergence.d1Supportive ? GREEN : VERMILION} icon={<Scale size={18} />} title="D1 saṁtāna picture supportive" body={convergence.d1Supportive ? "D1 5th, lord, and Jupiter agree." : "D1 shows stress or mixed factors."} onClick={() => setConvergence((prev) => ({ ...prev, d1Supportive: !prev.d1Supportive }))} />
@@ -315,12 +316,6 @@ const cardStyle: CSSProperties = {
   boxShadow: "var(--gl-shadow-soft)",
 };
 
-const responsiveTwoColumnStyle: CSSProperties = {
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 330px), 1fr))",
-  gap: "1rem",
-  alignItems: "start",
-};
 
 const eyebrowStyle: CSSProperties = {
   margin: 0,

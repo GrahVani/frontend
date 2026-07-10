@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import { BadgeCheck, CalendarClock, Eye, GitMerge, HandHeart, HeartHandshake, Layers3, Orbit, RotateCcw, Scale, ShieldCheck, TriangleAlert } from "lucide-react";
+import { workbenchTwoColumnStyle, workbenchDiagramLayoutStyle } from "../lib/layouts";
 
 type ScenarioId = "twoYesYear" | "annualOnly" | "lalKitabRemedy" | "overclaim";
 type FocusId = "tajika" | "twoYes" | "lalKitab" | "remedy" | "layering";
@@ -254,8 +255,8 @@ export function MarriageTajikaLalKitabOverlayWorkbench() {
         </div>
       </section>
 
-      <div style={responsiveTwoColumnStyle}>
-        <section style={cardStyle}>
+      <div style={workbenchDiagramLayoutStyle}>
+        <section style={{ ...cardStyle, flex: "2 1 460px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", gap: "1rem", alignItems: "center", flexWrap: "wrap" }}>
             <div>
               <p style={eyebrowStyle}>Overlay convergence map</p>
@@ -271,7 +272,7 @@ export function MarriageTajikaLalKitabOverlayWorkbench() {
           </div>
         </section>
 
-        <section style={{ display: "grid", gap: "0.85rem" }}>
+        <section style={{ display: "grid", gap: "0.85rem", flex: "1 1 280px" }}>
           <Panel title="Tajika year refinement" icon={<Orbit size={18} />} color={annualYes ? GREEN : GOLD}>
             <Toggle active={dashaActive} color={dashaActive ? GREEN : VERMILION} icon={<Scale size={18} />} title="Dasha marriage window" body={dashaActive ? "Primary timing says yes." : "Annual chart has no dasha field."} onClick={() => setDashaActive((value) => !value)} />
             <Toggle active={munthaSeventh} color={munthaSeventh ? GREEN : GOLD} icon={<CalendarClock size={18} />} title="Muntha on annual 7th/Venus" body={munthaSeventh ? "Marriage year is highlighted." : "Muntha does not emphasize marriage."} onClick={() => setMunthaSeventh((value) => !value)} />
@@ -280,7 +281,7 @@ export function MarriageTajikaLalKitabOverlayWorkbench() {
         </section>
       </div>
 
-      <div style={responsiveTwoColumnStyle}>
+      <div style={workbenchTwoColumnStyle}>
         <section style={cardStyle}>
           <p style={eyebrowStyle}>Tajika and Lal Kitab switches</p>
           <div style={{ display: "grid", gap: "0.7rem", marginTop: "0.75rem" }}>
@@ -340,29 +341,29 @@ function OverlayFlowSvg({ focus, dashaActive, annualYes, venusState, methodOk }:
   return (
     <svg viewBox="0 0 780 390" role="img" aria-label="Tajika and Lal Kitab marriage overlay workflow" style={{ width: "100%", minHeight: 300, margin: "0.7rem 0" }}>
       <rect x="18" y="18" width="744" height="354" rx="8" fill={SURFACE} stroke={HAIRLINE} />
-      <text x="390" y="52" textAnchor="middle" fill={GOLD} fontSize="13" fontWeight="700">OVERLAYS REFINE AND SUPPORT; THEY DO NOT DECREE</text>
+      <text x="390" y="52" textAnchor="middle" fill={GOLD} fontSize="15" fontWeight="700">OVERLAYS REFINE AND SUPPORT; THEY DO NOT DECREE</text>
       <line x1="94" y1="145" x2="694" y2="145" stroke={HAIRLINE} strokeWidth="4" />
       {steps.map((step, index) => {
         const active = focus === step.id;
         return (
           <g key={step.id}>
-            {index < steps.length - 1 ? <path d={`M ${step.x + 42} 145 L ${steps[index + 1].x - 48} 145`} stroke={step.color} strokeWidth={active ? 5 : 3} opacity={active ? 1 : 0.45} /> : null}
-            <circle cx={step.x} cy="145" r={active ? 43 : 36} fill={OPAQUE_LIGHT_FILL[step.color]} stroke={step.color} strokeWidth={active ? 4 : 2.5} />
-            <text x={step.x} y="141" textAnchor="middle" fill={step.color} fontSize="11" fontWeight="700">{step.label}</text>
-            <text x={step.x} y="162" textAnchor="middle" fill={INK_MUTED} fontSize="10">{index + 1}</text>
+            {index < steps.length - 1 ? <path d={`M ${step.x + 46} 145 L ${steps[index + 1].x - 52} 145`} stroke={step.color} strokeWidth={active ? 5 : 3} opacity={active ? 1 : 0.45} /> : null}
+            <circle cx={step.x} cy="145" r={active ? 47 : 41} fill={OPAQUE_LIGHT_FILL[step.color]} stroke={step.color} strokeWidth={active ? 4 : 2.5} />
+            <text x={step.x} y="140" textAnchor="middle" fill={step.color} fontSize="14" fontWeight="700">{step.label}</text>
+            <text x={step.x} y="162" textAnchor="middle" fill={INK_MUTED} fontSize="13">{index + 1}</text>
           </g>
         );
       })}
-      <rect x="78" y="235" width="190" height="58" rx="8" fill={OPAQUE_LIGHT_FILL[dashaActive ? GREEN : GOLD]} stroke={dashaActive ? GREEN : GOLD} />
-      <text x="173" y="258" textAnchor="middle" fill={dashaActive ? GREEN : GOLD} fontSize="12" fontWeight="700">Dasha field</text>
-      <text x="173" y="279" textAnchor="middle" fill={INK_MUTED} fontSize="11">{dashaActive ? "primary yes" : "not open"}</text>
-      <rect x="295" y="235" width="190" height="58" rx="8" fill={OPAQUE_LIGHT_FILL[annualYes ? GREEN : GOLD]} stroke={annualYes ? GREEN : GOLD} />
-      <text x="390" y="258" textAnchor="middle" fill={annualYes ? GREEN : GOLD} fontSize="12" fontWeight="700">Annual chart</text>
-      <text x="390" y="279" textAnchor="middle" fill={INK_MUTED} fontSize="11">{annualYes ? "second yes" : "qualified"}</text>
-      <rect x="512" y="235" width="190" height="58" rx="8" fill={OPAQUE_LIGHT_FILL[methodOk ? venus.color : VERMILION]} stroke={methodOk ? venus.color : VERMILION} />
-      <text x="607" y="258" textAnchor="middle" fill={methodOk ? venus.color : VERMILION} fontSize="12" fontWeight="700">Lal Kitab note</text>
-      <text x="607" y="279" textAnchor="middle" fill={INK_MUTED} fontSize="11">{methodOk ? venus.label : "guardrail"}</text>
-      <text x="390" y="330" textAnchor="middle" fill={INK_SECONDARY} fontSize="12">Two-yes narrows a year; Lal Kitab adds optional support; the primary streams remain central.</text>
+      <rect x="78" y="235" width="190" height="60" rx="8" fill={OPAQUE_LIGHT_FILL[dashaActive ? GREEN : GOLD]} stroke={dashaActive ? GREEN : GOLD} />
+      <text x="173" y="258" textAnchor="middle" fill={dashaActive ? GREEN : GOLD} fontSize="15" fontWeight="700">Dasha field</text>
+      <text x="173" y="281" textAnchor="middle" fill={INK_MUTED} fontSize="13">{dashaActive ? "primary yes" : "not open"}</text>
+      <rect x="295" y="235" width="190" height="60" rx="8" fill={OPAQUE_LIGHT_FILL[annualYes ? GREEN : GOLD]} stroke={annualYes ? GREEN : GOLD} />
+      <text x="390" y="258" textAnchor="middle" fill={annualYes ? GREEN : GOLD} fontSize="15" fontWeight="700">Annual chart</text>
+      <text x="390" y="281" textAnchor="middle" fill={INK_MUTED} fontSize="13">{annualYes ? "second yes" : "qualified"}</text>
+      <rect x="512" y="235" width="190" height="60" rx="8" fill={OPAQUE_LIGHT_FILL[methodOk ? venus.color : VERMILION]} stroke={methodOk ? venus.color : VERMILION} />
+      <text x="607" y="258" textAnchor="middle" fill={methodOk ? venus.color : VERMILION} fontSize="15" fontWeight="700">Lal Kitab note</text>
+      <text x="607" y="281" textAnchor="middle" fill={INK_MUTED} fontSize="13">{methodOk ? venus.label : "guardrail"}</text>
+      <text x="390" y="332" textAnchor="middle" fill={INK_SECONDARY} fontSize="14">Two-yes narrows a year; Lal Kitab adds optional support; the primary streams remain central.</text>
     </svg>
   );
 }
@@ -382,10 +383,10 @@ function Panel({ title, icon, color, children }: { title: string; icon: ReactNod
 function Toggle({ active, color, icon, title, body, onClick }: { active: boolean; color: string; icon: ReactNode; title: string; body: string; onClick: () => void }) {
   return (
     <button type="button" aria-pressed={active} onClick={onClick} style={toggleStyle(active, color)}>
-      <span style={{ color }}>{icon}</span>
+      <span style={{ color, flexShrink: 0 }}>{icon}</span>
       <span>
-        <strong style={{ fontWeight: 700 }}>{title}</strong>
-        <span>{body}</span>
+        <strong style={{ display: "block", fontWeight: 700, marginBottom: "0.15rem" }}>{title}</strong>
+        <span style={{ color: INK_SECONDARY, lineHeight: 1.45 }}>{body}</span>
       </span>
     </button>
   );
@@ -409,12 +410,6 @@ const cardStyle: CSSProperties = {
   background: SURFACE,
   padding: "1rem",
   boxShadow: "var(--gl-shadow-soft)",
-};
-
-const responsiveTwoColumnStyle: CSSProperties = {
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 330px), 1fr))",
-  gap: "1rem",
 };
 
 const eyebrowStyle: CSSProperties = {

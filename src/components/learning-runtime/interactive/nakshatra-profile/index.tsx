@@ -1,7 +1,7 @@
 "use client";
 
 import { NAKSHATRAS, RULER_COLORS, GANA_STYLE } from "../nakshatra-data";
-import { useLessonSlug } from "../rashi-attribute-wheel";
+import { useLessonSlug } from "@/components/learning-runtime/interactive/tier-1/module-4/rashi-attribute-wheel";
 
 const INK_PRIMARY = "var(--gl-ink-on-cream-primary)";
 const INK_SECONDARY = "var(--gl-ink-on-cream-secondary)";

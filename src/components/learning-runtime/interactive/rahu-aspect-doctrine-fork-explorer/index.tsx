@@ -11,6 +11,7 @@ import {
   Scale,
   ShieldCheck,
 } from "lucide-react";
+import { workbenchDiagramLayoutStyle } from "../lib/layouts";
 
 const INK_PRIMARY = "var(--gl-ink-on-cream-primary)";
 const INK_SECONDARY = "var(--gl-ink-on-cream-secondary)";
@@ -149,8 +150,8 @@ export function RahuAspectDoctrineForkExplorer() {
         </div>
       </section>
 
-      <div style={responsiveTwoColumnStyle}>
-        <section style={cardStyle}>
+      <div style={workbenchDiagramLayoutStyle}>
+        <section style={{ ...cardStyle, flex: "2 1 460px" }}>
           <div
             style={{
               display: "flex",
@@ -208,7 +209,7 @@ export function RahuAspectDoctrineForkExplorer() {
           </button>
         </section>
 
-        <section style={{ display: "grid", gap: "0.85rem" }}>
+        <section style={{ display: "grid", gap: "0.85rem", flex: "1 1 280px" }}>
           <Panel title="Doctrine note" icon={<BookOpen size={18} />} color={DOCTRINES[doctrine].color}>
             <p
               style={{
@@ -581,12 +582,6 @@ const cardStyle: CSSProperties = {
   boxShadow: "var(--gl-shadow-soft)",
 };
 
-const responsiveTwoColumnStyle: CSSProperties = {
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 330px), 1fr))",
-  gap: "1rem",
-  alignItems: "start",
-};
 
 const eyebrowStyle: CSSProperties = {
   margin: 0,

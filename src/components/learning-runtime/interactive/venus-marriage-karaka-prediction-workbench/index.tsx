@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import { BadgeCheck, GitCompare, HeartHandshake, Orbit, RotateCcw, Scale, ShieldCheck, Sparkles, TriangleAlert, Venus } from "lucide-react";
+import { workbenchTwoColumnStyle, workbenchDiagramLayoutStyle } from "../lib/layouts";
 
 type Layer = "significations" | "alongside" | "trap" | "nuance";
 type Strength = "strong" | "moderate" | "weak";
@@ -152,8 +153,8 @@ export function VenusMarriageKarakaPredictionWorkbench() {
         </div>
       </section>
 
-      <div style={responsiveTwoColumnStyle}>
-        <section style={cardStyle}>
+      <div style={workbenchDiagramLayoutStyle}>
+        <section style={{ ...cardStyle, flex: "2 1 460px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem", flexWrap: "wrap" }}>
             <div>
               <p style={eyebrowStyle}>Combined reading</p>
@@ -169,7 +170,7 @@ export function VenusMarriageKarakaPredictionWorkbench() {
           </div>
         </section>
 
-        <section style={{ display: "grid", gap: "0.85rem" }}>
+        <section style={{ display: "grid", gap: "0.85rem", flex: "1 1 280px" }}>
           <Panel title="Set the three layers" icon={<GitCompare size={18} />} color={BLUE}>
             <Segmented label="7th house and lord promise" value={seventhStrength} options={[["strong", "Strong"], ["moderate", "Moderate"], ["weak", "Weak"]]} colors={{ strong: GREEN, moderate: GOLD, weak: VERMILION }} onChange={(value) => setSeventhStrength(value as Strength)} />
             <Segmented label="D9 depth promise" value={d9Strength} options={[["strong", "Strong"], ["moderate", "Moderate"], ["weak", "Weak"]]} colors={{ strong: GREEN, moderate: GOLD, weak: VERMILION }} onChange={(value) => setD9Strength(value as Strength)} />
@@ -183,7 +184,7 @@ export function VenusMarriageKarakaPredictionWorkbench() {
         </section>
       </div>
 
-      <div style={responsiveTwoColumnStyle}>
+      <div style={workbenchTwoColumnStyle}>
         <section style={cardStyle}>
           <p style={eyebrowStyle}>Single-karaka guardrails</p>
           <div style={{ display: "grid", gap: "0.75rem", marginTop: "0.75rem" }}>
@@ -301,11 +302,6 @@ const cardStyle: CSSProperties = {
   boxShadow: "var(--gl-shadow-soft)",
 };
 
-const responsiveTwoColumnStyle: CSSProperties = {
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 330px), 1fr))",
-  gap: "1rem",
-};
 
 const eyebrowStyle: CSSProperties = {
   margin: 0,

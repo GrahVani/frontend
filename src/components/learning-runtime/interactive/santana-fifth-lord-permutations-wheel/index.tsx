@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import { Baby, Compass, Heart, HeartPulse, Landmark, Orbit, RotateCcw, ShieldCheck, Sparkles, TriangleAlert } from "lucide-react";
+import { workbenchDiagramLayoutStyle } from "../lib/layouts";
 import { NI_HOUSE_POLYGONS, NI_HOUSE_CENTERS } from "@/lib/north-indian-chart-geometry";
 
 const INK_PRIMARY = "var(--gl-ink-on-cream-primary)";
@@ -224,7 +225,7 @@ export function SantanaFifthLordPermutationsWheel() {
         </div>
       </section>
 
-      <div style={responsiveTwoColumnStyle}>
+      <div style={workbenchDiagramLayoutStyle}>
         <section style={{ ...cardStyle, overflow: "hidden" }}>
           <div style={{ display: "flex", justifyContent: "space-between", gap: "1rem", alignItems: "center", flexWrap: "wrap" }}>
             <div>
@@ -243,7 +244,7 @@ export function SantanaFifthLordPermutationsWheel() {
           </div>
         </section>
 
-        <section style={{ display: "grid", gap: "0.85rem" }}>
+        <section style={{ display: "grid", gap: "0.85rem", flex: "1 1 280px" }}>
           <Panel title="Place the 5th lord" icon={<Orbit size={18} />} color={placement.color}>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(4, minmax(0, 1fr))", gap: "0.45rem" }}>
               {FIFTH_LORD_PLACEMENTS.map((item) => (
@@ -286,8 +287,8 @@ export function SantanaFifthLordPermutationsWheel() {
         </section>
       </div>
 
-      <div style={responsiveTwoColumnStyle}>
-        <section style={cardStyle}>
+      <div style={workbenchTwoColumnStyle}>
+        <section style={{ ...cardStyle, flex: "2 1 460px" }}>
           <p style={eyebrowStyle}>Supporting relationships</p>
           <div style={{ display: "grid", gap: "0.7rem", marginTop: "0.75rem" }}>
             <Toggle active={lagnaLink} color={lagnaLink ? GREEN : GOLD} icon={<Compass size={18} />} title="5th lord linked to Lagna lord" body={lagnaLink ? "The self engages the saṁtāna story supportively." : "No Lagna-lord link selected."} onClick={() => setLagnaLink((value) => !value)} />
@@ -459,7 +460,7 @@ const cardStyle: CSSProperties = {
   boxShadow: "var(--gl-shadow-soft)",
 };
 
-const responsiveTwoColumnStyle: CSSProperties = {
+const workbenchTwoColumnStyle: CSSProperties = {
   display: "grid",
   gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 330px), 1fr))",
   gap: "1rem",
