@@ -1,13 +1,15 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Info, Sparkles, Check, Copy, Flame, Shield } from "lucide-react";
+import { Sparkles, Check, Copy, Flame, Shield } from "lucide-react";
 import { ink } from "@/design-tokens/grahvani-learning/colors";
 
 const HAIRLINE = "var(--gl-gold-hairline, rgba(232, 199, 114, 0.28))";
 const SURFACE = "var(--gl-card-surface-solid, #FFF9F0)";
 const INK_PRIMARY = "var(--gl-ink-primary, #2d261e)";
 const GOLD = ink.goldAccent || "#9C7A2F";
+const LABEL_TEXT = "#5B6472";
+const LABEL_TEXT_STRONG = "#374151";
 
 const SHLOKA_WORDS = [
   { word: "सिंहे", meaning: "In Leo (Solar Hora)" },
@@ -66,7 +68,7 @@ export function D2SolarLunarTendencies() {
     }
 
     return { summaryText: summary, phrasingText: phrase };
-  }, [solarRatio, layer]);
+  }, [activeStrength, inactiveStrength, layer]);
 
   const copyPhrasing = () => {
     navigator.clipboard.writeText(phrasingText);
@@ -90,7 +92,7 @@ export function D2SolarLunarTendencies() {
           <h2 className="text-2xl font-bold tracking-tight text-amber-900" style={{ fontFamily: "var(--font-cormorant), serif" }}>
             D2 Solar vs. Lunar Tendencies
           </h2>
-          <p className="text-xs italic text-gray-600">
+          <p className="text-xs italic" style={{ color: LABEL_TEXT_STRONG }}>
             Module 5, Chapter 2: Comparing Enterprise (Pravṛtti) vs. Protection (Nivṛtti) wealth balances.
           </p>
         </div>
@@ -102,7 +104,7 @@ export function D2SolarLunarTendencies() {
 
       {/* Sanskrit Verse with breakdowns */}
       <div className="mb-6 p-4 rounded-xl border bg-white shadow-sm text-center relative" style={{ borderColor: HAIRLINE }}>
-        <div className="absolute top-1 left-2 text-[9px] uppercase font-bold text-gray-400 tracking-wider">
+        <div className="absolute top-1 left-2 text-[9px] uppercase font-bold tracking-wider" style={{ color: LABEL_TEXT }}>
           Sanskrit Classical Verse (Click words for breakdown)
         </div>
         <div className="py-3 flex flex-wrap justify-center gap-2">
@@ -133,7 +135,7 @@ export function D2SolarLunarTendencies() {
         <div className="lg:col-span-6 space-y-4">
           <div className="p-4 rounded-xl border bg-white shadow-sm space-y-4" style={{ borderColor: HAIRLINE }}>
             <div className="flex justify-between items-center border-b pb-1">
-              <span className="text-[10px] uppercase font-bold text-gray-400">
+              <span className="text-[10px] uppercase font-bold" style={{ color: LABEL_TEXT }}>
                 Hora Ratio & Signification Layer
               </span>
               
@@ -142,27 +144,27 @@ export function D2SolarLunarTendencies() {
                 <button
                   onClick={() => setLayer("capital")}
                   className={`text-[8px] font-bold px-2 py-0.5 rounded border transition-all cursor-pointer ${
-                    layer === "capital" ? "bg-amber-800 text-white" : "bg-transparent text-gray-500"
+                    layer === "capital" ? "bg-amber-800 text-white" : "bg-transparent"
                   }`}
-                  style={{ borderColor: HAIRLINE }}
+                  style={{ borderColor: HAIRLINE, color: layer === "capital" ? undefined : LABEL_TEXT_STRONG }}
                 >
                   Capital
                 </button>
                 <button
                   onClick={() => setLayer("acquisition")}
                   className={`text-[8px] font-bold px-2 py-0.5 rounded border transition-all cursor-pointer ${
-                    layer === "acquisition" ? "bg-amber-800 text-white" : "bg-transparent text-gray-500"
+                    layer === "acquisition" ? "bg-amber-800 text-white" : "bg-transparent"
                   }`}
-                  style={{ borderColor: HAIRLINE }}
+                  style={{ borderColor: HAIRLINE, color: layer === "acquisition" ? undefined : LABEL_TEXT_STRONG }}
                 >
                   Acquisition
                 </button>
                 <button
                   onClick={() => setLayer("temperament")}
                   className={`text-[8px] font-bold px-2 py-0.5 rounded border transition-all cursor-pointer ${
-                    layer === "temperament" ? "bg-amber-800 text-white" : "bg-transparent text-gray-500"
+                    layer === "temperament" ? "bg-amber-800 text-white" : "bg-transparent"
                   }`}
-                  style={{ borderColor: HAIRLINE }}
+                  style={{ borderColor: HAIRLINE, color: layer === "temperament" ? undefined : LABEL_TEXT_STRONG }}
                 >
                   Temperament
                 </button>
@@ -193,7 +195,7 @@ export function D2SolarLunarTendencies() {
         {/* Right Column: Comparative Gauges */}
         <div className="lg:col-span-6 space-y-4">
           <div className="p-4 rounded-xl border bg-white shadow-sm flex flex-col justify-center space-y-5 min-h-[200px]" style={{ borderColor: HAIRLINE }}>
-            <span className="text-[10px] uppercase font-bold text-gray-400 block border-b pb-1 w-full text-center">
+            <span className="text-[10px] uppercase font-bold block border-b pb-1 w-full text-center" style={{ borderColor: HAIRLINE, color: LABEL_TEXT }}>
               Balance Evaluation (Active Layer: {layer.toUpperCase()})
             </span>
 
@@ -230,7 +232,7 @@ export function D2SolarLunarTendencies() {
 
       {/* Synthesis description */}
       <div className="mb-6 p-4 rounded-xl border bg-white shadow-sm leading-relaxed" style={{ borderColor: HAIRLINE }}>
-        <span className="text-[9px] uppercase font-bold text-gray-400 block border-b pb-1 mb-2">
+        <span className="text-[9px] uppercase font-bold block border-b pb-1 mb-2" style={{ borderColor: HAIRLINE, color: LABEL_TEXT }}>
           Synthesis Evaluation
         </span>
         <p className="text-xs font-bold text-amber-900">{summaryText}</p>
@@ -240,10 +242,10 @@ export function D2SolarLunarTendencies() {
       <div className="p-4 rounded-xl border bg-white shadow-sm space-y-3" style={{ borderColor: HAIRLINE }}>
         <div className="flex justify-between items-center border-b pb-2" style={{ borderColor: HAIRLINE }}>
           <div>
-            <span className="text-[9px] uppercase tracking-wider block text-gray-400 font-bold">
+            <span className="text-[9px] uppercase tracking-wider block font-bold" style={{ color: LABEL_TEXT }}>
               Calibrated Interpretations
             </span>
-            <span className="text-[10px] text-gray-500 font-medium italic">
+            <span className="text-[10px] font-medium italic" style={{ color: LABEL_TEXT_STRONG }}>
               Use this qualitative framing in your client write-ups
             </span>
           </div>
@@ -256,8 +258,8 @@ export function D2SolarLunarTendencies() {
             {copied ? "Copied" : "Copy Phrasing"}
           </button>
         </div>
-        <blockquote className="text-xs italic text-gray-600 border-l-2 pl-3 py-1 bg-amber-50/10" style={{ borderColor: GOLD }}>
-          "{phrasingText}"
+        <blockquote className="text-xs italic border-l-2 pl-3 py-1 bg-amber-50/10" style={{ borderColor: GOLD, color: LABEL_TEXT_STRONG }}>
+          &ldquo;{phrasingText}&rdquo;
         </blockquote>
       </div>
     </div>

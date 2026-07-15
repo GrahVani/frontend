@@ -1,13 +1,17 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Info, Sparkles, Check, Copy, AlertTriangle } from "lucide-react";
+import { Sparkles, Check, Copy, AlertTriangle } from "lucide-react";
 import { ink } from "@/design-tokens/grahvani-learning/colors";
 
 const HAIRLINE = "var(--gl-gold-hairline, rgba(232, 199, 114, 0.28))";
 const SURFACE = "var(--gl-card-surface-solid, #FFF9F0)";
 const INK_PRIMARY = "var(--gl-ink-primary, #2d261e)";
 const GOLD = ink.goldAccent || "#9C7A2F";
+const LABEL_TEXT = "#374151";
+const LABEL_TEXT_STRONG = "#1F2937";
+const CHART_LINE = "#A16207";
+const CHART_LINE_STRONG = "#7C4A03";
 
 const SHLOKA_WORDS = [
   { word: "सूक्ष्मविचारे", meaning: "In detailed divisional/varga readings" },
@@ -39,7 +43,7 @@ const PRESETS = {
 };
 
 export function D2RealChartWorkbench() {
-  const [presetKey, setPresetKey] = useState<"entrepreneur" | "heir">("entrepreneur");
+  const [presetKey, setPresetKey] = useState<keyof typeof PRESETS>("entrepreneur");
   const [btrShift, setBtrShift] = useState(false);
   const [activeWordIdx, setActiveWordIdx] = useState<number | null>(null);
   const [copied, setCopied] = useState(false);
@@ -51,7 +55,7 @@ export function D2RealChartWorkbench() {
       return `${activePreset.phrasing} BTR Alert: An early birth shift alters planetary positions and requires verification of legacy assets.`;
     }
     return activePreset.phrasing;
-  }, [presetKey, btrShift]);
+  }, [activePreset.phrasing, btrShift]);
 
   const copyPhrasing = () => {
     navigator.clipboard.writeText(phrasingText);
@@ -75,7 +79,7 @@ export function D2RealChartWorkbench() {
           <h2 className="text-2xl font-bold tracking-tight text-amber-900" style={{ fontFamily: "var(--font-cormorant), serif" }}>
             D2 Real Chart Workbench
           </h2>
-          <p className="text-xs italic text-gray-600">
+          <p className="text-sm italic font-medium" style={{ color: LABEL_TEXT_STRONG }}>
             Module 5, Chapter 2: Multi-varga analysis, preset worked cases, and BTR threshold checks.
           </p>
         </div>
@@ -87,7 +91,7 @@ export function D2RealChartWorkbench() {
 
       {/* Sanskrit Verse with breakdowns */}
       <div className="mb-6 p-4 rounded-xl border bg-white shadow-sm text-center relative" style={{ borderColor: HAIRLINE }}>
-        <div className="absolute top-1 left-2 text-[9px] uppercase font-bold text-gray-400 tracking-wider">
+        <div className="absolute top-1 left-2 text-[10px] uppercase font-extrabold tracking-wider" style={{ color: LABEL_TEXT }}>
           Sanskrit Classical Maxim (Click words for breakdown)
         </div>
         <div className="py-3 flex flex-wrap justify-center gap-2">
@@ -117,17 +121,17 @@ export function D2RealChartWorkbench() {
         {/* Left Column: Preset selector */}
         <div className="lg:col-span-5 space-y-4">
           <div className="p-4 rounded-xl border bg-white shadow-sm space-y-4" style={{ borderColor: HAIRLINE }}>
-            <span className="text-[10px] uppercase font-bold text-gray-400 block border-b pb-1">
+            <span className="text-[11px] uppercase font-extrabold block border-b pb-1" style={{ borderColor: HAIRLINE, color: LABEL_TEXT }}>
               Select Chart Case Preset
             </span>
 
             {/* Presets */}
             <div>
-              <label className="block text-[10px] uppercase font-bold text-gray-500 mb-1">Worked Cases:</label>
+              <label className="block text-[11px] uppercase font-extrabold mb-1" style={{ color: LABEL_TEXT_STRONG }}>Worked Cases:</label>
               <select
                 value={presetKey}
-                onChange={(e) => setPresetKey(e.target.value as any)}
-                className="w-full text-xs p-2 border rounded bg-transparent font-semibold focus:ring-amber-800 cursor-pointer"
+                onChange={(e) => setPresetKey(e.target.value as keyof typeof PRESETS)}
+                className="w-full text-sm p-2.5 border rounded bg-white font-semibold focus:ring-amber-800 cursor-pointer"
                 style={{ borderColor: HAIRLINE }}
               >
                 <option value="entrepreneur">Self-made Entrepreneur (Solar Dominant)</option>
@@ -137,7 +141,7 @@ export function D2RealChartWorkbench() {
 
             {/* BTR shift */}
             <div className="pt-2 flex flex-col justify-center">
-              <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-gray-700">
+              <label className="flex items-center gap-2 cursor-pointer text-sm font-bold" style={{ color: LABEL_TEXT_STRONG }}>
                 <input
                   type="checkbox"
                   checked={btrShift}
@@ -152,9 +156,9 @@ export function D2RealChartWorkbench() {
 
         {/* Right Column: Visual D2 Division Display */}
         <div className="lg:col-span-7 space-y-4">
-          <div className="p-4 rounded-xl border bg-white shadow-sm min-h-[250px] flex flex-col md:flex-row gap-4 justify-between items-center" style={{ borderColor: HAIRLINE }}>
+          <div className="p-4 rounded-xl border bg-white shadow-sm min-h-[280px] flex flex-col md:flex-row gap-5 justify-between items-center" style={{ borderColor: HAIRLINE }}>
             <div className="flex-1 w-full space-y-2">
-              <span className="text-[10px] uppercase font-bold text-gray-400 block border-b pb-1 w-full text-center mb-2">
+              <span className="text-[11px] uppercase font-extrabold block border-b pb-1 w-full text-center mb-2" style={{ borderColor: HAIRLINE, color: LABEL_TEXT }}>
                 Planetary Division Mapping
               </span>
 
@@ -163,10 +167,10 @@ export function D2RealChartWorkbench() {
                 const finalD2 = isShifted ? (p.D2 === "Solar" ? "Lunar" : "Solar") : p.D2;
 
                 return (
-                  <div key={idx} className="flex justify-between items-center p-2 rounded border bg-amber-50/5 text-xs font-medium" style={{ borderColor: HAIRLINE }}>
+                  <div key={idx} className="flex justify-between items-center p-2.5 rounded border bg-amber-50/40 text-sm font-semibold" style={{ borderColor: "rgba(161, 98, 7, 0.32)", color: INK_PRIMARY }}>
                     <span>{p.name} ({p.deg}° in {p.sign === "odd" ? "Odd" : "Even"} Sign)</span>
                     <span className={`px-2 py-0.5 rounded text-[9px] uppercase tracking-wider font-extrabold transition-all duration-300 ${
-                      finalD2 === "Solar" ? "bg-amber-100 text-amber-900 animate-pulse" : "bg-indigo-100 text-indigo-900 animate-pulse"
+                      finalD2 === "Solar" ? "bg-amber-200 text-amber-950" : "bg-indigo-200 text-indigo-950"
                     }`}>
                       {finalD2}
                     </span>
@@ -176,23 +180,23 @@ export function D2RealChartWorkbench() {
             </div>
 
             {/* D2 Visual Chart (North Indian style bisection) */}
-            <div className="w-36 h-36 bg-[#fbf9f4] border p-1 rounded-lg relative shrink-0" style={{ borderColor: HAIRLINE }}>
+            <div className="w-56 h-56 bg-[#fffaf0] border-2 p-2 rounded-lg relative shrink-0 shadow-inner" style={{ borderColor: CHART_LINE_STRONG }}>
               <svg viewBox="0 0 100 100" className="w-full h-full">
-                <rect x="2" y="2" width="96" height="96" fill="transparent" stroke={HAIRLINE} strokeWidth="0.8" />
-                <line x1="2" y1="2" x2="98" y2="98" stroke={HAIRLINE} strokeWidth="0.6" />
-                <line x1="98" y1="2" x2="2" y2="98" stroke={HAIRLINE} strokeWidth="0.6" />
-                <line x1="50" y1="2" x2="2" y2="50" stroke={HAIRLINE} strokeWidth="0.8" />
-                <line x1="2" y1="50" x2="50" y2="98" stroke={HAIRLINE} strokeWidth="0.8" />
-                <line x1="50" y1="98" x2="98" y2="50" stroke={HAIRLINE} strokeWidth="0.8" />
-                <line x1="98" y1="50" x2="50" y2="2" stroke={HAIRLINE} strokeWidth="0.8" />
+                <rect x="2" y="2" width="96" height="96" fill="transparent" stroke={CHART_LINE_STRONG} strokeWidth="1.8" />
+                <line x1="2" y1="2" x2="98" y2="98" stroke={CHART_LINE} strokeWidth="1.45" />
+                <line x1="98" y1="2" x2="2" y2="98" stroke={CHART_LINE} strokeWidth="1.45" />
+                <line x1="50" y1="2" x2="2" y2="50" stroke={CHART_LINE} strokeWidth="1.55" />
+                <line x1="2" y1="50" x2="50" y2="98" stroke={CHART_LINE} strokeWidth="1.55" />
+                <line x1="50" y1="98" x2="98" y2="50" stroke={CHART_LINE} strokeWidth="1.55" />
+                <line x1="98" y1="50" x2="50" y2="2" stroke={CHART_LINE} strokeWidth="1.55" />
 
                 {/* Leo Solar sector (House 5 at top-left quadrant) */}
-                <text x="25" y="25" textAnchor="middle" fontSize="6" fill="#b45309" fontWeight="bold">Leo</text>
-                <text x="25" y="32" textAnchor="middle" fontSize="4.5" fill="#78350f">Solar</text>
+                <text x="25" y="25" textAnchor="middle" fontSize="7.8" fill="#7C2D12" fontWeight="800">Leo</text>
+                <text x="25" y="33" textAnchor="middle" fontSize="5.8" fill="#431407" fontWeight="700">Solar</text>
 
                 {/* Cancer Lunar sector (House 4 at bottom-right quadrant) */}
-                <text x="75" y="75" textAnchor="middle" fontSize="6" fill="#1e3a8a" fontWeight="bold">Cancer</text>
-                <text x="75" y="82" textAnchor="middle" fontSize="4.5" fill="#172554">Lunar</text>
+                <text x="75" y="75" textAnchor="middle" fontSize="7.8" fill="#1E3A8A" fontWeight="800">Cancer</text>
+                <text x="75" y="83" textAnchor="middle" fontSize="5.8" fill="#111827" fontWeight="700">Lunar</text>
               </svg>
             </div>
           </div>
@@ -205,8 +209,8 @@ export function D2RealChartWorkbench() {
           <div className="flex items-center gap-2 text-xs font-bold text-red-800">
             <AlertTriangle size={16} /> BTR Divisonal Boundary Warning
           </div>
-          <p className="text-[11px] text-gray-600">
-            <strong>Rectification Alert:</strong> A minor 3-minute birth shift alters the degrees of close-cusp planets, shifting them from the Solar Hora to the Lunar Hora or vice versa. Verify your client's birth details before submitting divisional readings.
+          <p className="text-[11px]" style={{ color: LABEL_TEXT_STRONG }}>
+            <strong>Rectification Alert:</strong> A minor 3-minute birth shift alters the degrees of close-cusp planets, shifting them from the Solar Hora to the Lunar Hora or vice versa. Verify your client&apos;s birth details before submitting divisional readings.
           </p>
         </div>
       )}
@@ -215,10 +219,10 @@ export function D2RealChartWorkbench() {
       <div className="p-4 rounded-xl border bg-white shadow-sm space-y-3" style={{ borderColor: HAIRLINE }}>
         <div className="flex justify-between items-center border-b pb-2" style={{ borderColor: HAIRLINE }}>
           <div>
-            <span className="text-[9px] uppercase tracking-wider block text-gray-400 font-bold">
+            <span className="text-[10px] uppercase tracking-wider block font-extrabold" style={{ color: LABEL_TEXT }}>
               Calibrated Interpretations
             </span>
-            <span className="text-[10px] text-gray-500 font-medium italic">
+            <span className="text-xs font-semibold italic" style={{ color: LABEL_TEXT_STRONG }}>
               Use this qualitative framing in your client write-ups
             </span>
           </div>
@@ -231,8 +235,8 @@ export function D2RealChartWorkbench() {
             {copied ? "Copied" : "Copy Phrasing"}
           </button>
         </div>
-        <blockquote className="text-xs italic text-gray-600 border-l-2 pl-3 py-1 bg-amber-50/10" style={{ borderColor: GOLD }}>
-          "{phrasingText}"
+        <blockquote className="text-sm italic border-l-2 pl-3 py-1 bg-amber-50/40 font-medium" style={{ borderColor: GOLD, color: LABEL_TEXT_STRONG }}>
+          &ldquo;{phrasingText}&rdquo;
         </blockquote>
       </div>
     </div>
