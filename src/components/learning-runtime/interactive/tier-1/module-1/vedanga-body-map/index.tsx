@@ -13,6 +13,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { Devanagari, IAST } from "@/components/learning-runtime/chrome/typography";
 import { VEDANGAS, type VedangaEntry } from "./data";
+import { useTutorStore } from "@/store/useTutorStore";
 
 export function VedangaBodyMap() {
   const [activeIdx, setActiveIdx] = useState<number | null>(null);
@@ -22,6 +23,33 @@ export function VedangaBodyMap() {
     if (typeof window === "undefined") return;
     setReducedMotion(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
   }, []);
+
+  useEffect(() => {
+    const setInteractiveContext = useTutorStore.getState().setInteractiveContext;
+    const clearInteractiveContext = useTutorStore.getState().clearInteractiveContext;
+
+    setInteractiveContext({
+      componentId: "vedanga-body-map",
+      componentType: "visualization",
+      componentTitle: "Vedāṅga Body Map",
+    });
+
+    return () => {
+      clearInteractiveContext();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (activeIdx !== null) {
+      const v = VEDANGAS[activeIdx];
+      useTutorStore.getState().updateInteraction({
+        selectedOption: v.slug,
+        currentStep: activeIdx + 1,
+        completionPercentage: Math.round(((activeIdx + 1) / VEDANGAS.length) * 100),
+        userSelections: { activeVedanga: v.slug, bodyPart: v.bodyPart },
+      });
+    }
+  }, [activeIdx]);
 
   const active = activeIdx !== null ? VEDANGAS[activeIdx] : null;
 
