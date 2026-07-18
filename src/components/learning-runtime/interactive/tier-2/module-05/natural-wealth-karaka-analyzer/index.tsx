@@ -1,15 +1,21 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Info, HelpCircle, ShieldAlert, Sparkles, Check, Copy } from "lucide-react";
+import { ShieldAlert, Sparkles, Check, Copy } from "lucide-react";
 import { ink } from "@/design-tokens/grahvani-learning/colors";
 
 const HAIRLINE = "var(--gl-gold-hairline, rgba(232, 199, 114, 0.28))";
 const SURFACE = "var(--gl-card-surface-solid, #FFF9F0)";
-const SURFACE_2 = "var(--gl-surface-2, #F5EDD8)";
 const INK_PRIMARY = "var(--gl-ink-primary, #2d261e)";
-const INK_SECONDARY = "var(--gl-ink-secondary, #4d4133)";
 const GOLD = ink.goldAccent || "#9C7A2F";
+const CHART_LINE = "#B89A58";
+const CHART_LINE_STRONG = "#8A641D";
+const LABEL_TEXT = "#5B6472";
+const LABEL_TEXT_STRONG = "#374151";
+
+type JupiterPlacement = "2nd" | "11th" | "9th" | "12th";
+type VenusPlacement = "2nd" | "11th" | "12th" | "7th";
+type Dignity = "exalted" | "own" | "debilitated" | "neutral";
 
 const SHLOKA_WORDS = [
   { word: "कारको", meaning: "The natural significator (kāraka)" },
@@ -34,10 +40,10 @@ const NORTH_HOUSE_COORDS = [
 ];
 
 export function NaturalWealthKarakaAnalyzer() {
-  const [jupPlacement, setJupPlacement] = useState<"2nd" | "11th" | "9th" | "12th">("2nd");
-  const [jupDignity, setJupDignity] = useState<"exalted" | "own" | "debilitated" | "neutral">("neutral");
-  const [venPlacement, setVenPlacement] = useState<"2nd" | "11th" | "12th" | "7th">("11th");
-  const [venDignity, setVenDignity] = useState<"exalted" | "own" | "debilitated" | "neutral">("neutral");
+  const [jupPlacement, setJupPlacement] = useState<JupiterPlacement>("2nd");
+  const [jupDignity, setJupDignity] = useState<Dignity>("neutral");
+  const [venPlacement, setVenPlacement] = useState<VenusPlacement>("11th");
+  const [venDignity, setVenDignity] = useState<Dignity>("neutral");
   const [activeWordIdx, setActiveWordIdx] = useState<number | null>(null);
   const [activeKarakaFocus, setActiveKarakaFocus] = useState<"jupiter" | "venus">("jupiter");
   const [copied, setCopied] = useState(false);
@@ -119,7 +125,7 @@ export function NaturalWealthKarakaAnalyzer() {
           <h2 className="text-2xl font-bold tracking-tight text-amber-900" style={{ fontFamily: "var(--font-cormorant), serif" }}>
             Natural Wealth Kāraka Analyzer
           </h2>
-          <p className="text-xs italic text-gray-600">
+          <p className="text-xs italic" style={{ color: LABEL_TEXT_STRONG }}>
             Module 5, Chapter 1: Comparing Guru and Śukra significations and evaluating Karako Bhāva Nāśāya.
           </p>
         </div>
@@ -131,7 +137,7 @@ export function NaturalWealthKarakaAnalyzer() {
 
       {/* Sanskrit Verse with Interactive Breakdown */}
       <div className="mb-6 p-4 rounded-xl border bg-white shadow-sm text-center relative" style={{ borderColor: HAIRLINE }}>
-        <div className="absolute top-1 left-2 text-[9px] uppercase font-bold text-gray-400 tracking-wider">
+        <div className="absolute top-1 left-2 text-[9px] uppercase font-bold tracking-wider" style={{ color: LABEL_TEXT }}>
           Sanskrit Classical Verse (Click words for breakdown)
         </div>
         <div className="py-3 flex flex-wrap justify-center gap-2">
@@ -162,25 +168,25 @@ export function NaturalWealthKarakaAnalyzer() {
         <div className="lg:col-span-6 space-y-4">
           <div className="p-4 rounded-xl border bg-white shadow-sm space-y-4" style={{ borderColor: HAIRLINE }}>
             <div className="flex justify-between items-center border-b pb-1">
-              <span className="text-[10px] uppercase font-bold text-gray-400">
+              <span className="text-[10px] uppercase font-bold" style={{ color: LABEL_TEXT }}>
                 Natural Kāraka Modulators
               </span>
               <div className="flex gap-2">
                 <button 
                   onClick={() => setActiveKarakaFocus("jupiter")} 
                   className={`text-[9px] font-bold px-2 py-0.5 rounded border transition-all cursor-pointer ${
-                    activeKarakaFocus === "jupiter" ? "bg-amber-800 text-white" : "bg-transparent text-gray-500"
+                    activeKarakaFocus === "jupiter" ? "bg-amber-800 text-white" : "bg-transparent"
                   }`}
-                  style={{ borderColor: HAIRLINE }}
+                  style={{ borderColor: HAIRLINE, color: activeKarakaFocus === "jupiter" ? undefined : LABEL_TEXT_STRONG }}
                 >
                   Edit Jupiter
                 </button>
                 <button 
                   onClick={() => setActiveKarakaFocus("venus")} 
                   className={`text-[9px] font-bold px-2 py-0.5 rounded border transition-all cursor-pointer ${
-                    activeKarakaFocus === "venus" ? "bg-indigo-800 text-white" : "bg-transparent text-gray-500"
+                    activeKarakaFocus === "venus" ? "bg-indigo-800 text-white" : "bg-transparent"
                   }`}
-                  style={{ borderColor: HAIRLINE }}
+                  style={{ borderColor: HAIRLINE, color: activeKarakaFocus === "venus" ? undefined : LABEL_TEXT_STRONG }}
                 >
                   Edit Venus
                 </button>
@@ -192,10 +198,10 @@ export function NaturalWealthKarakaAnalyzer() {
               <div className="space-y-3 animate-fade-in">
                 <strong className="block text-xs text-amber-950 font-bold">Guru (Jupiter) - Core Significator</strong>
                 <div>
-                  <label className="block text-[9px] uppercase font-bold text-gray-500 mb-1">Placement:</label>
+                  <label className="block text-[9px] uppercase font-bold mb-1" style={{ color: LABEL_TEXT_STRONG }}>Placement:</label>
                   <select
                     value={jupPlacement}
-                    onChange={(e) => setJupPlacement(e.target.value as any)}
+                    onChange={(e) => setJupPlacement(e.target.value as JupiterPlacement)}
                     className="w-full text-xs p-2 border rounded bg-transparent font-semibold focus:ring-amber-800 cursor-pointer"
                     style={{ borderColor: HAIRLINE }}
                   >
@@ -206,10 +212,10 @@ export function NaturalWealthKarakaAnalyzer() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-[9px] uppercase font-bold text-gray-500 mb-1">Sign Dignity:</label>
+                  <label className="block text-[9px] uppercase font-bold mb-1" style={{ color: LABEL_TEXT_STRONG }}>Sign Dignity:</label>
                   <select
                     value={jupDignity}
-                    onChange={(e) => setJupDignity(e.target.value as any)}
+                    onChange={(e) => setJupDignity(e.target.value as Dignity)}
                     className="w-full text-xs p-2 border rounded bg-transparent font-semibold focus:ring-amber-800 cursor-pointer"
                     style={{ borderColor: HAIRLINE }}
                   >
@@ -224,10 +230,10 @@ export function NaturalWealthKarakaAnalyzer() {
               <div className="space-y-3 animate-fade-in">
                 <strong className="block text-xs text-indigo-950 font-bold">Śukra (Venus) - Secondary Significator</strong>
                 <div>
-                  <label className="block text-[9px] uppercase font-bold text-gray-500 mb-1">Placement:</label>
+                  <label className="block text-[9px] uppercase font-bold mb-1" style={{ color: LABEL_TEXT_STRONG }}>Placement:</label>
                   <select
                     value={venPlacement}
-                    onChange={(e) => setVenPlacement(e.target.value as any)}
+                    onChange={(e) => setVenPlacement(e.target.value as VenusPlacement)}
                     className="w-full text-xs p-2 border rounded bg-transparent font-semibold focus:ring-indigo-850 cursor-pointer"
                     style={{ borderColor: HAIRLINE }}
                   >
@@ -238,10 +244,10 @@ export function NaturalWealthKarakaAnalyzer() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-[9px] uppercase font-bold text-gray-500 mb-1">Sign Dignity:</label>
+                  <label className="block text-[9px] uppercase font-bold mb-1" style={{ color: LABEL_TEXT_STRONG }}>Sign Dignity:</label>
                   <select
                     value={venDignity}
-                    onChange={(e) => setVenDignity(e.target.value as any)}
+                    onChange={(e) => setVenDignity(e.target.value as Dignity)}
                     className="w-full text-xs p-2 border rounded bg-transparent font-semibold focus:ring-indigo-850 cursor-pointer"
                     style={{ borderColor: HAIRLINE }}
                   >
@@ -259,7 +265,7 @@ export function NaturalWealthKarakaAnalyzer() {
         {/* Right Column: Visualizer */}
         <div className="lg:col-span-6 space-y-4">
           <div className="p-4 rounded-xl border bg-white shadow-sm flex flex-col items-center justify-center min-h-[280px]" style={{ borderColor: HAIRLINE }}>
-            <span className="text-[10px] uppercase font-bold text-gray-400 block mb-3 w-full text-center">
+            <span className="text-[10px] uppercase font-bold block mb-3 w-full text-center" style={{ color: LABEL_TEXT }}>
               Planetary Tejas (Tejas Orbs) & Chart Mapping
             </span>
 
@@ -299,15 +305,15 @@ export function NaturalWealthKarakaAnalyzer() {
             </div>
 
             {/* Interactive chart visualizer */}
-            <div className="w-36 h-36 bg-[#fbf9f4] border p-1 rounded-lg" style={{ borderColor: HAIRLINE }}>
+            <div className="w-56 h-56 bg-[#fbf9f4] border p-1 rounded-lg" style={{ borderColor: CHART_LINE }}>
               <svg viewBox="0 0 100 100" className="w-full h-full font-serif">
-                <rect x="2" y="2" width="96" height="96" fill="transparent" stroke={HAIRLINE} strokeWidth="0.8" />
-                <line x1="2" y1="2" x2="98" y2="98" stroke={HAIRLINE} strokeWidth="0.6" />
-                <line x1="98" y1="2" x2="2" y2="98" stroke={HAIRLINE} strokeWidth="0.6" />
-                <line x1="50" y1="2" x2="2" y2="50" stroke={HAIRLINE} strokeWidth="0.8" />
-                <line x1="2" y1="50" x2="50" y2="98" stroke={HAIRLINE} strokeWidth="0.8" />
-                <line x1="50" y1="98" x2="98" y2="50" stroke={HAIRLINE} strokeWidth="0.8" />
-                <line x1="98" y1="50" x2="50" y2="2" stroke={HAIRLINE} strokeWidth="0.8" />
+                <rect x="2" y="2" width="96" height="96" fill="transparent" stroke={CHART_LINE_STRONG} strokeWidth="1" />
+                <line x1="2" y1="2" x2="98" y2="98" stroke={CHART_LINE} strokeWidth="0.85" />
+                <line x1="98" y1="2" x2="2" y2="98" stroke={CHART_LINE} strokeWidth="0.85" />
+                <line x1="50" y1="2" x2="2" y2="50" stroke={CHART_LINE} strokeWidth="0.9" />
+                <line x1="2" y1="50" x2="50" y2="98" stroke={CHART_LINE} strokeWidth="0.9" />
+                <line x1="50" y1="98" x2="98" y2="50" stroke={CHART_LINE} strokeWidth="0.9" />
+                <line x1="98" y1="50" x2="50" y2="2" stroke={CHART_LINE} strokeWidth="0.9" />
 
                 {/* Hotspots */}
                 <polygon points="2,2 50,2 26,26" fill="transparent" className="cursor-pointer hover:fill-amber-100/10" onClick={() => handleHouseClick(2)} />
@@ -320,14 +326,14 @@ export function NaturalWealthKarakaAnalyzer() {
                   const hasVen = venPlacement === `${cell.house}nd` || venPlacement === `${cell.house}th` || (venPlacement === "2nd" && cell.house === 2) || (venPlacement === "7th" && cell.house === 7);
                   return (
                     <g key={cell.house} className="pointer-events-none">
-                      <text x={cell.cx} y={cell.cy + 1} textAnchor="middle" fontSize="4.5" fill={is2 || is11 ? GOLD : INK_SECONDARY}>
+                      <text x={cell.cx} y={cell.cy + 1} textAnchor="middle" fontSize="5" fontWeight={is2 || is11 ? "bold" : "600"} fill={is2 || is11 ? CHART_LINE_STRONG : LABEL_TEXT_STRONG}>
                         {cell.house}
                       </text>
                       {hasJup && (
-                        <circle cx={cell.cx - 3} cy={cell.cy - 3} r="1.5" fill="#f59e0b" />
+                        <circle cx={cell.cx - 3} cy={cell.cy - 3} r="2" fill="#d97706" />
                       )}
                       {hasVen && (
-                        <circle cx={cell.cx + 3} cy={cell.cy - 3} r="1.5" fill="#6366f1" />
+                        <circle cx={cell.cx + 3} cy={cell.cy - 3} r="2" fill="#4f46e5" />
                       )}
                     </g>
                   );
@@ -352,10 +358,10 @@ export function NaturalWealthKarakaAnalyzer() {
       <div className="p-4 rounded-xl border bg-white shadow-sm space-y-3" style={{ borderColor: HAIRLINE }}>
         <div className="flex justify-between items-center border-b pb-2" style={{ borderColor: HAIRLINE }}>
           <div>
-            <span className="text-[9px] uppercase tracking-wider block text-gray-400 font-bold">
+            <span className="text-[9px] uppercase tracking-wider block font-bold" style={{ color: LABEL_TEXT }}>
               Calibrated Kāraka Phrasing
             </span>
-            <span className="text-[10px] text-gray-500 font-medium italic">
+            <span className="text-[10px] font-medium italic" style={{ color: LABEL_TEXT_STRONG }}>
               Use this qualitative framing in your client write-ups
             </span>
           </div>
@@ -368,8 +374,8 @@ export function NaturalWealthKarakaAnalyzer() {
             {copied ? "Copied" : "Copy Phrasing"}
           </button>
         </div>
-        <blockquote className="text-xs italic text-gray-600 border-l-2 pl-3 py-1 bg-amber-50/10" style={{ borderColor: GOLD }}>
-          "{phrasingText}"
+        <blockquote className="text-xs italic border-l-2 pl-3 py-1 bg-amber-50/10" style={{ borderColor: GOLD, color: LABEL_TEXT_STRONG }}>
+          &ldquo;{phrasingText}&rdquo;
         </blockquote>
       </div>
     </div>

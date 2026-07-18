@@ -1,15 +1,21 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Info, HelpCircle, ShieldAlert, Sparkles, Check, Copy, RefreshCw } from "lucide-react";
+import { ShieldAlert, Sparkles, Check, Copy } from "lucide-react";
 import { ink } from "@/design-tokens/grahvani-learning/colors";
 
 const HAIRLINE = "var(--gl-gold-hairline, rgba(232, 199, 114, 0.28))";
 const SURFACE = "var(--gl-card-surface-solid, #FFF9F0)";
-const SURFACE_2 = "var(--gl-surface-2, #F5EDD8)";
 const INK_PRIMARY = "var(--gl-ink-primary, #2d261e)";
-const INK_SECONDARY = "var(--gl-ink-secondary, #4d4133)";
 const GOLD = ink.goldAccent || "#9C7A2F";
+const CHART_LINE = "#B89A58";
+const CHART_LINE_STRONG = "#8A641D";
+const LABEL_TEXT = "#5B6472";
+const LABEL_TEXT_STRONG = "#374151";
+
+type Lord2Location = "2nd" | "11th" | "12th" | "6th";
+type Lord11Location = "11th" | "2nd" | "8th" | "1st";
+type Association = "conjunction" | "aspect" | "parivartana" | "none";
 
 const SHLOKA_WORDS = [
   { word: "धनाधिपो", meaning: "The lord of the 2nd house (dhana-bhāva)" },
@@ -34,9 +40,9 @@ const NORTH_HOUSE_COORDS = [
 ];
 
 export function SecondEleventhLordPermutations() {
-  const [lord2Loc, setLord2Loc] = useState<"2nd" | "11th" | "12th" | "6th">("2nd");
-  const [lord11Loc, setLord11Loc] = useState<"11th" | "2nd" | "8th" | "1st">("11th");
-  const [association, setAssociation] = useState<"conjunction" | "aspect" | "parivartana" | "none">("none");
+  const [lord2Loc, setLord2Loc] = useState<Lord2Location>("2nd");
+  const [lord11Loc, setLord11Loc] = useState<Lord11Location>("11th");
+  const [association, setAssociation] = useState<Association>("none");
   const [btrShift, setBtrShift] = useState(false);
   const [activeWordIdx, setActiveWordIdx] = useState<number | null>(null);
   const [copied, setCopied] = useState(false);
@@ -113,7 +119,7 @@ export function SecondEleventhLordPermutations() {
           <h2 className="text-2xl font-bold tracking-tight text-amber-900" style={{ fontFamily: "var(--font-cormorant), serif" }}>
             2nd & 11th Lord Permutations
           </h2>
-          <p className="text-xs italic text-gray-600">
+          <p className="text-xs italic" style={{ color: LABEL_TEXT_STRONG }}>
             Module 5, Chapter 1: Assessing sambandha (connections) and exchanges forming Dhana Yogas.
           </p>
         </div>
@@ -125,7 +131,7 @@ export function SecondEleventhLordPermutations() {
 
       {/* Sanskrit Verse with Interactive Breakdown */}
       <div className="mb-6 p-4 rounded-xl border bg-white shadow-sm text-center relative" style={{ borderColor: HAIRLINE }}>
-        <div className="absolute top-1 left-2 text-[9px] uppercase font-bold text-gray-400 tracking-wider">
+        <div className="absolute top-1 left-2 text-[9px] uppercase font-bold tracking-wider" style={{ color: LABEL_TEXT }}>
           Sanskrit Classical Verse (Click words for breakdown)
         </div>
         <div className="py-3 flex flex-wrap justify-center gap-2">
@@ -155,18 +161,18 @@ export function SecondEleventhLordPermutations() {
         {/* Left Column: controls */}
         <div className="lg:col-span-6 space-y-4">
           <div className="p-4 rounded-xl border bg-white shadow-sm space-y-4" style={{ borderColor: HAIRLINE }}>
-            <span className="text-[10px] uppercase font-bold text-gray-400 block border-b pb-1">
+            <span className="text-[10px] uppercase font-bold block border-b pb-1" style={{ color: LABEL_TEXT, borderColor: HAIRLINE }}>
               Lord Relations & Permutations
             </span>
 
             {/* 2nd Lord Placement */}
             <div>
-              <label className="block text-[10px] uppercase font-bold text-gray-500 mb-1">
+              <label className="block text-[10px] uppercase font-bold mb-1" style={{ color: LABEL_TEXT_STRONG }}>
                 2nd Lord House Position:
               </label>
               <select
                 value={lord2Loc}
-                onChange={(e) => setLord2Loc(e.target.value as any)}
+                onChange={(e) => setLord2Loc(e.target.value as Lord2Location)}
                 className="w-full text-xs p-2 border rounded bg-transparent font-semibold focus:ring-amber-800 cursor-pointer"
                 style={{ borderColor: HAIRLINE }}
               >
@@ -179,12 +185,12 @@ export function SecondEleventhLordPermutations() {
 
             {/* 11th Lord Placement */}
             <div>
-              <label className="block text-[10px] uppercase font-bold text-gray-500 mb-1">
+              <label className="block text-[10px] uppercase font-bold mb-1" style={{ color: LABEL_TEXT_STRONG }}>
                 11th Lord House Position:
               </label>
               <select
                 value={lord11Loc}
-                onChange={(e) => setLord11Loc(e.target.value as any)}
+                onChange={(e) => setLord11Loc(e.target.value as Lord11Location)}
                 className="w-full text-xs p-2 border rounded bg-transparent font-semibold focus:ring-amber-800 cursor-pointer"
                 style={{ borderColor: HAIRLINE }}
               >
@@ -197,12 +203,12 @@ export function SecondEleventhLordPermutations() {
 
             {/* Association type */}
             <div>
-              <label className="block text-[10px] uppercase font-bold text-gray-500 mb-1">
+              <label className="block text-[10px] uppercase font-bold mb-1" style={{ color: LABEL_TEXT_STRONG }}>
                 Lord Association Type:
               </label>
               <select
                 value={association}
-                onChange={(e) => setAssociation(e.target.value as any)}
+                onChange={(e) => setAssociation(e.target.value as Association)}
                 className="w-full text-xs p-2 border rounded bg-transparent font-semibold focus:ring-amber-800 cursor-pointer"
                 style={{ borderColor: HAIRLINE }}
               >
@@ -231,20 +237,20 @@ export function SecondEleventhLordPermutations() {
         {/* Right Column: Visualizer */}
         <div className="lg:col-span-6 space-y-4">
           <div className="p-4 rounded-xl border bg-white shadow-sm flex flex-col items-center justify-center min-h-[280px]" style={{ borderColor: HAIRLINE }}>
-            <span className="text-[10px] uppercase font-bold text-gray-400 block mb-2 w-full text-center">
+            <span className="text-[10px] uppercase font-bold block mb-2 w-full text-center" style={{ color: LABEL_TEXT }}>
               Exchange/Aspect Flow Reference (Click 2, 11, 12, 6 for 2nd Lord Placement)
             </span>
 
             {/* Chart SVG showing arrows or aspect lines */}
-            <div className="w-48 h-48 bg-[#fbf9f4] border p-1 rounded-lg relative" style={{ borderColor: HAIRLINE }}>
+            <div className="w-48 h-48 bg-[#fbf9f4] border p-1 rounded-lg relative" style={{ borderColor: CHART_LINE }}>
               <svg viewBox="0 0 100 100" className="w-full h-full font-serif">
-                <rect x="2" y="2" width="96" height="96" fill="transparent" stroke={HAIRLINE} strokeWidth="0.8" />
-                <line x1="2" y1="2" x2="98" y2="98" stroke={HAIRLINE} strokeWidth="0.6" />
-                <line x1="98" y1="2" x2="2" y2="98" stroke={HAIRLINE} strokeWidth="0.6" />
-                <line x1="50" y1="2" x2="2" y2="50" stroke={HAIRLINE} strokeWidth="0.8" />
-                <line x1="2" y1="50" x2="50" y2="98" stroke={HAIRLINE} strokeWidth="0.8" />
-                <line x1="50" y1="98" x2="98" y2="50" stroke={HAIRLINE} strokeWidth="0.8" />
-                <line x1="98" y1="50" x2="50" y2="2" stroke={HAIRLINE} strokeWidth="0.8" />
+                <rect x="2" y="2" width="96" height="96" fill="transparent" stroke={CHART_LINE_STRONG} strokeWidth="1" />
+                <line x1="2" y1="2" x2="98" y2="98" stroke={CHART_LINE} strokeWidth="0.85" />
+                <line x1="98" y1="2" x2="2" y2="98" stroke={CHART_LINE} strokeWidth="0.85" />
+                <line x1="50" y1="2" x2="2" y2="50" stroke={CHART_LINE} strokeWidth="0.9" />
+                <line x1="2" y1="50" x2="50" y2="98" stroke={CHART_LINE} strokeWidth="0.9" />
+                <line x1="50" y1="98" x2="98" y2="50" stroke={CHART_LINE} strokeWidth="0.9" />
+                <line x1="98" y1="50" x2="50" y2="2" stroke={CHART_LINE} strokeWidth="0.9" />
 
                 {/* Interactive polygon overlays */}
                 <polygon points="2,2 50,2 26,26" fill="transparent" className="cursor-pointer hover:fill-amber-100/10" onClick={() => handleHouseClick(2)} />
@@ -258,7 +264,7 @@ export function SecondEleventhLordPermutations() {
                     d="M 27 13 C 45 3, 70 12, 87 27" 
                     fill="none" 
                     stroke={GOLD} 
-                    strokeWidth="1.5" 
+                    strokeWidth="1.8" 
                     strokeDasharray="1,1"
                     className="animate-pulse"
                   />
@@ -272,13 +278,13 @@ export function SecondEleventhLordPermutations() {
                     x2="87" 
                     y2="27" 
                     stroke={GOLD} 
-                    strokeWidth="1.2" 
+                    strokeWidth="1.6" 
                   />
                 )}
 
                 {/* Draw conjunction indicator circle */}
                 {association === "conjunction" && (
-                  <circle cx="50" cy="50" r="10" fill="rgba(184, 132, 33, 0.15)" stroke={GOLD} strokeWidth="0.5" strokeDasharray="2,2" />
+                  <circle cx="50" cy="50" r="10" fill="rgba(184, 132, 33, 0.15)" stroke={CHART_LINE_STRONG} strokeWidth="0.8" strokeDasharray="2,2" />
                 )}
 
                 {NORTH_HOUSE_COORDS.map((cell) => {
@@ -290,9 +296,9 @@ export function SecondEleventhLordPermutations() {
                         x={cell.cx} 
                         y={cell.cy + 1} 
                         textAnchor="middle" 
-                        fontSize="4.5" 
-                        fill={is2 || is11 ? GOLD : INK_SECONDARY} 
-                        fontWeight={is2 || is11 ? "bold" : "normal"}
+                        fontSize="5" 
+                        fill={is2 || is11 ? CHART_LINE_STRONG : LABEL_TEXT_STRONG} 
+                        fontWeight={is2 || is11 ? "bold" : "600"}
                       >
                         {cell.house}
                       </text>
@@ -304,7 +310,7 @@ export function SecondEleventhLordPermutations() {
 
             {/* Dhana Yoga Strength Speedometer Indicator */}
             <div className="w-full mt-4 space-y-1 text-center">
-              <span className="text-[10px] uppercase font-bold text-gray-500 block">Dhana Yoga Intensity Indicator:</span>
+              <span className="text-[10px] uppercase font-bold block" style={{ color: LABEL_TEXT_STRONG }}>Dhana Yoga Intensity Indicator:</span>
               <span className="text-xs font-bold text-amber-900 block mt-0.5">{yogaName}</span>
               <div className="w-full bg-gray-100 rounded-full h-2">
                 <div 
@@ -324,7 +330,7 @@ export function SecondEleventhLordPermutations() {
           <div className="flex items-center gap-2 text-xs font-bold text-red-800">
             <ShieldAlert size={16} /> BTR Boundary Shift Alert
           </div>
-          <p className="text-[11px] text-gray-600">
+          <p className="text-[11px]" style={{ color: LABEL_TEXT_STRONG }}>
             <strong>Rectification Required:</strong> A minor 4-minute birth time shift shifts the 2nd lord from Taurus to Gemini, reassigning rulership from Venus to Mercury. Do not issue predictive statements on the strength of this yoga without verifying birth time accuracy first.
           </p>
         </div>
@@ -334,10 +340,10 @@ export function SecondEleventhLordPermutations() {
       <div className="p-4 rounded-xl border bg-white shadow-sm space-y-3" style={{ borderColor: HAIRLINE }}>
         <div className="flex justify-between items-center border-b pb-2" style={{ borderColor: HAIRLINE }}>
           <div>
-            <span className="text-[9px] uppercase tracking-wider block text-gray-400 font-bold">
+            <span className="text-[9px] uppercase tracking-wider block font-bold" style={{ color: LABEL_TEXT }}>
               Calibrated Permutation Phrasing
             </span>
-            <span className="text-[10px] text-gray-500 font-medium italic">
+            <span className="text-[10px] font-medium italic" style={{ color: LABEL_TEXT_STRONG }}>
               Use this qualitative framing in your client write-ups
             </span>
           </div>
@@ -350,8 +356,8 @@ export function SecondEleventhLordPermutations() {
             {copied ? "Copied" : "Copy Phrasing"}
           </button>
         </div>
-        <blockquote className="text-xs italic text-gray-600 border-l-2 pl-3 py-1 bg-amber-50/10" style={{ borderColor: GOLD }}>
-          "{phrasingText}"
+        <blockquote className="text-xs italic border-l-2 pl-3 py-1 bg-amber-50/10" style={{ borderColor: GOLD, color: LABEL_TEXT_STRONG }}>
+          &ldquo;{phrasingText}&rdquo;
         </blockquote>
       </div>
     </div>

@@ -20,6 +20,8 @@ interface PrimarySimulatorProps {
   frontMatter: LessonFrontMatter;
 }
 
+type InteractiveModule = Record<string, unknown>;
+
 /**
  * Per-lesson §7 flagship overrides. Constitution §10.1 names §7 the Primary
  * Simulator — the lesson's biggest synthesis interactive. A lesson's
@@ -299,6 +301,16 @@ const SECTION_7_OVERRIDES: Readonly<Record<string, string>> = {
   "ashlesha-the-entwining-serpent": "nakshatra-profile",
 };
 
+const SHARED_INTERACTIVE_KEYS: Readonly<Record<string, string>> = {
+  "marriage-synthesis-workbench": "tier-2/module-01/marriage-synthesis-workbench",
+  "multi-domain-synthesis-workbench": "tier-2/module-01/multi-domain-synthesis-workbench",
+};
+
+const EXTRA_INTERACTIVE_LOADERS: Readonly<Record<string, () => Promise<InteractiveModule>>> = {
+  "marriage-scope-competence-router": () =>
+    import("@/components/learning-runtime/interactive/marriage-scope-competence-router/index"),
+};
+
 /** Slugs whose §7 interactive needs extra horizontal space (e.g. large SVG wheel + sidebar). */
 const WIDE_LAYOUT_SLUGS = new Set([
   "the-four-yugas-and-the-mahayuga",
@@ -510,12 +522,16 @@ export async function PrimarySimulator({ section, frontMatter: fm }: PrimarySimu
   const overrideKey = SECTION_7_OVERRIDES[fm.slug];
   const interactiveKey = overrideKey ?? componentType;
   const shouldRenderInteractive = Boolean(enabled || overrideKey);
+  const moduleKey = String(fm.module).padStart(2, "0");
   
   let InteractiveComponent = null;
 
   if (fm.tier && fm.module && interactiveKey) {
-    const mapKey = `tier-${fm.tier}/module-${fm.module}/${interactiveKey}`;
-    const loadFn = interactiveMap[mapKey];
+    const mapKey = `tier-${fm.tier}/module-${moduleKey}/${interactiveKey}`;
+    const loadFn =
+      interactiveMap[mapKey] ??
+      interactiveMap[SHARED_INTERACTIVE_KEYS[interactiveKey]] ??
+      EXTRA_INTERACTIVE_LOADERS[interactiveKey];
     if (loadFn) {
       try {
         const mod = await loadFn();

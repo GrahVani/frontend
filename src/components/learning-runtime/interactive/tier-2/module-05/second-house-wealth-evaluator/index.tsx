@@ -1,15 +1,21 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Info, HelpCircle, ShieldAlert, Sparkles, Check, Copy, Clock, Layers, Star } from "lucide-react";
+import { ShieldAlert, Sparkles, Check, Copy, Clock } from "lucide-react";
 import { ink } from "@/design-tokens/grahvani-learning/colors";
 
 const HAIRLINE = "var(--gl-gold-hairline, rgba(232, 199, 114, 0.28))";
 const SURFACE = "var(--gl-card-surface-solid, #FFF9F0)";
-const SURFACE_2 = "var(--gl-surface-2, #F5EDD8)";
 const INK_PRIMARY = "var(--gl-ink-primary, #2d261e)";
-const INK_SECONDARY = "var(--gl-ink-secondary, #4d4133)";
 const GOLD = ink.goldAccent || "#9C7A2F";
+const CHART_LINE = "#B89A58";
+const CHART_LINE_STRONG = "#8A641D";
+const LABEL_TEXT = "#5B6472";
+const LABEL_TEXT_STRONG = "#374151";
+
+type Occupant = "benefic" | "malefic" | "none";
+type LordDignity = "exalted" | "own" | "debilitated" | "neutral";
+type LordPlacement = "2nd" | "11th" | "12th" | "6th";
 
 const SHLOKA_WORDS = [
   { word: "द्वितीये", meaning: "In the second house (dhana-bhāva)" },
@@ -39,9 +45,9 @@ const NORTH_HOUSE_COORDS = [
 ];
 
 export function SecondHouseWealthEvaluator() {
-  const [occupant, setOccupant] = useState<"benefic" | "malefic" | "none">("none");
-  const [lordDignity, setLordDignity] = useState<"exalted" | "own" | "debilitated" | "neutral">("neutral");
-  const [lordPlacement, setLordPlacement] = useState<"2nd" | "11th" | "12th" | "6th">("2nd");
+  const [occupant, setOccupant] = useState<Occupant>("none");
+  const [lordDignity, setLordDignity] = useState<LordDignity>("neutral");
+  const [lordPlacement, setLordPlacement] = useState<LordPlacement>("2nd");
   const [comparisonMode, setComparisonMode] = useState(false);
   const [marakaMode, setMarakaMode] = useState(false);
   const [activeWordIdx, setActiveWordIdx] = useState<number | null>(null);
@@ -49,7 +55,7 @@ export function SecondHouseWealthEvaluator() {
   const [copied, setCopied] = useState(false);
 
   // Evaluate the strength of the 2nd house based on selections
-  const { strengthScore, summaryText, phrasingText } = useMemo(() => {
+  const { strengthScore, phrasingText } = useMemo(() => {
     let score = 50; // out of 100
     let desc = "";
     let phrase = "";
@@ -131,7 +137,7 @@ export function SecondHouseWealthEvaluator() {
           <h2 className="text-2xl font-bold tracking-tight text-amber-900" style={{ fontFamily: "var(--font-cormorant), serif" }}>
             2nd House Wealth (Dhana Bhāva) Evaluator
           </h2>
-          <p className="text-xs italic text-gray-600">
+          <p className="text-xs italic" style={{ color: LABEL_TEXT_STRONG }}>
             Module 5, Chapter 1: Assessing the capacity to accumulate liquid wealth and family assets.
           </p>
         </div>
@@ -146,7 +152,7 @@ export function SecondHouseWealthEvaluator() {
         className="mb-6 p-4 rounded-xl border bg-white shadow-sm text-center relative" 
         style={{ borderColor: HAIRLINE }}
       >
-        <div className="absolute top-1 left-2 text-[9px] uppercase font-bold text-gray-400 tracking-wider">
+        <div className="absolute top-1 left-2 text-[9px] uppercase font-bold tracking-wider" style={{ color: LABEL_TEXT }}>
           Sanskrit Classical Verse (Click words for breakdown)
         </div>
         <div className="py-3 flex flex-wrap justify-center gap-1.5 md:gap-3">
@@ -176,18 +182,18 @@ export function SecondHouseWealthEvaluator() {
         {/* Left Column: Dashboard Controls */}
         <div className="lg:col-span-6 space-y-4">
           <div className="p-4 rounded-xl border bg-white shadow-sm space-y-4" style={{ borderColor: HAIRLINE }}>
-            <span className="text-[10px] uppercase font-bold text-gray-400 block border-b pb-1">
+            <span className="text-[10px] uppercase font-bold block border-b pb-1" style={{ color: LABEL_TEXT, borderColor: HAIRLINE }}>
               Interactive House Modulators
             </span>
 
             {/* Occupants */}
             <div>
-              <label className="block text-[10px] uppercase font-bold text-gray-500 mb-1">
+              <label className="block text-[10px] uppercase font-bold mb-1" style={{ color: LABEL_TEXT_STRONG }}>
                 2nd House Occupant Influence:
               </label>
               <select
                 value={occupant}
-                onChange={(e) => setOccupant(e.target.value as any)}
+                onChange={(e) => setOccupant(e.target.value as Occupant)}
                 className="w-full text-xs p-2 border rounded bg-transparent font-semibold focus:ring-amber-800 cursor-pointer"
                 style={{ borderColor: HAIRLINE }}
               >
@@ -199,13 +205,13 @@ export function SecondHouseWealthEvaluator() {
 
             {/* Lord Placement */}
             <div>
-              <label className="block text-[10px] uppercase font-bold text-gray-500 mb-1">
+              <label className="block text-[10px] uppercase font-bold mb-1" style={{ color: LABEL_TEXT_STRONG }}>
                 2nd Lord House Placement:
               </label>
               <select
                 value={lordPlacement}
                 onChange={(e) => {
-                  setLordPlacement(e.target.value as any);
+                  setLordPlacement(e.target.value as LordPlacement);
                   const hNum = e.target.value === "2nd" ? 2 : e.target.value === "11th" ? 11 : e.target.value === "12th" ? 12 : 6;
                   setSelectedHouse(hNum);
                 }}
@@ -221,12 +227,12 @@ export function SecondHouseWealthEvaluator() {
 
             {/* Lord Dignity */}
             <div>
-              <label className="block text-[10px] uppercase font-bold text-gray-500 mb-1">
+              <label className="block text-[10px] uppercase font-bold mb-1" style={{ color: LABEL_TEXT_STRONG }}>
                 2nd Lord Sign Dignity:
               </label>
               <select
                 value={lordDignity}
-                onChange={(e) => setLordDignity(e.target.value as any)}
+                onChange={(e) => setLordDignity(e.target.value as LordDignity)}
                 className="w-full text-xs p-2 border rounded bg-transparent font-semibold focus:ring-amber-800 cursor-pointer"
                 style={{ borderColor: HAIRLINE }}
               >
@@ -270,27 +276,27 @@ export function SecondHouseWealthEvaluator() {
         {/* Right Column: Chart Visualizer */}
         <div className="lg:col-span-6 space-y-4">
           <div className="p-4 rounded-xl border bg-white shadow-sm flex flex-col items-center justify-center min-h-[280px]" style={{ borderColor: HAIRLINE }}>
-            <span className="text-[10px] uppercase font-bold text-gray-400 block mb-2 w-full text-center">
+            <span className="text-[10px] uppercase font-bold block mb-2 w-full text-center" style={{ color: LABEL_TEXT }}>
               Interactive Chart (Click houses to select placement)
             </span>
 
-            <div className="w-56 h-56 bg-[#fbf9f4] border p-1 rounded-lg relative" style={{ borderColor: HAIRLINE }}>
+            <div className="w-56 h-56 bg-[#fbf9f4] border p-1 rounded-lg relative" style={{ borderColor: CHART_LINE }}>
               <svg viewBox="0 0 100 100" className="w-full h-full font-serif">
                 {/* Background outline */}
-                <rect x="2" y="2" width="96" height="96" fill="transparent" stroke={HAIRLINE} strokeWidth="0.8" />
-                <line x1="2" y1="2" x2="98" y2="98" stroke={HAIRLINE} strokeWidth="0.6" />
-                <line x1="98" y1="2" x2="2" y2="98" stroke={HAIRLINE} strokeWidth="0.6" />
-                <line x1="50" y1="2" x2="2" y2="50" stroke={HAIRLINE} strokeWidth="0.8" />
-                <line x1="2" y1="50" x2="50" y2="98" stroke={HAIRLINE} strokeWidth="0.8" />
-                <line x1="50" y1="98" x2="98" y2="50" stroke={HAIRLINE} strokeWidth="0.8" />
-                <line x1="98" y1="50" x2="50" y2="2" stroke={HAIRLINE} strokeWidth="0.8" />
+                <rect x="2" y="2" width="96" height="96" fill="transparent" stroke={CHART_LINE_STRONG} strokeWidth="1" />
+                <line x1="2" y1="2" x2="98" y2="98" stroke={CHART_LINE} strokeWidth="0.85" />
+                <line x1="98" y1="2" x2="2" y2="98" stroke={CHART_LINE} strokeWidth="0.85" />
+                <line x1="50" y1="2" x2="2" y2="50" stroke={CHART_LINE} strokeWidth="0.9" />
+                <line x1="2" y1="50" x2="50" y2="98" stroke={CHART_LINE} strokeWidth="0.9" />
+                <line x1="50" y1="98" x2="98" y2="50" stroke={CHART_LINE} strokeWidth="0.9" />
+                <line x1="98" y1="50" x2="50" y2="2" stroke={CHART_LINE} strokeWidth="0.9" />
 
                 {/* Highlighted regions based on selection or modes */}
                 <polygon 
                   points="2,2 50,2 26,26" 
                   fill={selectedHouse === 2 ? "rgba(156, 122, 47, 0.25)" : "rgba(156, 122, 47, 0.05)"}
                   stroke={GOLD}
-                  strokeWidth="0.6"
+                  strokeWidth="0.9"
                   onClick={() => handleHouseClick(2)}
                   className="cursor-pointer transition-all duration-300 hover:fill-amber-100/30"
                 />
@@ -300,7 +306,7 @@ export function SecondHouseWealthEvaluator() {
                     points="98,98 50,98 74,74" 
                     fill={selectedHouse === 9 ? "rgba(37, 99, 235, 0.18)" : "rgba(37, 99, 235, 0.08)"}
                     stroke="#2563eb"
-                    strokeWidth="0.6"
+                    strokeWidth="0.9"
                     onClick={() => handleHouseClick(9)}
                     className="cursor-pointer transition-all duration-300 hover:fill-blue-100/30"
                   />
@@ -311,7 +317,7 @@ export function SecondHouseWealthEvaluator() {
                     points="98,2 50,2 74,26" 
                     fill={selectedHouse === 11 ? "rgba(22, 163, 74, 0.18)" : "rgba(22, 163, 74, 0.08)"}
                     stroke="#16a34a"
-                    strokeWidth="0.6"
+                    strokeWidth="0.9"
                     onClick={() => handleHouseClick(11)}
                     className="cursor-pointer transition-all duration-300 hover:fill-green-100/30"
                   />
@@ -324,8 +330,8 @@ export function SecondHouseWealthEvaluator() {
                   const is11th = cell.house === 11;
                   const isLordP = lordPlacement === `${cell.house}th` || (lordPlacement === "2nd" && cell.house === 2);
                   
-                  let fill = INK_SECONDARY;
-                  let fontW = "normal";
+                  let fill = LABEL_TEXT_STRONG;
+                  let fontW = "600";
 
                   if (is2nd) {
                     fill = GOLD;
@@ -340,11 +346,11 @@ export function SecondHouseWealthEvaluator() {
 
                   return (
                     <g key={cell.house} className="pointer-events-none">
-                      <text x={cell.cx} y={cell.cy + 1} textAnchor="middle" fontSize="4.5" fill={fill} fontWeight={fontW}>
+                      <text x={cell.cx} y={cell.cy + 1} textAnchor="middle" fontSize="5" fill={fill} fontWeight={fontW}>
                         {cell.house}
                       </text>
                       {is2nd && (
-                        <text x={cell.cx} y={cell.cy + 5} textAnchor="middle" fontSize="3" fontWeight="bold" fill={GOLD}>
+                        <text x={cell.cx} y={cell.cy + 5.5} textAnchor="middle" fontSize="3.2" fontWeight="bold" fill={CHART_LINE_STRONG}>
                           Dhana
                         </text>
                       )}
@@ -368,7 +374,7 @@ export function SecondHouseWealthEvaluator() {
             </div>
             
             <div className="w-full mt-4 space-y-1 text-center">
-              <span className="text-[10px] uppercase font-bold text-gray-500">Calculated Dhana Potential:</span>
+              <span className="text-[10px] uppercase font-bold" style={{ color: LABEL_TEXT_STRONG }}>Calculated Dhana Potential:</span>
               <div className="w-full bg-gray-100 rounded-full h-2">
                 <div 
                   className="bg-amber-850 h-2 rounded-full transition-all duration-500" 
@@ -384,25 +390,25 @@ export function SecondHouseWealthEvaluator() {
       {/* Dynamic comparison panel */}
       {comparisonMode && (
         <div className="mb-6 p-4 rounded-xl border bg-white shadow-sm space-y-3 animate-fade-in" style={{ borderColor: HAIRLINE }}>
-          <span className="text-[10px] uppercase font-bold text-gray-400 block border-b pb-1">
+          <span className="text-[10px] uppercase font-bold block border-b pb-1" style={{ color: LABEL_TEXT, borderColor: HAIRLINE }}>
             Three wealth houses comparison
           </span>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs leading-relaxed">
             <div className="p-3 rounded border bg-amber-50/15" style={{ borderColor: HAIRLINE }}>
               <strong className="block text-amber-900 mb-1">2nd House (Dhana Bhāva)</strong>
-              <p className="text-gray-600">
+              <p style={{ color: LABEL_TEXT_STRONG }}>
                 Governs accumulated wealth, bank balances, liquid assets, jewelry, family legacy, and initial resources. It signifies *what you save and hold*.
               </p>
             </div>
             <div className="p-3 rounded border bg-blue-50/15" style={{ borderColor: "rgba(37, 99, 235, 0.2)" }}>
               <strong className="block text-blue-900 mb-1">9th House (Bhāgya Bhāva)</strong>
-              <p className="text-gray-600">
+              <p style={{ color: LABEL_TEXT_STRONG }}>
                 Governs grace, luck, higher destiny, divine guidance, and general fortune. It represents *prosperity capability* from past good deeds (purva-punya).
               </p>
             </div>
             <div className="p-3 rounded border bg-green-50/15" style={{ borderColor: "rgba(22, 163, 74, 0.2)" }}>
               <strong className="block text-green-900 mb-1">11th House (Lābha Bhāva)</strong>
-              <p className="text-gray-600">
+              <p style={{ color: LABEL_TEXT_STRONG }}>
                 Governs income, gains, networks, and profit. It measures incoming cashflow and *daily/monthly inflows* from work.
               </p>
             </div>
@@ -424,14 +430,14 @@ export function SecondHouseWealthEvaluator() {
           
           <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
             <div className="md:col-span-8">
-              <p className="text-[11px] text-gray-600">
+              <p className="text-[11px]" style={{ color: LABEL_TEXT_STRONG }}>
                 Classical texts define the 2nd and 7th houses as maraka houses. However, in Tier-2 Advanced practice, you must frame this solely as a timing filter for Dasha-Bhukti transit confirmation, rather than declaring fatalistic physical doom to a client.
               </p>
             </div>
             <div className="md:col-span-4 p-3 bg-white/60 rounded border border-red-100 flex flex-col items-center justify-center text-center">
               <Clock className="text-red-700 animate-spin shrink-0 mb-1" size={20} style={{ animationDuration: "12s" }} />
               <span className="text-[10px] font-bold text-red-850">Dasha Threshold</span>
-              <span className="text-[8px] text-gray-500 italic">Required before declaring alert</span>
+              <span className="text-[8px] italic" style={{ color: LABEL_TEXT }}>Required before declaring alert</span>
             </div>
           </div>
         </div>
@@ -441,10 +447,10 @@ export function SecondHouseWealthEvaluator() {
       <div className="p-4 rounded-xl border bg-white shadow-sm space-y-3" style={{ borderColor: HAIRLINE }}>
         <div className="flex justify-between items-center border-b pb-2" style={{ borderColor: HAIRLINE }}>
           <div>
-            <span className="text-[9px] uppercase tracking-wider block text-gray-400 font-bold">
+            <span className="text-[9px] uppercase tracking-wider block font-bold" style={{ color: LABEL_TEXT }}>
               Calibrated Wealth Phrasing
             </span>
-            <span className="text-[10px] text-gray-500 font-medium italic">
+            <span className="text-[10px] font-medium italic" style={{ color: LABEL_TEXT_STRONG }}>
               Use this qualitative framing in your client write-ups
             </span>
           </div>
@@ -457,8 +463,8 @@ export function SecondHouseWealthEvaluator() {
             {copied ? "Copied" : "Copy Phrasing"}
           </button>
         </div>
-        <blockquote className="text-xs italic text-gray-600 border-l-2 pl-3 py-1 bg-amber-50/10" style={{ borderColor: GOLD }}>
-          "{phrasingText}"
+        <blockquote className="text-xs italic border-l-2 pl-3 py-1 bg-amber-50/10" style={{ borderColor: GOLD, color: LABEL_TEXT_STRONG }}>
+          &ldquo;{phrasingText}&rdquo;
         </blockquote>
       </div>
     </div>
