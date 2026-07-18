@@ -326,34 +326,35 @@ function SixthHouseSvg({
   const recoveryWidth = Math.max(28, recoveryScore * 4.4);
   const susceptibilityWidth = Math.max(28, susceptibilityScore * 4.4);
   return (
-    <svg viewBox="0 0 760 410" role="img" aria-label="Sixth house disease immunity and recovery balance" style={{ width: "100%", minHeight: 310, margin: "0.7rem 0" }}>
-      <rect x="18" y="18" width="724" height="374" rx="8" fill={SURFACE} stroke={HAIRLINE} />
-      <text x="380" y="52" textAnchor="middle" fill={GOLD} fontSize="13" fontWeight="600">6TH HOUSE: STRUGGLE REGISTER AND RECOVERY REGISTER</text>
+    <svg viewBox="0 0 640 410" role="img" aria-label="Sixth house disease immunity and recovery balance" style={{ width: "100%", minHeight: 330, margin: "0.7rem 0" }}>
+      <rect x="18" y="18" width="604" height="374" rx="8" fill={SURFACE} stroke={HAIRLINE} />
+      <text x="320" y="58" textAnchor="middle" fill={GOLD} fontSize="17" fontWeight="700">6TH HOUSE: STRUGGLE AND RECOVERY</text>
 
-      <circle cx="190" cy="150" r="54" fill={`${VERMILION}14`} stroke={VERMILION} strokeWidth="3" />
-      <text x="190" y="145" textAnchor="middle" fill={VERMILION} fontSize="13" fontWeight="600">Susceptibility</text>
-      <text x="190" y="166" textAnchor="middle" fill={INK_MUTED} fontSize="11">disease and struggle</text>
+      <circle cx="130" cy="150" r="58" fill={`${VERMILION}14`} stroke={VERMILION} strokeWidth="3" />
+      <text x="130" y="143" textAnchor="middle" fill={VERMILION} fontSize="15" fontWeight="700">Susceptibility</text>
+      <text x="130" y="168" textAnchor="middle" fill={INK_SECONDARY} fontSize="13">disease and struggle</text>
 
-      <circle cx="570" cy="150" r="54" fill={`${GREEN}14`} stroke={GREEN} strokeWidth="3" />
-      <text x="570" y="145" textAnchor="middle" fill={GREEN} fontSize="13" fontWeight="600">Recovery</text>
-      <text x="570" y="166" textAnchor="middle" fill={INK_MUTED} fontSize="11">immunity and resistance</text>
+      <circle cx="510" cy="150" r="58" fill={`${GREEN}14`} stroke={GREEN} strokeWidth="3" />
+      <text x="510" y="143" textAnchor="middle" fill={GREEN} fontSize="15" fontWeight="700">Recovery</text>
+      <text x="510" y="168" textAnchor="middle" fill={INK_SECONDARY} fontSize="13">immunity and resistance</text>
 
-      <line x1="250" y1="150" x2="510" y2="150" stroke={HAIRLINE} strokeWidth="5" />
-      <path d="M 260 150 C 330 94, 430 94, 500 150" fill="none" stroke={lordStrength === "strong" ? GREEN : lordStrength === "mixed" ? GOLD : VERMILION} strokeWidth="5" strokeLinecap="round" />
-      <text x="380" y="102" textAnchor="middle" fill={strengthColor(lordStrength)} fontSize="12" fontWeight="600">6th lord: {lordStrength}</text>
+      <line x1="192" y1="150" x2="448" y2="150" stroke={HAIRLINE} strokeWidth="5" />
+      <path d="M 200 150 C 270 94, 370 94, 440 150" fill="none" stroke={lordStrength === "strong" ? GREEN : lordStrength === "mixed" ? GOLD : VERMILION} strokeWidth="5" strokeLinecap="round" />
+      <text x="320" y="103" textAnchor="middle" fill={strengthColor(lordStrength)} fontSize="15" fontWeight="700">6th lord: {lordStrength}</text>
 
-      <rect x="138" y="244" width={susceptibilityWidth} height="34" rx="8" fill={`${VERMILION}20`} stroke={VERMILION} />
-      <text x="148" y="266" fill={VERMILION} fontSize="12" fontWeight="600">susceptibility {susceptibilityScore}%</text>
-      <rect x="138" y="294" width={recoveryWidth} height="34" rx="8" fill={`${GREEN}20`} stroke={GREEN} />
-      <text x="148" y="316" fill={GREEN} fontSize="12" fontWeight="600">recovery {recoveryScore}%</text>
+      <rect x="86" y="244" width={susceptibilityWidth} height="38" rx="8" fill={`${VERMILION}20`} stroke={VERMILION} />
+      <text x="98" y="269" fill={VERMILION} fontSize="14" fontWeight="700">susceptibility {susceptibilityScore}%</text>
+      <rect x="86" y="298" width={recoveryWidth} height="38" rx="8" fill={`${GREEN}20`} stroke={GREEN} />
+      <text x="98" y="323" fill={GREEN} fontSize="14" fontWeight="700">recovery {recoveryScore}%</text>
 
-      <rect x="468" y="244" width="170" height="84" rx="8" fill={`${occupantColor(occupantTone)}12`} stroke={occupantColor(occupantTone)} />
-      <text x="553" y="272" textAnchor="middle" fill={occupantColor(occupantTone)} fontSize="12" fontWeight="600">Occupants</text>
-      <text x="553" y="294" textAnchor="middle" fill={INK_MUTED} fontSize="11">{occupantTone} modulation</text>
-      <text x="553" y="314" textAnchor="middle" fill={INK_MUTED} fontSize="11">not decisive alone</text>
+      <rect x="414" y="244" width="160" height="92" rx="8" fill={`${occupantColor(occupantTone)}12`} stroke={occupantColor(occupantTone)} />
+      <text x="494" y="273" textAnchor="middle" fill={occupantColor(occupantTone)} fontSize="15" fontWeight="700">Occupants</text>
+      <text x="494" y="299" textAnchor="middle" fill={INK_SECONDARY} fontSize="13">{occupantTone} modulation</text>
+      <text x="494" y="321" textAnchor="middle" fill={INK_SECONDARY} fontSize="13">not decisive alone</text>
 
-      <text x="380" y="362" textAnchor="middle" fill={safeFrame ? GREEN : VERMILION} fontSize="12" fontWeight="600">
-        {safeFrame ? "Output: tendency language with medical boundary intact" : "Output: repair the scope before reading"}
+      <text x="320" y="360" textAnchor="middle" fill={safeFrame ? GREEN : VERMILION} fontSize="15" fontWeight="700">
+        <tspan x="320" dy="0">{safeFrame ? "Output: tendency language" : "Output: repair the scope"}</tspan>
+        <tspan x="320" dy="21">{safeFrame ? "with medical boundary intact" : "before reading"}</tspan>
       </text>
     </svg>
   );

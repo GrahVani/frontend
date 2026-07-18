@@ -45,10 +45,18 @@ const PLANETS: Planet[] = [
 const CENTER = { x: 170, y: 170 };
 const ORBIT_RADIUS = 118;
 const PLANET_RADIUS = 20;
+const LOWER_PLANET_OFFSET_Y = 18;
 
 function polarToCartesian(cx: number, cy: number, radius: number, angleDeg: number) {
   const rad = ((angleDeg - 90) * Math.PI) / 180;
   return { x: cx + radius * Math.cos(rad), y: cy + radius * Math.sin(rad) };
+}
+
+function getPlanetPosition(planet: Planet) {
+  const pos = polarToCartesian(CENTER.x, CENTER.y, ORBIT_RADIUS, planet.angle);
+  return ["rahu", "ketu", "saturn"].includes(planet.key)
+    ? { ...pos, y: pos.y + LOWER_PLANET_OFFSET_Y }
+    : pos;
 }
 
 function planetScore(planet: Planet, strength: StrengthKey, dignified: boolean): number {
@@ -282,8 +290,8 @@ export function SantanaFifthDrishtiBalance() {
 
 function AspectNetSvg({ active, target, showRays }: { active: Record<string, boolean>; target: TargetKey; showRays: boolean }) {
   return (
-    <svg viewBox="0 0 340 340" role="img" aria-label="Aspect net showing planets aspecting the 5th house or 5th lord" style={{ width: "100%", maxHeight: 400, margin: "0.4rem auto 0.85rem", display: "block" }}>
-      <rect x="10" y="10" width="320" height="320" rx="10" fill={`${GOLD}05`} stroke={HAIRLINE} strokeWidth="1.5" />
+    <svg viewBox="0 0 340 380" role="img" aria-label="Aspect net showing planets aspecting the 5th house or 5th lord" style={{ width: "100%", maxHeight: 430, margin: "0.4rem auto 0.85rem", display: "block" }}>
+      <rect x="10" y="10" width="320" height="360" rx="10" fill={`${GOLD}05`} stroke={HAIRLINE} strokeWidth="1.5" />
 
       {/* Orbit ring */}
       <circle cx={CENTER.x} cy={CENTER.y} r={ORBIT_RADIUS} fill="none" stroke={HAIRLINE} strokeWidth="1" strokeDasharray="4 4" />
@@ -291,7 +299,7 @@ function AspectNetSvg({ active, target, showRays }: { active: Record<string, boo
       {/* Rays to target */}
       {showRays &&
         PLANETS.filter((p) => active[p.key]).map((planet) => {
-          const pos = polarToCartesian(CENTER.x, CENTER.y, ORBIT_RADIUS, planet.angle);
+          const pos = getPlanetPosition(planet);
           const width = planet.nature === "jupiter" ? 4 : 2;
           const color = planet.nature === "jupiter" ? GOLD : planet.nature === "benefic" ? GREEN : planet.nature === "malefic" ? (planet.color === PURPLE ? PURPLE : VERMILION) : INK_MUTED;
           return (
@@ -320,7 +328,7 @@ function AspectNetSvg({ active, target, showRays }: { active: Record<string, boo
 
       {/* Planet circles */}
       {PLANETS.map((planet) => {
-        const pos = polarToCartesian(CENTER.x, CENTER.y, ORBIT_RADIUS, planet.angle);
+        const pos = getPlanetPosition(planet);
         const isActive = active[planet.key];
         const isMalefic = planet.nature === "malefic";
         return (
@@ -337,7 +345,7 @@ function AspectNetSvg({ active, target, showRays }: { active: Record<string, boo
       })}
 
       {/* Legend */}
-      <g transform="translate(28 300)">
+      <g transform="translate(28 342)">
         <line x1="0" y1="0" x2="18" y2="0" stroke={GOLD} strokeWidth="4" strokeLinecap="round" />
         <text x="24" y="4" fill={INK_SECONDARY} fontSize="10" fontWeight="600">Jupiter relief</text>
         <line x1="92" y1="0" x2="110" y2="0" stroke={GREEN} strokeWidth="2" strokeLinecap="round" />

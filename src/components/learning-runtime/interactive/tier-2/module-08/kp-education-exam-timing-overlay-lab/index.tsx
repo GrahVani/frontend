@@ -208,41 +208,41 @@ function TimingOverlaySvg({
   score: number;
 }) {
   return (
-    <svg viewBox="0 0 760 460" role="img" aria-label="KP dasha significator timing overlay diagram" style={{ width: "100%", minHeight: 360, display: "block" }}>
-      <rect x="12" y="12" width="736" height="436" rx="20" fill={SURFACE} stroke={HAIRLINE} />
-      <text x="380" y="48" textAnchor="middle" fill={GOLD} fontSize="13" fontWeight="600">DASHA TO SIGNIFICATOR OVERLAY</text>
-      <text x="380" y="78" textAnchor="middle" fill={period.color} fontSize="18" fontWeight="600">{period.label}</text>
-      <text x="380" y="103" textAnchor="middle" fill={INK_SECONDARY} fontSize="12">{period.window}</text>
+    <svg viewBox="0 0 640 500" role="img" aria-label="KP dasha significator timing overlay diagram" style={{ width: "100%", minHeight: 420, display: "block" }}>
+      <rect x="12" y="12" width="616" height="476" rx="18" fill={SURFACE} stroke={HAIRLINE} />
+      <text x="320" y="52" textAnchor="middle" fill={GOLD} fontSize="17" fontWeight="700">DASHA TO SIGNIFICATOR OVERLAY</text>
+      <text x="320" y="86" textAnchor="middle" fill={period.color} fontSize="22" fontWeight="700">{period.label}</text>
+      <text x="320" y="114" textAnchor="middle" fill={INK_SECONDARY} fontSize="14" fontWeight="600">{period.window}</text>
 
-      <rect x="82" y="142" width="224" height="88" rx="16" fill={period.color} fillOpacity="0.1" stroke={period.color} />
-      <text x="194" y="171" textAnchor="middle" fill={period.color} fontSize="13" fontWeight="600">Running lords</text>
-      <text x="194" y="198" textAnchor="middle" fill={INK_PRIMARY} fontSize="18">{period.lord} / {period.bhukti}</text>
+      <rect x="58" y="150" width="220" height="96" rx="16" fill={period.color} fillOpacity="0.1" stroke={period.color} />
+      <text x="168" y="183" textAnchor="middle" fill={period.color} fontSize="15" fontWeight="700">Running lords</text>
+      <text x="168" y="214" textAnchor="middle" fill={INK_PRIMARY} fontSize="20" fontWeight="600">{period.lord} / {period.bhukti}</text>
 
-      <path d="M318 186 C368 145 417 145 467 186" fill="none" stroke={verdict.color} strokeWidth="4" strokeLinecap="round" />
-      <polygon points="465,177 485,187 465,197" fill={verdict.color} />
+      <path d="M288 198 C340 156 386 156 438 198" fill="none" stroke={verdict.color} strokeWidth="4" strokeLinecap="round" />
+      <polygon points="436,189 456,199 436,209" fill={verdict.color} />
 
-      <rect x="486" y="142" width="196" height="88" rx="16" fill={verdict.color} fillOpacity="0.1" stroke={verdict.color} />
-      <text x="584" y="171" textAnchor="middle" fill={verdict.color} fontSize="13" fontWeight="600">Outcome tone</text>
-      <text x="584" y="199" textAnchor="middle" fill={INK_PRIMARY} fontSize="15">{verdict.label}</text>
+      <rect x="456" y="150" width="150" height="96" rx="16" fill={verdict.color} fillOpacity="0.1" stroke={verdict.color} />
+      <text x="531" y="183" textAnchor="middle" fill={verdict.color} fontSize="15" fontWeight="700">Outcome tone</text>
+      <text x="531" y="214" textAnchor="middle" fill={INK_PRIMARY} fontSize="14" fontWeight="600">{verdict.label}</text>
 
       {(Object.keys(HOUSE_SIGNALS) as HouseKey[]).map((key, index) => {
         const signal = HOUSE_SIGNALS[key];
-        const x = 138 + index * 242;
+        const x = 116 + index * 204;
         const active = period.aligned.includes(key);
         const height = active ? signal.strength : 22;
-        const y = 352 - height;
+        const y = 384 - height;
         return (
           <g key={key}>
-            <rect x={x - 48} y={y} width="96" height={height} rx="12" fill={active ? signal.color : SURFACE} fillOpacity={active ? "0.16" : "1"} stroke={active ? signal.color : HAIRLINE} />
-            <text x={x} y={y - 12} textAnchor="middle" fill={active ? signal.color : INK_MUTED} fontSize="12" fontWeight="600">{signal.label} house</text>
-            <text x={x} y={376} textAnchor="middle" fill={INK_PRIMARY} fontSize="12">{signal.domain}</text>
-            <text x={x} y={396} textAnchor="middle" fill={active ? signal.color : INK_MUTED} fontSize="11">{active ? signal.venusLevel : "no main match"}</text>
+            <rect x={x - 54} y={y} width="108" height={height} rx="12" fill={active ? signal.color : SURFACE} fillOpacity={active ? "0.16" : "1"} stroke={active ? signal.color : HAIRLINE} />
+            <text x={x} y={y - 13} textAnchor="middle" fill={active ? signal.color : INK_SECONDARY} fontSize="14" fontWeight="700">{signal.label} house</text>
+            <text x={x} y={410} textAnchor="middle" fill={INK_PRIMARY} fontSize="13" fontWeight="600">{signal.domain}</text>
+            <text x={x} y={433} textAnchor="middle" fill={active ? signal.color : INK_SECONDARY} fontSize="12" fontWeight="600">{active ? signal.venusLevel : "no main match"}</text>
           </g>
         );
       })}
 
-      <line x1="96" y1="352" x2="664" y2="352" stroke={HAIRLINE} />
-      <text x="380" y="432" textAnchor="middle" fill={verdict.color} fontSize="12" fontWeight="600">Discipline score: {score}%</text>
+      <line x1="72" y1="384" x2="568" y2="384" stroke={HAIRLINE} />
+      <text x="320" y="470" textAnchor="middle" fill={verdict.color} fontSize="14" fontWeight="700">Discipline score: {score}%</text>
     </svg>
   );
 }

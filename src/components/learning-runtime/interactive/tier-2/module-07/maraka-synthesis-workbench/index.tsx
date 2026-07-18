@@ -298,7 +298,12 @@ export function MarakaSynthesisWorkbench() {
 function SynthesisSvg({ picture }: { picture: Picture }) {
   const colors = picture === "reassuring" ? [GREEN, GOLD, GREEN] : [VERMILION, VERMILION, VERMILION];
   return (
-    <svg viewBox="0 0 360 120" role="img" aria-label="Three-layer synthesis diagram">
+    <svg
+      viewBox="0 0 360 120"
+      role="img"
+      aria-label="Three-layer synthesis diagram"
+      style={{ display: "block", width: "min(100%, 540px)", margin: "0.85rem auto 0" }}
+    >
       <rect x="20" y="30" width="90" height="60" rx="6" fill={`${colors[0]}18`} stroke={colors[0]} />
       <text x="65" y="55" textAnchor="middle" fill={colors[0]} fontSize="10" fontWeight={600}>Bālāriṣṭa</text>
       <text x="65" y="75" textAnchor="middle" fill={INK_MUTED} fontSize="9" fontWeight={400}>Chapter 2</text>

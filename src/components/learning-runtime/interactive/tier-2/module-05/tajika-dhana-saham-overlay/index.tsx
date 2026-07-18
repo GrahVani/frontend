@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Info, Sparkles, Check, Copy, AlertTriangle } from "lucide-react";
+import { Sparkles, Check, Copy } from "lucide-react";
 import { ink } from "@/design-tokens/grahvani-learning/colors";
 
 const HAIRLINE = "var(--gl-gold-hairline, rgba(232, 199, 114, 0.28))";
@@ -9,6 +9,10 @@ const SURFACE = "var(--gl-card-surface-solid, #FFF9F0)";
 const INK_PRIMARY = "var(--gl-ink-primary, #2d261e)";
 const INK_SECONDARY = "var(--gl-ink-secondary, #4d4133)";
 const GOLD = ink.goldAccent || "#9C7A2F";
+const LABEL_TEXT = "#5f5447";
+const HELPER_TEXT = "#4b5563";
+const CHART_LINE = "#9b7b42";
+const CHART_LINE_STRONG = "#755521";
 
 const SHLOKA_WORDS = [
   { word: "धनसहमे", meaning: "Dhana Saham: The computed sensitive wealth-point lot" },
@@ -108,7 +112,7 @@ export function TajikaDhanaSahamOverlay() {
 
       {/* Sanskrit Verse with breakdowns */}
       <div className="mb-6 p-4 rounded-xl border bg-white shadow-sm text-center relative" style={{ borderColor: HAIRLINE }}>
-        <div className="absolute top-1 left-2 text-[9px] uppercase font-bold text-gray-400 tracking-wider">
+        <div className="absolute top-1 left-2 text-[9px] uppercase font-bold tracking-wider" style={{ color: LABEL_TEXT }}>
           Tajika Classic Maxims (Click words for translation)
         </div>
         <div className="py-3 flex flex-wrap justify-center gap-2">
@@ -138,7 +142,7 @@ export function TajikaDhanaSahamOverlay() {
         {/* Left Column: controls */}
         <div className="lg:col-span-5 space-y-4">
           <div className="p-4 rounded-xl border bg-white shadow-sm space-y-4" style={{ borderColor: HAIRLINE }}>
-            <span className="text-[10px] uppercase font-bold text-gray-400 block border-b pb-1">
+            <span className="text-[10px] uppercase font-bold block border-b pb-1" style={{ color: LABEL_TEXT }}>
               Varshaphala Return Parameters
             </span>
 
@@ -157,7 +161,7 @@ export function TajikaDhanaSahamOverlay() {
 
             {/* Muntha select */}
             <div>
-              <label className="block text-[10px] uppercase font-bold text-gray-500 mb-1">Muntha House:</label>
+              <label className="block text-[10px] uppercase font-bold mb-1" style={{ color: LABEL_TEXT }}>Muntha House:</label>
               <select
                 value={munthaHouse}
                 onChange={(e) => setMunthaHouse(parseInt(e.target.value))}
@@ -172,10 +176,10 @@ export function TajikaDhanaSahamOverlay() {
 
             {/* Varṣeśa */}
             <div>
-              <label className="block text-[10px] uppercase font-bold text-gray-500 mb-1">Year-Lord (Varṣeśa):</label>
+              <label className="block text-[10px] uppercase font-bold mb-1" style={{ color: LABEL_TEXT }}>Year-Lord (Varṣeśa):</label>
               <select
                 value={varshesa}
-                onChange={(e) => setVarshesa(e.target.value as any)}
+                onChange={(e) => setVarshesa(e.target.value as "jupiter" | "mars" | "saturn")}
                 className="w-full text-xs p-2 border rounded bg-transparent font-semibold focus:ring-amber-800 cursor-pointer"
                 style={{ borderColor: HAIRLINE }}
               >
@@ -203,19 +207,19 @@ export function TajikaDhanaSahamOverlay() {
         {/* Right Column: Return Chart Diamond SVG */}
         <div className="lg:col-span-7 space-y-4">
           <div className="p-4 rounded-xl border bg-white shadow-sm flex flex-col items-center justify-center min-h-[250px]" style={{ borderColor: HAIRLINE }}>
-            <span className="text-[10px] uppercase font-bold text-gray-400 block mb-3 w-full text-center">
+            <span className="text-[10px] uppercase font-bold block mb-3 w-full text-center" style={{ color: LABEL_TEXT }}>
               Annual Return Chart (Click houses to place Muntha)
             </span>
 
-            <div className="w-48 h-48 bg-[#fbf9f4] border p-1 rounded-lg relative" style={{ borderColor: HAIRLINE }}>
+            <div className="w-48 h-48 bg-[#fbf9f4] border p-1 rounded-lg relative" style={{ borderColor: CHART_LINE_STRONG }}>
               <svg viewBox="0 0 100 100" className="w-full h-full font-serif">
-                <rect x="2" y="2" width="96" height="96" fill="transparent" stroke={HAIRLINE} strokeWidth="0.8" />
-                <line x1="2" y1="2" x2="98" y2="98" stroke={HAIRLINE} strokeWidth="0.6" />
-                <line x1="98" y1="2" x2="2" y2="98" stroke={HAIRLINE} strokeWidth="0.6" />
-                <line x1="50" y1="2" x2="2" y2="50" stroke={HAIRLINE} strokeWidth="0.8" />
-                <line x1="2" y1="50" x2="50" y2="98" stroke={HAIRLINE} strokeWidth="0.8" />
-                <line x1="50" y1="98" x2="98" y2="50" stroke={HAIRLINE} strokeWidth="0.8" />
-                <line x1="98" y1="50" x2="50" y2="2" stroke={HAIRLINE} strokeWidth="0.8" />
+                <rect x="2" y="2" width="96" height="96" fill="transparent" stroke={CHART_LINE_STRONG} strokeWidth="1.2" />
+                <line x1="2" y1="2" x2="98" y2="98" stroke={CHART_LINE} strokeWidth="1" />
+                <line x1="98" y1="2" x2="2" y2="98" stroke={CHART_LINE} strokeWidth="1" />
+                <line x1="50" y1="2" x2="2" y2="50" stroke={CHART_LINE} strokeWidth="1.1" />
+                <line x1="2" y1="50" x2="50" y2="98" stroke={CHART_LINE} strokeWidth="1.1" />
+                <line x1="50" y1="98" x2="98" y2="50" stroke={CHART_LINE} strokeWidth="1.1" />
+                <line x1="98" y1="50" x2="50" y2="2" stroke={CHART_LINE} strokeWidth="1.1" />
 
                 {/* Aspect connection line */}
                 {ithasalaActive && (
@@ -225,7 +229,7 @@ export function TajikaDhanaSahamOverlay() {
                     x2={NORTH_HOUSE_COORDS.find((c) => c.house === 2)?.cx} 
                     y2={NORTH_HOUSE_COORDS.find((c) => c.house === 2)?.cy}
                     stroke="#d97706" 
-                    strokeWidth="1.5" 
+                    strokeWidth="2" 
                     strokeDasharray="2,2"
                     className="animate-pulse"
                   />
@@ -247,7 +251,7 @@ export function TajikaDhanaSahamOverlay() {
                         onClick={() => handleHouseClick(cell.house)}
                       />
                       <g className="pointer-events-none">
-                        <text x={cell.cx} y={cell.cy + 1.5} textAnchor="middle" fontSize="4.5" fill={INK_SECONDARY}>
+                        <text x={cell.cx} y={cell.cy + 1.5} textAnchor="middle" fontSize="5" fontWeight="700" fill={INK_SECONDARY}>
                           {cell.house}
                         </text>
                         {isMuntha && (
@@ -263,7 +267,7 @@ export function TajikaDhanaSahamOverlay() {
               </svg>
             </div>
             
-            <div className="flex gap-4 text-[9px] font-bold text-gray-500 mt-2">
+            <div className="flex gap-4 text-[9px] font-bold mt-2" style={{ color: LABEL_TEXT }}>
               <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-amber-600 block" /> Muntha Target</span>
               <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-green-700 block" /> Dhana Saham (H2)</span>
             </div>
@@ -273,7 +277,7 @@ export function TajikaDhanaSahamOverlay() {
 
       {/* Two-Yes Dashboard */}
       <div className="mb-6 p-4 rounded-xl border bg-white shadow-sm space-y-4" style={{ borderColor: HAIRLINE }}>
-        <span className="text-[10px] uppercase font-bold text-gray-400 block border-b pb-1">
+        <span className="text-[10px] uppercase font-bold block border-b pb-1" style={{ color: LABEL_TEXT }}>
           Two-Yes Verification Dashboard
         </span>
         <div className="grid grid-cols-2 gap-4">
@@ -297,10 +301,10 @@ export function TajikaDhanaSahamOverlay() {
       <div className="p-4 rounded-xl border bg-white shadow-sm space-y-3" style={{ borderColor: HAIRLINE }}>
         <div className="flex justify-between items-center border-b pb-2" style={{ borderColor: HAIRLINE }}>
           <div>
-            <span className="text-[9px] uppercase tracking-wider block text-gray-400 font-bold">
+            <span className="text-[9px] uppercase tracking-wider block font-bold" style={{ color: LABEL_TEXT }}>
               Calibrated Interpretations
             </span>
-            <span className="text-[10px] text-gray-500 font-medium italic">
+            <span className="text-[10px] font-medium italic" style={{ color: HELPER_TEXT }}>
               Use this qualitative framing in your client write-ups
             </span>
           </div>
@@ -313,8 +317,8 @@ export function TajikaDhanaSahamOverlay() {
             {copied ? "Copied" : "Copy Phrasing"}
           </button>
         </div>
-        <blockquote className="text-xs italic text-gray-600 border-l-2 pl-3 py-1 bg-amber-50/10" style={{ borderColor: GOLD }}>
-          "{phrasingText}"
+        <blockquote className="text-xs italic border-l-2 pl-3 py-1 bg-amber-50/10" style={{ borderColor: GOLD, color: HELPER_TEXT }}>
+          &ldquo;{phrasingText}&rdquo;
         </blockquote>
       </div>
     </div>

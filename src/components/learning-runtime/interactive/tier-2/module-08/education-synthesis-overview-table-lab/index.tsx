@@ -215,29 +215,29 @@ function SynthesisOverviewSvg({
   visibleTechniques: typeof TECHNIQUES;
 }) {
   return (
-    <svg viewBox="0 0 760 460" role="img" aria-label="Education synthesis overview table diagram" style={{ width: "100%", minHeight: 360, display: "block" }}>
-      <rect x="12" y="12" width="736" height="436" rx="20" fill={SURFACE} stroke={HAIRLINE} />
-      <text x="380" y="48" textAnchor="middle" fill={GOLD} fontSize="13" fontWeight="600">CROSS-TECHNIQUE EDUCATION TABLE</text>
-      <text x="380" y="78" textAnchor="middle" fill={house.color} fontSize="18" fontWeight="600">{house.label} house: {house.domain}</text>
+    <svg viewBox="0 0 640 500" role="img" aria-label="Education synthesis overview table diagram" style={{ width: "100%", minHeight: 420, display: "block" }}>
+      <rect x="16" y="16" width="608" height="468" rx="20" fill={SURFACE} stroke={HAIRLINE} />
+      <text x="320" y="62" textAnchor="middle" fill={GOLD} fontSize="15" fontWeight="700">CROSS-TECHNIQUE EDUCATION TABLE</text>
+      <text x="320" y="96" textAnchor="middle" fill={house.color} fontSize="22" fontWeight="700">{house.label} house: {house.domain}</text>
 
-      <rect x="96" y="126" width="568" height="42" rx="12" fill={house.color} fillOpacity="0.1" stroke={house.color} />
-      <text x="380" y="153" textAnchor="middle" fill={house.color} fontSize="13" fontWeight="600">{house.strongest}</text>
+      <rect x="62" y="142" width="516" height="48" rx="12" fill={house.color} fillOpacity="0.12" stroke={house.color} />
+      <text x="320" y="172" textAnchor="middle" fill={house.color} fontSize="15" fontWeight="700">{house.strongest}</text>
 
       {visibleTechniques.map((technique, index) => {
-        const x = 128 + (index % 3) * 252;
-        const y = 210 + Math.floor(index / 3) * 72;
+        const x = 140 + (index % 3) * 180;
+        const y = 248 + Math.floor(index / 3) * 76;
         return (
           <g key={technique.label}>
-            <rect x={x - 88} y={y - 24} width="176" height="48" rx="12" fill={technique.color} fillOpacity="0.1" stroke={technique.color} />
-            <text x={x} y={y - 3} textAnchor="middle" fill={technique.color} fontSize="12" fontWeight="600">{technique.label}</text>
-            <text x={x} y={y + 16} textAnchor="middle" fill={INK_MUTED} fontSize="11">{technique.independent ? "independent lens" : "overlay / related lens"}</text>
+            <rect x={x - 76} y={y - 28} width="152" height="56" rx="12" fill={technique.color} fillOpacity="0.1" stroke={technique.color} />
+            <text x={x} y={y - 5} textAnchor="middle" fill={technique.color} fontSize="15" fontWeight="700">{technique.label}</text>
+            <text x={x} y={y + 17} textAnchor="middle" fill={INK_SECONDARY} fontSize="12" fontWeight="500">{technique.independent ? "independent lens" : "overlay / related lens"}</text>
           </g>
         );
       })}
 
-      <rect x="118" y="372" width="524" height="46" rx="16" fill={verdict.color} fillOpacity="0.1" stroke={verdict.color} />
-      <text x="380" y="400" textAnchor="middle" fill={verdict.color} fontSize="12" fontWeight="600">{verdict.label}</text>
-      <text x="380" y="436" textAnchor="middle" fill={INK_MUTED} fontSize="11">Depth signal: {house.depth}% qualitative corroboration, not a score</text>
+      <rect x="70" y="402" width="500" height="52" rx="16" fill={verdict.color} fillOpacity="0.12" stroke={verdict.color} />
+      <text x="320" y="434" textAnchor="middle" fill={verdict.color} fontSize="15" fontWeight="700">{verdict.label}</text>
+      <text x="320" y="470" textAnchor="middle" fill={INK_SECONDARY} fontSize="13" fontWeight="500">Depth signal: {house.depth}% qualitative corroboration, not a score</text>
     </svg>
   );
 }

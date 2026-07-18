@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import { Info, Sparkles, Check, Copy } from "lucide-react";
+import { useState } from "react";
+import { Sparkles, Check, Copy } from "lucide-react";
 import { ink } from "@/design-tokens/grahvani-learning/colors";
 
 const HAIRLINE = "var(--gl-gold-hairline, rgba(232, 199, 114, 0.28))";
@@ -9,6 +9,10 @@ const SURFACE = "var(--gl-card-surface-solid, #FFF9F0)";
 const INK_PRIMARY = "var(--gl-ink-primary, #2d261e)";
 const INK_SECONDARY = "var(--gl-ink-secondary, #4d4133)";
 const GOLD = ink.goldAccent || "#9C7A2F";
+const LABEL_TEXT = "#5f5447";
+const HELPER_TEXT = "#4b5563";
+const CHART_LINE = "#9b7b42";
+const CHART_LINE_STRONG = "#755521";
 
 const SHLOKA_WORDS = [
   { word: "कर्मणः", meaning: "Of actions and deeds performed in past alignments" },
@@ -109,7 +113,7 @@ export function LalKitabWealthReadingWorkbench() {
 
       {/* Sanskrit Verse with breakdowns */}
       <div className="mb-6 p-4 rounded-xl border bg-white shadow-sm text-center relative" style={{ borderColor: HAIRLINE }}>
-        <div className="absolute top-1 left-2 text-[9px] uppercase font-bold text-gray-400 tracking-wider">
+        <div className="absolute top-1 left-2 text-[9px] uppercase font-bold tracking-wider" style={{ color: LABEL_TEXT }}>
           Sanskrit Maxim (Click words for breakdown)
         </div>
         <div className="py-3 flex flex-wrap justify-center gap-2">
@@ -139,16 +143,16 @@ export function LalKitabWealthReadingWorkbench() {
         {/* Left Column: controls */}
         <div className="lg:col-span-5 space-y-4">
           <div className="p-4 rounded-xl border bg-white shadow-sm space-y-4" style={{ borderColor: HAIRLINE }}>
-            <span className="text-[10px] uppercase font-bold text-gray-400 block border-b pb-1">
+            <span className="text-[10px] uppercase font-bold block border-b pb-1" style={{ color: LABEL_TEXT }}>
               Select worked case preset
             </span>
 
             {/* Select Preset */}
             <div>
-              <label className="block text-[10px] uppercase font-bold text-gray-500 mb-1">Worked Cases:</label>
+              <label className="block text-[10px] uppercase font-bold mb-1" style={{ color: LABEL_TEXT }}>Worked Cases:</label>
               <select
                 value={presetKey}
-                onChange={(e) => handlePresetChange(e.target.value as any)}
+                onChange={(e) => handlePresetChange(e.target.value as "trader" | "afflicted")}
                 className="w-full text-xs p-2 border rounded bg-transparent font-semibold focus:ring-amber-800 cursor-pointer"
                 style={{ borderColor: HAIRLINE }}
               >
@@ -159,7 +163,7 @@ export function LalKitabWealthReadingWorkbench() {
 
             {/* Audit Checklist */}
             <div className="space-y-2 pt-2 border-t" style={{ borderColor: HAIRLINE }}>
-              <label className="block text-[10px] uppercase font-bold text-gray-400 mb-1.5">Chart Audit Checklist:</label>
+              <label className="block text-[10px] uppercase font-bold mb-1.5" style={{ color: LABEL_TEXT }}>Chart Audit Checklist:</label>
               
               <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-gray-700">
                 <input
@@ -202,21 +206,21 @@ export function LalKitabWealthReadingWorkbench() {
               <p><strong>Prescribed Upaya:</strong> {activePreset.remedy}</p>
             </div>
 
-            <div className="w-36 h-36 bg-[#fbf9f4] border p-1 rounded-lg relative shrink-0" style={{ borderColor: HAIRLINE }}>
+            <div className="w-36 h-36 bg-[#fbf9f4] border p-1 rounded-lg relative shrink-0" style={{ borderColor: CHART_LINE_STRONG }}>
               <svg viewBox="0 0 100 100" className="w-full h-full font-serif">
-                <rect x="2" y="2" width="96" height="96" fill="transparent" stroke={HAIRLINE} strokeWidth="0.8" />
-                <line x1="2" y1="2" x2="98" y2="98" stroke={HAIRLINE} strokeWidth="0.6" />
-                <line x1="98" y1="2" x2="2" y2="98" stroke={HAIRLINE} strokeWidth="0.6" />
-                <line x1="50" y1="2" x2="2" y2="50" stroke={HAIRLINE} strokeWidth="0.8" />
-                <line x1="2" y1="50" x2="50" y2="98" stroke={HAIRLINE} strokeWidth="0.8" />
-                <line x1="50" y1="98" x2="98" y2="50" stroke={HAIRLINE} strokeWidth="0.8" />
-                <line x1="98" y1="50" x2="50" y2="2" stroke={HAIRLINE} strokeWidth="0.8" />
+                <rect x="2" y="2" width="96" height="96" fill="transparent" stroke={CHART_LINE_STRONG} strokeWidth="1.2" />
+                <line x1="2" y1="2" x2="98" y2="98" stroke={CHART_LINE} strokeWidth="1" />
+                <line x1="98" y1="2" x2="2" y2="98" stroke={CHART_LINE} strokeWidth="1" />
+                <line x1="50" y1="2" x2="2" y2="50" stroke={CHART_LINE} strokeWidth="1.1" />
+                <line x1="2" y1="50" x2="50" y2="98" stroke={CHART_LINE} strokeWidth="1.1" />
+                <line x1="50" y1="98" x2="98" y2="50" stroke={CHART_LINE} strokeWidth="1.1" />
+                <line x1="98" y1="50" x2="50" y2="2" stroke={CHART_LINE} strokeWidth="1.1" />
 
                 {NORTH_HOUSE_COORDS.map((cell) => {
                   const matches = activePreset.planets.filter((p) => p.house === cell.house);
                   return (
                     <g key={cell.house}>
-                      <text x={cell.cx} y={cell.cy + 1} textAnchor="middle" fontSize="4.5" fill={INK_SECONDARY}>
+                      <text x={cell.cx} y={cell.cy + 1} textAnchor="middle" fontSize="5" fontWeight="700" fill={INK_SECONDARY}>
                         {cell.house}
                       </text>
                       {matches.map((m, idx) => (
@@ -241,10 +245,10 @@ export function LalKitabWealthReadingWorkbench() {
       <div className="p-4 rounded-xl border bg-white shadow-sm space-y-3" style={{ borderColor: HAIRLINE }}>
         <div className="flex justify-between items-center border-b pb-2" style={{ borderColor: HAIRLINE }}>
           <div>
-            <span className="text-[9px] uppercase tracking-wider block text-gray-400 font-bold">
+            <span className="text-[9px] uppercase tracking-wider block font-bold" style={{ color: LABEL_TEXT }}>
               Calibrated Interpretations
             </span>
-            <span className="text-[10px] text-gray-500 font-medium italic">
+            <span className="text-[10px] font-medium italic" style={{ color: HELPER_TEXT }}>
               {allAudited ? "Audit complete. Interpretation copy unlocked." : "Complete the chart audit checklist to unlock copy capabilities."}
             </span>
           </div>
@@ -252,18 +256,18 @@ export function LalKitabWealthReadingWorkbench() {
             onClick={copyPhrasing}
             disabled={!allAudited}
             className={`px-2 py-1 text-[10px] font-bold rounded border transition-all flex items-center gap-1 bg-transparent cursor-pointer ${
-              allAudited ? "hover:bg-amber-50 text-amber-955" : "opacity-35 cursor-not-allowed text-gray-400"
+              allAudited ? "hover:bg-amber-50 text-amber-955" : "opacity-50 cursor-not-allowed"
             }`}
-            style={{ borderColor: HAIRLINE }}
+            style={{ borderColor: HAIRLINE, color: allAudited ? undefined : LABEL_TEXT }}
           >
             {copied ? <Check size={11} className="text-green-700" /> : <Copy size={11} />}
             {copied ? "Copied" : "Copy Phrasing"}
           </button>
         </div>
         <blockquote className={`text-xs italic border-l-2 pl-3 py-1 bg-amber-50/10 transition-opacity duration-300 ${
-          allAudited ? "opacity-100 text-gray-600" : "opacity-30 text-gray-400 select-none"
-        }`} style={{ borderColor: GOLD }}>
-          "{activePreset.phrasing}"
+          allAudited ? "opacity-100" : "opacity-30 select-none"
+        }`} style={{ borderColor: GOLD, color: allAudited ? HELPER_TEXT : LABEL_TEXT }}>
+          &ldquo;{activePreset.phrasing}&rdquo;
         </blockquote>
       </div>
     </div>

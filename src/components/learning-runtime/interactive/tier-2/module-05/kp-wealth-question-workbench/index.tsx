@@ -1,13 +1,15 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Info, Sparkles, Check, Copy, HelpCircle } from "lucide-react";
+import { Sparkles, Check, Copy } from "lucide-react";
 import { ink } from "@/design-tokens/grahvani-learning/colors";
 
 const HAIRLINE = "var(--gl-gold-hairline, rgba(232, 199, 114, 0.28))";
 const SURFACE = "var(--gl-card-surface-solid, #FFF9F0)";
 const INK_PRIMARY = "var(--gl-ink-primary, #2d261e)";
 const GOLD = ink.goldAccent || "#9C7A2F";
+const LABEL_TEXT = "#5f5447";
+const HELPER_TEXT = "#4b5563";
 
 const SHLOKA_WORDS = [
   { word: "प्रश्नकुण्डल्यां", meaning: "In the Horary chart (Prashna Kundali)" },
@@ -98,7 +100,7 @@ export function KpWealthQuestionWorkbench() {
 
       {/* Sanskrit Verse with breakdowns */}
       <div className="mb-6 p-4 rounded-xl border bg-white shadow-sm text-center relative" style={{ borderColor: HAIRLINE }}>
-        <div className="absolute top-1 left-2 text-[9px] uppercase font-bold text-gray-400 tracking-wider">
+        <div className="absolute top-1 left-2 text-[9px] uppercase font-bold tracking-wider" style={{ color: LABEL_TEXT }}>
           KP Astrological Maxim (Click words for breakdown)
         </div>
         <div className="py-3 flex flex-wrap justify-center gap-2">
@@ -128,16 +130,16 @@ export function KpWealthQuestionWorkbench() {
         {/* Left Column: controls */}
         <div className="lg:col-span-6 space-y-4">
           <div className="p-4 rounded-xl border bg-white shadow-sm space-y-4" style={{ borderColor: HAIRLINE }}>
-            <span className="text-[10px] uppercase font-bold text-gray-400 block border-b pb-1">
+            <span className="text-[10px] uppercase font-bold block border-b pb-1" style={{ color: LABEL_TEXT }}>
               Horary Query Cockpit
             </span>
 
             {/* Query select */}
             <div>
-              <label className="block text-[10px] uppercase font-bold text-gray-500 mb-1">Query Type:</label>
+              <label className="block text-[10px] uppercase font-bold mb-1" style={{ color: LABEL_TEXT }}>Query Type:</label>
               <select
                 value={queryKey}
-                onChange={(e) => setQueryKey(e.target.value as any)}
+                onChange={(e) => setQueryKey(e.target.value as "lost_money" | "debts")}
                 className="w-full text-xs p-2 border rounded bg-transparent font-semibold focus:ring-amber-800 cursor-pointer"
                 style={{ borderColor: HAIRLINE }}
               >
@@ -148,7 +150,7 @@ export function KpWealthQuestionWorkbench() {
 
             {/* Horary number input */}
             <div>
-              <div className="flex justify-between text-[10px] uppercase font-bold text-gray-500 mb-1">
+              <div className="flex justify-between text-[10px] uppercase font-bold mb-1" style={{ color: LABEL_TEXT }}>
                 <span>Select Horary No. (1 - 249):</span>
                 <span className="text-amber-900 font-extrabold">{horaryNumber}</span>
               </div>
@@ -161,7 +163,7 @@ export function KpWealthQuestionWorkbench() {
                 onChange={(e) => setHoraryNumber(parseInt(e.target.value))}
                 className="w-full accent-amber-850 cursor-pointer"
               />
-              <div className="flex justify-between text-[8px] text-gray-400 mt-1 font-semibold">
+              <div className="flex justify-between text-[8px] mt-1 font-semibold" style={{ color: LABEL_TEXT }}>
                 <span>1</span>
                 <span className="text-amber-700">125 Middle</span>
                 <span>249</span>
@@ -174,10 +176,10 @@ export function KpWealthQuestionWorkbench() {
         <div className="lg:col-span-6 space-y-4">
           <div className="p-4 rounded-xl border bg-white shadow-sm flex flex-col md:flex-row gap-4 items-center justify-center min-h-[220px]" style={{ borderColor: HAIRLINE }}>
             <div className="flex-1 w-full space-y-2.5 text-center">
-              <span className="text-[10px] uppercase font-bold text-gray-400 block border-b pb-1">
+              <span className="text-[10px] uppercase font-bold block border-b pb-1" style={{ color: LABEL_TEXT }}>
                 CSL Verdict
               </span>
-              <div className="text-[11px] text-gray-500 font-semibold uppercase">
+              <div className="text-[11px] font-semibold uppercase" style={{ color: HELPER_TEXT }}>
                 Sub-Lord: <span className="text-amber-900 font-bold">{subLord}</span> | Star: <span className="text-amber-900 font-bold">{starLord}</span>
               </div>
               <div className={`p-3 rounded border text-sm font-extrabold transition-all duration-300 ${
@@ -217,10 +219,10 @@ export function KpWealthQuestionWorkbench() {
       <div className="p-4 rounded-xl border bg-white shadow-sm space-y-3" style={{ borderColor: HAIRLINE }}>
         <div className="flex justify-between items-center border-b pb-2" style={{ borderColor: HAIRLINE }}>
           <div>
-            <span className="text-[9px] uppercase tracking-wider block text-gray-400 font-bold">
+            <span className="text-[9px] uppercase tracking-wider block font-bold" style={{ color: LABEL_TEXT }}>
               Calibrated Interpretations
             </span>
-            <span className="text-[10px] text-gray-500 font-medium italic">
+            <span className="text-[10px] font-medium italic" style={{ color: HELPER_TEXT }}>
               Use this qualitative framing in your client write-ups
             </span>
           </div>
@@ -233,8 +235,8 @@ export function KpWealthQuestionWorkbench() {
             {copied ? "Copied" : "Copy Phrasing"}
           </button>
         </div>
-        <blockquote className="text-xs italic text-gray-600 border-l-2 pl-3 py-1 bg-amber-50/10" style={{ borderColor: GOLD }}>
-          "{phrasingText}"
+        <blockquote className="text-xs italic border-l-2 pl-3 py-1 bg-amber-50/10" style={{ borderColor: GOLD, color: HELPER_TEXT }}>
+          &ldquo;{phrasingText}&rdquo;
         </blockquote>
       </div>
     </div>

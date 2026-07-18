@@ -253,13 +253,13 @@ function ScenarioTab() {
         </p>
 
         <div className="mt-4 overflow-x-auto rounded-xl p-4" style={{ background: SURFACE_2, border: `1px solid ${HAIRLINE}` }}>
-          <svg viewBox="0 0 540 280" className="h-auto w-full min-w-[420px]" role="img" aria-label="Consultation compass">
+          <svg viewBox="0 0 540 300" className="h-auto w-full min-w-[420px]" role="img" aria-label="Consultation compass">
             {/* Central node */}
-            <circle cx="270" cy="140" r="42" fill={wash(GOLD, "18")} stroke={GOLD} strokeWidth="2" />
-            <text x="270" y="136" textAnchor="middle" fill={INK_PRIMARY} fontSize="11" fontWeight="600" style={{ fontFamily: fontFamilies.body }}>
+            <circle cx="270" cy="145" r="50" fill={wash(GOLD, "18")} stroke={GOLD} strokeWidth="2" />
+            <text x="270" y="140" textAnchor="middle" fill={INK_PRIMARY} fontSize="14" fontWeight="700" style={{ fontFamily: fontFamilies.body }}>
               Known illness
             </text>
-            <text x="270" y="152" textAnchor="middle" fill={INK_SECONDARY} fontSize="9" style={{ fontFamily: fontFamilies.body }}>
+            <text x="270" y="160" textAnchor="middle" fill={INK_SECONDARY} fontSize="12" fontWeight="500" style={{ fontFamily: fontFamilies.body }}>
               support moment
             </text>
 
@@ -268,28 +268,36 @@ function ScenarioTab() {
               { x: 80, y: 60, label: "Shared finding", sub: "Saturn/11th" },
               { x: 60, y: 210, label: "Silent tone", sub: "daśā held privately" },
               { x: 270, y: 30, label: "Human validation", sub: "frustration is real" },
-            ].map((node, idx) => (
+            ].map((node, idx) => {
+              const lineEndX = node.x < 270 ? node.x + 66 : node.x > 270 ? node.x - 66 : node.x;
+              const lineEndY = node.y < 145 ? node.y + 26 : node.y > 145 ? node.y - 26 : node.y;
+              return (
               <g key={`allowed-${idx}`} role="button" tabIndex={0} onClick={() => setSelected(`allowed-${idx}`)} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") setSelected(`allowed-${idx}`); }} style={{ cursor: "pointer" }}>
-                <line x1={270 + (node.x - 270) * 0.35} y1={140 + (node.y - 140) * 0.35} x2={node.x} y2={node.y} stroke={SAFE} strokeWidth="2" />
-                <rect x={node.x - 58} y={node.y - 22} width="116" height="44" rx="10" fill={wash(SAFE, "14")} stroke={selected === `allowed-${idx}` ? SAFE : HAIRLINE} strokeWidth={selected === `allowed-${idx}` ? 2 : 1} />
-                <text x={node.x} y={node.y - 4} textAnchor="middle" fill={SAFE} fontSize="10" fontWeight="600" style={{ fontFamily: fontFamilies.body }}>{node.label}</text>
-                <text x={node.x} y={node.y + 10} textAnchor="middle" fill={INK_SECONDARY} fontSize="8" style={{ fontFamily: fontFamilies.body }}>{node.sub}</text>
+                <line x1={270 + (lineEndX - 270) * 0.5} y1={145 + (lineEndY - 145) * 0.5} x2={lineEndX} y2={lineEndY} stroke={SAFE} strokeWidth="2.4" />
+                <rect x={node.x - 66} y={node.y - 26} width="132" height="52" rx="10" fill={wash(SAFE, "14")} stroke={selected === `allowed-${idx}` ? SAFE : HAIRLINE} strokeWidth={selected === `allowed-${idx}` ? 2 : 1} />
+                <text x={node.x} y={node.y - 5} textAnchor="middle" fill={SAFE} fontSize="12" fontWeight="700" style={{ fontFamily: fontFamilies.body }}>{node.label}</text>
+                <text x={node.x} y={node.y + 14} textAnchor="middle" fill={INK_SECONDARY} fontSize="10" fontWeight="500" style={{ fontFamily: fontFamilies.body }}>{node.sub}</text>
               </g>
-            ))}
+              );
+            })}
 
             {/* Prohibited rays */}
             {[
               { x: 460, y: 60, label: "New claims", sub: "requires diagnosis" },
               { x: 480, y: 210, label: "Prognosis", sub: "no timeline" },
               { x: 270, y: 250, label: "Reassurance", sub: "medical-sounding" },
-            ].map((node, idx) => (
+            ].map((node, idx) => {
+              const lineEndX = node.x < 270 ? node.x + 66 : node.x > 270 ? node.x - 66 : node.x;
+              const lineEndY = node.y < 145 ? node.y + 26 : node.y > 145 ? node.y - 26 : node.y;
+              return (
               <g key={`prohibited-${idx}`} role="button" tabIndex={0} onClick={() => setSelected(`prohibited-${idx}`)} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") setSelected(`prohibited-${idx}`); }} style={{ cursor: "pointer" }}>
-                <line x1={270 + (node.x - 270) * 0.35} y1={140 + (node.y - 140) * 0.35} x2={node.x} y2={node.y} stroke={CAUTION} strokeWidth="2" />
-                <rect x={node.x - 58} y={node.y - 22} width="116" height="44" rx="10" fill={wash(CAUTION, "12")} stroke={selected === `prohibited-${idx}` ? CAUTION : HAIRLINE} strokeWidth={selected === `prohibited-${idx}` ? 2 : 1} />
-                <text x={node.x} y={node.y - 4} textAnchor="middle" fill={CAUTION} fontSize="10" fontWeight="600" style={{ fontFamily: fontFamilies.body }}>{node.label}</text>
-                <text x={node.x} y={node.y + 10} textAnchor="middle" fill={INK_SECONDARY} fontSize="8" style={{ fontFamily: fontFamilies.body }}>{node.sub}</text>
+                <line x1={270 + (lineEndX - 270) * 0.5} y1={145 + (lineEndY - 145) * 0.5} x2={lineEndX} y2={lineEndY} stroke={CAUTION} strokeWidth="2.4" />
+                <rect x={node.x - 66} y={node.y - 26} width="132" height="52" rx="10" fill={wash(CAUTION, "12")} stroke={selected === `prohibited-${idx}` ? CAUTION : HAIRLINE} strokeWidth={selected === `prohibited-${idx}` ? 2 : 1} />
+                <text x={node.x} y={node.y - 5} textAnchor="middle" fill={CAUTION} fontSize="12" fontWeight="700" style={{ fontFamily: fontFamilies.body }}>{node.label}</text>
+                <text x={node.x} y={node.y + 14} textAnchor="middle" fill={INK_SECONDARY} fontSize="10" fontWeight="500" style={{ fontFamily: fontFamilies.body }}>{node.sub}</text>
               </g>
-            ))}
+              );
+            })}
           </svg>
         </div>
 

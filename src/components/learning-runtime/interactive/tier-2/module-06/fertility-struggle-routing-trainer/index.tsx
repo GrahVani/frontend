@@ -21,7 +21,7 @@ const GREEN = "#2F7D55";
 const GOLD = "#B88421";
 const VERMILION = "#A23A1E";
 const BLUE = "#356CAB";
-const PURPLE = "#6B5AA8";
+const PAUSE_ROUTE = "#8A4B12";
 
 type ScenarioKey = "example1" | "example2";
 
@@ -297,7 +297,7 @@ const THRESHOLDS = [
   {
     key: "pause",
     label: "Pause + route",
-    color: PURPLE,
+    color: PAUSE_ROUTE,
     note: "Acute emotional strain sets the chart aside; both referrals stand.",
   },
 ];
@@ -810,7 +810,7 @@ function DisclosureToggle({
 }
 
 function ThresholdLadderSvg({ level }: { level: number }) {
-  const colors = [BLUE, VERMILION, PURPLE];
+  const fills = ["#F3F8FF", "#FFF1EA", "#FFF7E8"];
   return (
     <svg
       viewBox="0 0 340 220"
@@ -843,14 +843,14 @@ function ThresholdLadderSvg({ level }: { level: number }) {
               width="280"
               height="36"
               rx="8"
-              fill={isActive ? `${colors[index]}${"18"}` : `${INK_MUTED}11`}
-              stroke={isActive ? colors[index] : HAIRLINE}
+              fill={isActive ? fills[index] : "#FBF7EF"}
+              stroke={isActive ? t.color : HAIRLINE}
               strokeWidth={isActive ? 2.5 : 1}
             />
             <text
               x="48"
               y={y + 4}
-              fill={isActive ? colors[index] : INK_MUTED}
+              fill={isActive ? t.color : INK_MUTED}
               fontSize="12"
               fontWeight="600"
             >
@@ -861,7 +861,7 @@ function ThresholdLadderSvg({ level }: { level: number }) {
                 x="300"
                 y={y + 4}
                 textAnchor="end"
-                fill={colors[index]}
+                fill={t.color}
                 fontSize="16"
               >
                 ●

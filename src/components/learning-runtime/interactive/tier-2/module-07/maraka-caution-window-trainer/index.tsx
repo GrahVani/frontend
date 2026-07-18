@@ -457,7 +457,12 @@ export function MarakaCautionWindowTrainer() {
 
 function BoundarySvg() {
   return (
-    <svg viewBox="0 0 420 160" role="img" aria-label="Maraka finding stays internal; only universal proactive guidance reaches the client">
+    <svg
+      viewBox="0 0 420 160"
+      role="img"
+      aria-label="Maraka finding stays internal; only universal proactive guidance reaches the client"
+      style={{ display: "block", width: "min(100%, 560px)", margin: "0.85rem auto 0" }}
+    >
       <rect x="20" y="20" width="130" height="120" rx="8" fill={`${VERMILION}10`} stroke={VERMILION} />
       <text x="85" y="50" textAnchor="middle" fill={VERMILION} fontSize="11" fontWeight={600}>Practitioner</text>
       <text x="85" y="75" textAnchor="middle" fill={INK_PRIMARY} fontSize="10" fontWeight={500}>maraka finding</text>

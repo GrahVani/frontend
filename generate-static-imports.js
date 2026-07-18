@@ -21,6 +21,10 @@ for (const tier of tiers) {
     for (const comp of components) {
       const compPath = path.join(modPath, comp);
       if (fs.statSync(compPath).isDirectory()) {
+        // Skip placeholder directories that have no entry file yet — importing
+        // them would break the build with "Module not found".
+        const hasEntry = fs.existsSync(path.join(compPath, 'index.tsx')) || fs.existsSync(path.join(compPath, 'index.ts'));
+        if (!hasEntry) continue;
         const importStr = `  "${tier}/${mod}/${comp}": () => import("@/components/learning-runtime/interactive/${tier}/${mod}/${comp}/index")`;
         mapEntries.push(importStr);
       }

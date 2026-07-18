@@ -314,34 +314,38 @@ function KpEducationSvg({ activeCusp, activeGraha }: { activeCusp: CuspKey; acti
   const cusp = CUSPS[activeCusp];
   const graha = GRAHAS[activeGraha];
   return (
-    <svg viewBox="0 0 760 430" role="img" aria-label="KP education cusp and house shift map" style={{ width: "100%", minHeight: 330, margin: "0.7rem 0" }}>
-      <rect x="18" y="18" width="724" height="394" rx="8" fill={SURFACE} stroke={HAIRLINE} />
-      <text x="380" y="52" textAnchor="middle" fill={GOLD} fontSize="13" fontWeight="600">CHART E1: KP PLACIDUS CUSPS FOR EDUCATION</text>
-      <line x1="108" y1="140" x2="652" y2="140" stroke={HAIRLINE} strokeWidth="5" />
+    <svg viewBox="0 0 640 460" role="img" aria-label="KP education cusp and house shift map" style={{ width: "100%", minHeight: 380, margin: "0.7rem 0" }}>
+      <rect x="18" y="18" width="604" height="424" rx="8" fill={SURFACE} stroke={HAIRLINE} />
+      <text x="320" y="58" textAnchor="middle" fill={GOLD} fontSize="17" fontWeight="700">CHART E1: KP PLACIDUS CUSPS</text>
+      <text x="320" y="80" textAnchor="middle" fill={GOLD} fontSize="15" fontWeight="700">FOR EDUCATION</text>
+      <line x1="88" y1="156" x2="552" y2="156" stroke={HAIRLINE} strokeWidth="5" />
       {(Object.keys(CUSPS) as CuspKey[]).map((key, index) => {
-        const x = 150 + index * 230;
+        const x = 120 + index * 200;
         const active = key === activeCusp;
         return (
           <g key={key}>
-            <circle cx={x} cy="140" r={active ? 42 : 34} fill={`${CUSPS[key].color}14`} stroke={active ? CUSPS[key].color : HAIRLINE} strokeWidth={active ? 3 : 1.5} />
-            <text x={x} y="132" textAnchor="middle" fill={active ? CUSPS[key].color : INK_SECONDARY} fontSize="12" fontWeight="600">{CUSPS[key].label}</text>
-            <text x={x} y="153" textAnchor="middle" fill={INK_MUTED} fontSize="10">{CUSPS[key].subLord}</text>
+            <circle cx={x} cy="156" r={active ? 46 : 38} fill={`${CUSPS[key].color}14`} stroke={active ? CUSPS[key].color : HAIRLINE} strokeWidth={active ? 3 : 1.5} />
+            <text x={x} y="149" textAnchor="middle" fill={active ? CUSPS[key].color : INK_SECONDARY} fontSize="14" fontWeight="700">{CUSPS[key].label}</text>
+            <text x={x} y="172" textAnchor="middle" fill={INK_SECONDARY} fontSize="12" fontWeight="600">{CUSPS[key].subLord}</text>
           </g>
         );
       })}
-      <rect x="102" y="226" width="250" height="76" rx="8" fill={`${cusp.color}12`} stroke={cusp.color} />
-      <text x="227" y="251" textAnchor="middle" fill={cusp.color} fontSize="12" fontWeight="600">{cusp.label}: {cusp.degree}</text>
-      <text x="227" y="273" textAnchor="middle" fill={INK_MUTED} fontSize="11">{cusp.nakshatra}</text>
-      <text x="227" y="292" textAnchor="middle" fill={INK_MUTED} fontSize="11">Sub-lord: {cusp.subLord}</text>
+      <rect x="62" y="250" width="250" height="86" rx="8" fill={`${cusp.color}12`} stroke={cusp.color} />
+      <text x="187" y="277" textAnchor="middle" fill={cusp.color} fontSize="14" fontWeight="700">{cusp.label}: {cusp.degree}</text>
+      <text x="187" y="302" textAnchor="middle" fill={INK_SECONDARY} fontSize="12" fontWeight="600">{cusp.nakshatra}</text>
+      <text x="187" y="323" textAnchor="middle" fill={INK_SECONDARY} fontSize="12" fontWeight="600">Sub-lord: {cusp.subLord}</text>
 
-      <rect x="408" y="226" width="250" height="76" rx="8" fill={`${graha.color}12`} stroke={graha.color} />
-      <text x="533" y="251" textAnchor="middle" fill={graha.color} fontSize="12" fontWeight="600">{graha.label}: {graha.degree}</text>
-      <text x="533" y="273" textAnchor="middle" fill={INK_MUTED} fontSize="11">Whole-sign: {graha.whole}</text>
-      <text x="533" y="292" textAnchor="middle" fill={INK_MUTED} fontSize="11">Placidus: {graha.placidus}</text>
+      <rect x="328" y="250" width="250" height="86" rx="8" fill={`${graha.color}12`} stroke={graha.color} />
+      <text x="453" y="277" textAnchor="middle" fill={graha.color} fontSize="14" fontWeight="700">{graha.label}: {graha.degree}</text>
+      <text x="453" y="302" textAnchor="middle" fill={INK_SECONDARY} fontSize="12" fontWeight="600">Whole-sign: {graha.whole}</text>
+      <text x="453" y="323" textAnchor="middle" fill={INK_SECONDARY} fontSize="12" fontWeight="600">Placidus: {graha.placidus}</text>
 
-      <path d="M 352 264 C 378 244, 386 244, 408 264" fill="none" stroke={graha.color} strokeWidth="4" strokeLinecap="round" />
-      <text x="380" y="342" textAnchor="middle" fill={INK_SECONDARY} fontSize="12">Mars and Jupiter shift because they sit before the next Placidus cusp begins.</text>
-      <text x="380" y="370" textAnchor="middle" fill={GREEN} fontSize="12" fontWeight="600">Whole-sign and KP Placidus are both valid inside their own frameworks.</text>
+      <path d="M 312 293 C 326 274, 332 274, 328 293" fill="none" stroke={graha.color} strokeWidth="4" strokeLinecap="round" />
+      <text x="320" y="372" textAnchor="middle" fill={INK_SECONDARY} fontSize="14" fontWeight="600">
+        <tspan x="320" dy="0">Mars and Jupiter shift because they sit before</tspan>
+        <tspan x="320" dy="20">the next Placidus cusp begins.</tspan>
+      </text>
+      <text x="320" y="420" textAnchor="middle" fill={GREEN} fontSize="14" fontWeight="700">Both frameworks are valid in their own rules.</text>
     </svg>
   );
 }

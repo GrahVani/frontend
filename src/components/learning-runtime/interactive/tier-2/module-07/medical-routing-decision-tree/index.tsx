@@ -207,39 +207,39 @@ function TreeTab() {
           <svg viewBox="0 0 720 320" className="h-auto w-full min-w-[560px]" role="img" aria-label="Medical-routing decision tree">
             <defs>
               <marker id="treeArrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
-                <path d="M0,0 L8,4 L0,8 z" fill={INK_MUTED} />
+                <path d="M0,0 L8,4 L0,8 z" fill={INK_SECONDARY} />
               </marker>
             </defs>
 
             {/* Start */}
             <g role="button" tabIndex={0} onClick={() => setStep("emergency")} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") setStep("emergency"); }} style={{ cursor: "pointer" }}>
               <rect x="280" y="16" width="160" height="48" rx="12" fill={wash(GOLD, "18")} stroke={step === "start" || step === "emergency" ? GOLD : HAIRLINE} strokeWidth="2" />
-              <text x="360" y="36" textAnchor="middle" fill={INK_PRIMARY} fontSize="11" fontWeight="600" style={{ fontFamily: fontFamilies.body }}>Start: health mentioned</text>
-              <text x="360" y="52" textAnchor="middle" fill={INK_MUTED} fontSize="9" style={{ fontFamily: fontFamilies.body }}>tap to begin</text>
+              <text x="360" y="36" textAnchor="middle" fill={INK_PRIMARY} fontSize="13" fontWeight="700" style={{ fontFamily: fontFamilies.body }}>Start: health mentioned</text>
+              <text x="360" y="53" textAnchor="middle" fill={INK_SECONDARY} fontSize="11" fontWeight="600" style={{ fontFamily: fontFamilies.body }}>tap to begin</text>
             </g>
 
             {/* Q1 */}
             <line x1="360" y1="64" x2="360" y2="96" stroke={HAIRLINE} strokeWidth="2" markerEnd="url(#treeArrow)" />
             <g>
               <rect x="220" y="96" width="280" height="48" rx="12" fill={wash(CAUTION, "12")} stroke={step === "emergency" || step === 1 ? CAUTION : HAIRLINE} strokeWidth={step === "emergency" || step === 1 ? 2 : 1} />
-              <text x="360" y="118" textAnchor="middle" fill={INK_PRIMARY} fontSize="11" fontWeight="600" style={{ fontFamily: fontFamilies.body }}>Active, severe, crisis-level, immediate danger?</text>
-              <text x="360" y="134" textAnchor="middle" fill={INK_MUTED} fontSize="9" style={{ fontFamily: fontFamilies.body }}>severity / immediacy check</text>
+              <text x="360" y="118" textAnchor="middle" fill={INK_PRIMARY} fontSize="13" fontWeight="700" style={{ fontFamily: fontFamilies.body }}>Active, severe, crisis-level, immediate danger?</text>
+              <text x="360" y="136" textAnchor="middle" fill={INK_SECONDARY} fontSize="11" fontWeight="600" style={{ fontFamily: fontFamilies.body }}>severity / immediacy check</text>
             </g>
 
             {/* Yes → Tier 1 */}
             <line x1="220" y1="120" x2="120" y2="120" stroke={CAUTION} strokeWidth="2" markerEnd="url(#treeArrow)" />
-            <text x="180" y="112" textAnchor="middle" fill={INK_MUTED} fontSize="9" style={{ fontFamily: fontFamilies.body }}>yes</text>
+            <text x="180" y="112" textAnchor="middle" fill={INK_SECONDARY} fontSize="11" fontWeight="600" style={{ fontFamily: fontFamilies.body }}>yes</text>
             <g role="button" tabIndex={0} onClick={() => setStep(1)} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") setStep(1); }} style={{ cursor: "pointer" }}>
               <rect x="40" y="96" width="120" height="48" rx="10" fill={wash(CAUTION, "14")} stroke={step === 1 ? CAUTION : HAIRLINE} strokeWidth={step === 1 ? 2 : 1} />
-              <text x="100" y="126" textAnchor="middle" fill={CAUTION} fontSize="12" fontWeight="600" style={{ fontFamily: fontFamilies.body }}>Tier 1</text>
+              <text x="100" y="126" textAnchor="middle" fill={CAUTION} fontSize="14" fontWeight="700" style={{ fontFamily: fontFamilies.body }}>Tier 1</text>
             </g>
 
             {/* No → Q2 */}
             <line x1="500" y1="120" x2="600" y2="120" stroke={HAIRLINE} strokeWidth="2" markerEnd="url(#treeArrow)" />
-            <text x="560" y="112" textAnchor="middle" fill={INK_MUTED} fontSize="9" style={{ fontFamily: fontFamilies.body }}>no</text>
+            <text x="560" y="112" textAnchor="middle" fill={INK_SECONDARY} fontSize="11" fontWeight="600" style={{ fontFamily: fontFamilies.body }}>no</text>
             <g role="button" tabIndex={0} onClick={() => setStep("undiagnosed")} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") setStep("undiagnosed"); }} style={{ cursor: "pointer" }}>
               <rect x="600" y="96" width="120" height="48" rx="10" fill={SURFACE} stroke={HAIRLINE} strokeWidth="1" />
-              <text x="660" y="126" textAnchor="middle" fill={INK_SECONDARY} fontSize="10" style={{ fontFamily: fontFamilies.body }}>next question</text>
+              <text x="660" y="126" textAnchor="middle" fill={INK_SECONDARY} fontSize="12" fontWeight="600" style={{ fontFamily: fontFamilies.body }}>next question</text>
             </g>
 
             {/* Q2 */}
@@ -248,25 +248,25 @@ function TreeTab() {
             <line x1="360" y1="176" x2="360" y2="200" stroke={HAIRLINE} strokeWidth="2" markerEnd="url(#treeArrow)" />
             <g>
               <rect x="220" y="200" width="280" height="48" rx="12" fill={wash(GOLD, "12")} stroke={step === "undiagnosed" || step === 2 || step === 3 ? GOLD : HAIRLINE} strokeWidth={step === "undiagnosed" || step === 2 || step === 3 ? 2 : 1} />
-              <text x="360" y="222" textAnchor="middle" fill={INK_PRIMARY} fontSize="11" fontWeight="600" style={{ fontFamily: fontFamilies.body }}>Existing, stable, clinician-diagnosed condition?</text>
-              <text x="360" y="238" textAnchor="middle" fill={INK_MUTED} fontSize="9" style={{ fontFamily: fontFamilies.body }}>diagnosis test</text>
+              <text x="360" y="222" textAnchor="middle" fill={INK_PRIMARY} fontSize="13" fontWeight="700" style={{ fontFamily: fontFamilies.body }}>Existing, stable, clinician-diagnosed condition?</text>
+              <text x="360" y="240" textAnchor="middle" fill={INK_SECONDARY} fontSize="11" fontWeight="600" style={{ fontFamily: fontFamilies.body }}>diagnosis test</text>
             </g>
 
             {/* Yes → Tier 3 */}
             <line x1="220" y1="224" x2="120" y2="224" stroke={SAFE} strokeWidth="2" markerEnd="url(#treeArrow)" />
-            <text x="180" y="216" textAnchor="middle" fill={INK_MUTED} fontSize="9" style={{ fontFamily: fontFamilies.body }}>yes</text>
+            <text x="180" y="216" textAnchor="middle" fill={INK_SECONDARY} fontSize="11" fontWeight="600" style={{ fontFamily: fontFamilies.body }}>yes</text>
             <g role="button" tabIndex={0} onClick={() => setStep(3)} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") setStep(3); }} style={{ cursor: "pointer" }}>
               <rect x="40" y="200" width="120" height="48" rx="10" fill={wash(SAFE, "14")} stroke={step === 3 ? SAFE : HAIRLINE} strokeWidth={step === 3 ? 2 : 1} />
-              <text x="100" y="230" textAnchor="middle" fill={SAFE} fontSize="12" fontWeight="600" style={{ fontFamily: fontFamilies.body }}>Tier 3</text>
+              <text x="100" y="230" textAnchor="middle" fill={SAFE} fontSize="14" fontWeight="700" style={{ fontFamily: fontFamilies.body }}>Tier 3</text>
             </g>
 
             {/* No → undiagnosed symptom? */}
             <line x1="500" y1="224" x2="600" y2="224" stroke={HAIRLINE} strokeWidth="2" markerEnd="url(#treeArrow)" />
-            <text x="560" y="216" textAnchor="middle" fill={INK_MUTED} fontSize="9" style={{ fontFamily: fontFamilies.body }}>no</text>
+            <text x="560" y="216" textAnchor="middle" fill={INK_SECONDARY} fontSize="11" fontWeight="600" style={{ fontFamily: fontFamilies.body }}>no</text>
             <g>
               <rect x="600" y="200" width="120" height="48" rx="10" fill={wash(GOLD, "10")} stroke={step === "undiagnosed" || step === 2 || step === 4 ? GOLD : HAIRLINE} strokeWidth={step === "undiagnosed" || step === 2 || step === 4 ? 2 : 1} />
-              <text x="660" y="222" textAnchor="middle" fill={INK_PRIMARY} fontSize="10" fontWeight="600" style={{ fontFamily: fontFamilies.body }}>Real symptom?</text>
-              <text x="660" y="236" textAnchor="middle" fill={INK_MUTED} fontSize="9" style={{ fontFamily: fontFamilies.body }}>undiagnosed</text>
+              <text x="660" y="222" textAnchor="middle" fill={INK_PRIMARY} fontSize="12" fontWeight="700" style={{ fontFamily: fontFamilies.body }}>Real symptom?</text>
+              <text x="660" y="238" textAnchor="middle" fill={INK_SECONDARY} fontSize="11" fontWeight="600" style={{ fontFamily: fontFamilies.body }}>undiagnosed</text>
             </g>
 
             {/* Yes → Tier 2 */}
@@ -274,7 +274,7 @@ function TreeTab() {
             <text x="680" y="266" textAnchor="start" fill={INK_MUTED} fontSize="9" style={{ fontFamily: fontFamilies.body }}>yes → Tier 2</text>
             <g role="button" tabIndex={0} onClick={() => setStep(2)} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") setStep(2); }} style={{ cursor: "pointer" }}>
               <rect x="600" y="272" width="120" height="40" rx="10" fill={wash(GOLD, "14")} stroke={step === 2 ? GOLD : HAIRLINE} strokeWidth={step === 2 ? 2 : 1} />
-              <text x="660" y="298" textAnchor="middle" fill={GOLD} fontSize="12" fontWeight="600" style={{ fontFamily: fontFamilies.body }}>Tier 2</text>
+              <text x="660" y="298" textAnchor="middle" fill={GOLD} fontSize="14" fontWeight="700" style={{ fontFamily: fontFamilies.body }}>Tier 2</text>
             </g>
 
             {/* No → Tier 4 */}
@@ -282,8 +282,8 @@ function TreeTab() {
             <line x1="360" y1="248" x2="360" y2="290" stroke={INK_MUTED} strokeWidth="2" markerEnd="url(#treeArrow)" />
             <text x="380" y="282" textAnchor="start" fill={INK_MUTED} fontSize="9" style={{ fontFamily: fontFamilies.body }}>no real symptom → Tier 4</text>
             <g role="button" tabIndex={0} onClick={() => setStep(4)} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") setStep(4); }} style={{ cursor: "pointer" }}>
-              <rect x="300" y="290" width="120" height="40" rx="10" fill={wash(INK_MUTED, "10")} stroke={step === 4 ? INK_MUTED : HAIRLINE} strokeWidth={step === 4 ? 2 : 1} />
-              <text x="360" y="316" textAnchor="middle" fill={INK_MUTED} fontSize="12" fontWeight="600" style={{ fontFamily: fontFamilies.body }}>Tier 4</text>
+              <rect x="300" y="290" width="120" height="40" rx="10" fill="#F7F1E7" stroke={step === 4 ? INK_SECONDARY : HAIRLINE} strokeWidth={step === 4 ? 2 : 1} />
+              <text x="360" y="316" textAnchor="middle" fill={INK_SECONDARY} fontSize="14" fontWeight="700" style={{ fontFamily: fontFamilies.body }}>Tier 4</text>
             </g>
           </svg>
         </div>

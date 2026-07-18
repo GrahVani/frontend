@@ -314,39 +314,60 @@ function LadderTab() {
   );
 }
 
+function ordinalSuffix(n: number): string {
+  if (n === 1) return "st";
+  if (n === 2) return "nd";
+  if (n === 3) return "rd";
+  return "th";
+}
+
 function LadderSvg({ activeHouse }: { activeHouse: number }) {
   const rungs = [2, 4, 9];
   return (
-    <svg viewBox="0 0 240 160" className="w-full" style={{ maxHeight: 180 }} aria-label="Three-tier education ladder">
+    <svg viewBox="0 0 360 190" className="w-full" style={{ maxHeight: 220 }} aria-label="Three-tier education ladder">
       {/* vertical rail */}
-      <line x1={60} y1={20} x2={60} y2={140} stroke={HAIRLINE} strokeWidth={4} strokeLinecap="round" />
+      <line x1={70} y1={22} x2={70} y2={168} stroke={HAIRLINE} strokeWidth={4} strokeLinecap="round" />
       {rungs.map((h, idx) => {
-        const y = 130 - idx * 45;
+        const y = 155 - idx * 58;
         const isActive = h === activeHouse;
+        const tier = TIERS.find((t) => t.house === h);
         return (
           <g key={h}>
             <rect
-              x={80}
-              y={y - 14}
-              width={140}
-              height={28}
+              x={105}
+              y={y - 23}
+              width={230}
+              height={46}
               rx={6}
               fill={isActive ? GOLD : "transparent"}
               stroke={isActive ? GOLD : HAIRLINE}
               strokeWidth={1.5}
             />
             <text
-              x={150}
-              y={y + 4}
+              x={220}
+              y={y - 4}
+              textAnchor="middle"
+              fontSize={13}
+              fill={isActive ? "#1A1408" : INK_SECONDARY}
+              fontWeight={700}
+            >
+              {h}{ordinalSuffix(h)} house
+            </text>
+            <text
+              x={220}
+              y={y + 14}
               textAnchor="middle"
               fontSize={12}
               fill={isActive ? "#1A1408" : INK_SECONDARY}
               fontWeight={500}
             >
-              {h}nd house — {TIERS.find((t) => t.house === h)?.title}
+              {tier?.title}
             </text>
-            <circle cx={60} cy={y} r={isActive ? 8 : 5} fill={isActive ? GOLD : INK_MUTED} />
-            <line x1={60} y1={y} x2={80} y2={y} stroke={isActive ? GOLD : HAIRLINE} strokeWidth={2} />
+            <circle cx={70} cy={y} r={isActive ? 10 : 6} fill={isActive ? GOLD : INK_MUTED} />
+            <text x={70} y={y + 4} textAnchor="middle" fill={isActive ? "#1A1408" : "#fff"} fontSize={10} fontWeight={700}>
+              {h}
+            </text>
+            <line x1={70} y1={y} x2={105} y2={y} stroke={isActive ? GOLD : HAIRLINE} strokeWidth={2} />
           </g>
         );
       })}

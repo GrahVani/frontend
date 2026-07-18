@@ -177,7 +177,7 @@ function MapTab() {
   const activeSign = mode === "zodiac" ? activePart.zodiacSign : activePart.chartSign;
 
   return (
-    <div className="grid min-w-0 gap-4 lg:grid-cols-[minmax(0,300px)_minmax(0,1fr)]">
+    <div className="grid min-w-0 gap-4">
       <div className="grid gap-4">
         <Panel eyebrow="§4.1" title="Click a body region">
           <div className="flex flex-wrap gap-2">

@@ -240,18 +240,18 @@ export function EducationDashaTimingWindowLab() {
 function DashaTimingSvg({ activeKey, verdict, readiness }: { activeKey: WindowKey; verdict: { label: string; color: string }; readiness: number }) {
   const minAge = 0;
   const maxAge = 36.5625;
-  const toX = (age: number) => 86 + ((age - minAge) / (maxAge - minAge)) * 588;
+  const toX = (age: number) => 76 + ((age - minAge) / (maxAge - minAge)) * 488;
 
   return (
-    <svg viewBox="0 0 760 460" role="img" aria-label="Education dasha timing windows diagram" style={{ width: "100%", minHeight: 360, display: "block" }}>
-      <rect x="12" y="12" width="736" height="436" rx="20" fill={SURFACE} stroke={HAIRLINE} />
-      <text x="380" y="48" textAnchor="middle" fill={GOLD} fontSize="13" fontWeight="600">CHART E1 EDUCATION DASHA WINDOWS</text>
-      <text x="380" y="78" textAnchor="middle" fill={verdict.color} fontSize="18" fontWeight="600">{verdict.label}</text>
-      <line x1="86" y1="220" x2="674" y2="220" stroke={HAIRLINE} strokeWidth="3" />
+    <svg viewBox="0 0 640 500" role="img" aria-label="Education dasha timing windows diagram" style={{ width: "100%", minHeight: 420, display: "block" }}>
+      <rect x="12" y="12" width="616" height="476" rx="18" fill={SURFACE} stroke={HAIRLINE} />
+      <text x="320" y="54" textAnchor="middle" fill={GOLD} fontSize="17" fontWeight="700">CHART E1 EDUCATION DASHA WINDOWS</text>
+      <text x="320" y="88" textAnchor="middle" fill={verdict.color} fontSize="22" fontWeight="700">{verdict.label}</text>
+      <line x1="76" y1="238" x2="564" y2="238" stroke={HAIRLINE} strokeWidth="3" />
       {[0, 9.5625, 16.5625, 36.5625].map((age) => (
         <g key={age}>
-          <line x1={toX(age)} y1="207" x2={toX(age)} y2="233" stroke={INK_MUTED} />
-          <text x={toX(age)} y="256" textAnchor="middle" fill={INK_MUTED} fontSize="11">{age.toFixed(age === 0 ? 0 : 2)}</text>
+          <line x1={toX(age)} y1="224" x2={toX(age)} y2="252" stroke={INK_SECONDARY} />
+          <text x={toX(age)} y="278" textAnchor="middle" fill={INK_SECONDARY} fontSize="12" fontWeight="600">{age.toFixed(age === 0 ? 0 : 2)}</text>
         </g>
       ))}
       {(Object.keys(WINDOWS) as WindowKey[]).map((key, index) => {
@@ -259,18 +259,21 @@ function DashaTimingSvg({ activeKey, verdict, readiness }: { activeKey: WindowKe
         const active = key === activeKey;
         const x = toX(item.start);
         const width = Math.max(14, toX(item.end) - toX(item.start));
-        const y = 130 + index * 38;
+        const y = 142 + index * 44;
         return (
           <g key={key}>
-            <rect x={x} y={y} width={width} height="24" rx="8" fill={item.color} fillOpacity={active ? "0.28" : "0.1"} stroke={active ? item.color : HAIRLINE} />
-            <text x={x + width / 2} y={y - 7} textAnchor="middle" fill={active ? item.color : INK_MUTED} fontSize="11" fontWeight="600">{item.label}</text>
+            <rect x={x} y={y} width={width} height="30" rx="8" fill={item.color} fillOpacity={active ? "0.28" : "0.1"} stroke={active ? item.color : HAIRLINE} />
+            <text x={x + width / 2} y={y - 9} textAnchor="middle" fill={active ? item.color : INK_SECONDARY} fontSize="12" fontWeight="700">{item.label}</text>
           </g>
         );
       })}
-      <rect x="106" y="300" width="548" height="68" rx="18" fill={verdict.color} fillOpacity="0.1" stroke={verdict.color} />
-      <text x="380" y="328" textAnchor="middle" fill={verdict.color} fontSize="13" fontWeight="600">Timing discipline: {readiness}%</text>
-      <text x="380" y="353" textAnchor="middle" fill={INK_SECONDARY} fontSize="12">Mercury, Jupiter, Venus define Sarasvati-yoga firing checks; Ketu/Venus clears the 9th-house two-yes.</text>
-      <text x="380" y="414" textAnchor="middle" fill={INK_MUTED} fontSize="11">Age axis: birth through Venus mahadasha span</text>
+      <rect x="74" y="322" width="492" height="86" rx="18" fill={verdict.color} fillOpacity="0.1" stroke={verdict.color} />
+      <text x="320" y="351" textAnchor="middle" fill={verdict.color} fontSize="15" fontWeight="700">Timing discipline: {readiness}%</text>
+      <text x="320" y="376" textAnchor="middle" fill={INK_SECONDARY} fontSize="13" fontWeight="600">
+        <tspan x="320" dy="0">Mercury, Jupiter, Venus define firing checks;</tspan>
+        <tspan x="320" dy="20">Ketu/Venus clears the 9th-house two-yes.</tspan>
+      </text>
+      <text x="320" y="454" textAnchor="middle" fill={INK_SECONDARY} fontSize="12" fontWeight="600">Age axis: birth through Venus mahadasha span</text>
     </svg>
   );
 }

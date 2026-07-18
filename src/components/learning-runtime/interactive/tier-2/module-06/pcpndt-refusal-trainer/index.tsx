@@ -830,15 +830,16 @@ function BoundarySvg() {
 
       {/* Incoming arrows */}
       <g>
-        <line x1="55" y1="95" x2="125" y2="100" stroke={INK_MUTED} strokeWidth="2" strokeDasharray="4 2" />
-        <text x="50" y="90" textAnchor="end" fill={INK_SECONDARY} fontSize="9" fontWeight="600">
+        <line x1="88" y1="95" x2="125" y2="100" stroke={INK_MUTED} strokeWidth="2" strokeDasharray="4 2" />
+        <text x="28" y="90" textAnchor="start" fill={INK_SECONDARY} fontSize="9" fontWeight="600">
           astrologer
         </text>
       </g>
       <g>
-        <line x1="55" y1="140" x2="125" y2="115" stroke={INK_MUTED} strokeWidth="2" strokeDasharray="4 2" />
-        <text x="50" y="150" textAnchor="end" fill={INK_SECONDARY} fontSize="9" fontWeight="600">
-          words / signs / gestures
+        <line x1="96" y1="132" x2="125" y2="115" stroke={INK_MUTED} strokeWidth="2" strokeDasharray="4 2" />
+        <text x="28" y="137" textAnchor="start" fill={INK_SECONDARY} fontSize="9" fontWeight="600">
+          <tspan x="28" dy="0">words / signs</tspan>
+          <tspan x="28" dy="12">/ gestures</tspan>
         </text>
       </g>
 

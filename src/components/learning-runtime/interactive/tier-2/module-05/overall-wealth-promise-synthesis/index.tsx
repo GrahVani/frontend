@@ -1,13 +1,15 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Info, Sparkles, Check, Copy, Flame } from "lucide-react";
+import { Sparkles, Check, Copy } from "lucide-react";
 import { ink } from "@/design-tokens/grahvani-learning/colors";
 
 const HAIRLINE = "var(--gl-gold-hairline, rgba(232, 199, 114, 0.28))";
 const SURFACE = "var(--gl-card-surface-solid, #FFF9F0)";
 const INK_PRIMARY = "var(--gl-ink-primary, #2d261e)";
 const GOLD = ink.goldAccent || "#9C7A2F";
+const LABEL_TEXT = "#5f5447";
+const HELPER_TEXT = "#4b5563";
 
 const SHLOKA_WORDS = [
   { word: "सर्वसूत्रसमन्वयाद्", meaning: "From harmonising and cross-checking all astrological streams (Parāśari, KP, Lal Kitab, Tājika)" },
@@ -94,7 +96,7 @@ export function OverallWealthPromiseSynthesis() {
 
       {/* Sanskrit Verse with breakdowns */}
       <div className="mb-6 p-4 rounded-xl border bg-white shadow-sm text-center relative" style={{ borderColor: HAIRLINE }}>
-        <div className="absolute top-1 left-2 text-[9px] uppercase font-bold text-gray-400 tracking-wider">
+        <div className="absolute top-1 left-2 text-[9px] uppercase font-bold tracking-wider" style={{ color: LABEL_TEXT }}>
           Samanvaya Synthesis Maxim (Click words for breakdown)
         </div>
         <div className="py-3 flex flex-wrap justify-center gap-2">
@@ -130,7 +132,7 @@ export function OverallWealthPromiseSynthesis() {
                 1. Parāśari Base (Houses, D2)
               </span>
               <div className="space-y-2">
-                <div className="flex justify-between text-[9px] uppercase font-bold text-gray-500">
+                <div className="flex justify-between text-[9px] uppercase font-bold" style={{ color: LABEL_TEXT }}>
                   <span>D1/D2 Strength:</span>
                   <span className="text-amber-900 font-extrabold">{parasaraStrength}%</span>
                 </div>
@@ -210,7 +212,7 @@ export function OverallWealthPromiseSynthesis() {
         {/* Right Column: Convergence Radar Dial */}
         <div className="lg:col-span-4 space-y-4">
           <div className="p-4 rounded-xl border bg-white shadow-sm flex flex-col items-center justify-center min-h-[220px]" style={{ borderColor: HAIRLINE }}>
-            <span className="text-[10px] uppercase font-bold text-gray-400 block border-b pb-1 w-full text-center mb-6">
+            <span className="text-[10px] uppercase font-bold block border-b pb-1 w-full text-center mb-6" style={{ color: LABEL_TEXT }}>
               Cross-Stream Convergence Dial
             </span>
 
@@ -231,7 +233,7 @@ export function OverallWealthPromiseSynthesis() {
               </svg>
               <div className="absolute text-center">
                 <span className="text-xl font-extrabold text-amber-900">{convergenceFactor}%</span>
-                <span className="text-[8px] text-gray-400 block font-bold uppercase tracking-wider">Correlation</span>
+                <span className="text-[8px] block font-bold uppercase tracking-wider" style={{ color: LABEL_TEXT }}>Correlation</span>
               </div>
             </div>
             <span className="text-xs font-extrabold text-amber-900 block mt-4 text-center">{confidenceTier}</span>
@@ -243,10 +245,10 @@ export function OverallWealthPromiseSynthesis() {
       <div className="p-4 rounded-xl border bg-white shadow-sm space-y-3" style={{ borderColor: HAIRLINE }}>
         <div className="flex justify-between items-center border-b pb-2" style={{ borderColor: HAIRLINE }}>
           <div>
-            <span className="text-[9px] uppercase tracking-wider block text-gray-400 font-bold">
+            <span className="text-[9px] uppercase tracking-wider block font-bold" style={{ color: LABEL_TEXT }}>
               Calibrated Interpretations
             </span>
-            <span className="text-[10px] text-gray-500 font-medium italic">
+            <span className="text-[10px] font-medium italic" style={{ color: HELPER_TEXT }}>
               Use this qualitative framing in your client write-ups
             </span>
           </div>
@@ -259,8 +261,8 @@ export function OverallWealthPromiseSynthesis() {
             {copied ? "Copied" : "Copy Phrasing"}
           </button>
         </div>
-        <blockquote className="text-xs italic text-gray-600 border-l-2 pl-3 py-1 bg-amber-50/10" style={{ borderColor: GOLD }}>
-          "{phrasingText}"
+        <blockquote className="text-xs italic border-l-2 pl-3 py-1 bg-amber-50/10" style={{ borderColor: GOLD, color: HELPER_TEXT }}>
+          &ldquo;{phrasingText}&rdquo;
         </blockquote>
       </div>
     </div>

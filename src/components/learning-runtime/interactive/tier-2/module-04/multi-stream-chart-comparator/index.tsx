@@ -1,8 +1,7 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import { motion } from "framer-motion";
-import { Sparkles, Eye, Layers, Clock, Award, HelpCircle } from "lucide-react";
+import { Sparkles, Eye, Layers, Clock, Award } from "lucide-react";
 import { RASHIS } from '@/components/learning-runtime/interactive/rashi-data';
 
 const GOLD = "#9C7A2F";
@@ -15,6 +14,17 @@ const INK_MUTED = "var(--gl-ink-on-cream-muted, #7c6d5b)";
 const CARA_COLOR = "#be123c"; // Movable (Cara) - Crimson
 const STHIRA_COLOR = "#0f766e"; // Fixed (Sthira) - Teal
 const DVI_COLOR = "#4338ca"; // Dual (Dvi) - Indigo
+const CHART_GRID_STROKE = "rgba(122, 94, 30, 0.62)";
+const CHART_SUBTLE_STROKE = "rgba(122, 94, 30, 0.46)";
+const CHART_HOUSE_LABEL = "#756753";
+const CHART_PANEL_STYLE: React.CSSProperties = {
+  flex: "1 1 320px",
+  maxWidth: "360px",
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  gap: "8px"
+};
 
 const getPlanetLabels = (name: string): { en: string; native: string } => {
   const map: Record<string, { en: string; native: string }> = {
@@ -519,13 +529,13 @@ export function MultiStreamChartComparator() {
       <div style={{ display: "flex", gap: "16px", flexWrap: "wrap", justifyContent: "center", marginBottom: "20px" }}>
 
         {/* Panel 1: Parāśari */}
-        <div style={{ flex: "1 1 280px", maxWidth: "300px", display: "flex", flexDirection: "column", alignItems: "center", gap: "8px" }}>
+        <div style={CHART_PANEL_STYLE}>
           <div style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "11.5px", fontWeight: 700, color: CARA_COLOR }}>
             <Eye size={14} /> 1. Parāśari Graha-Dṛṣṭi
           </div>
           <svg viewBox="0 0 400 400" style={{ width: "100%", background: "#fffdf8", border: "1px solid rgba(156,122,47,0.12)", borderRadius: "10px", overflow: "visible" }}>
             <defs>
-              <marker id="arrow-parashari-comp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <marker id="arrow-parashari-comp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
                 <path d="M 0 0 L 10 5 L 0 10 z" fill={CARA_COLOR} />
               </marker>
             </defs>
@@ -543,13 +553,13 @@ export function MultiStreamChartComparator() {
                   <polygon
                     points={HOUSE_POLYGONS[hNum]}
                     fill={isTarget ? "rgba(190, 18, 60, 0.06)" : (hasAspect ? "rgba(156, 122, 47, 0.02)" : "transparent")}
-                    stroke={isTarget ? CARA_COLOR : "rgba(156, 122, 47, 0.15)"}
-                    strokeWidth={isTarget ? 2 : 1}
+                    stroke={isTarget ? CARA_COLOR : CHART_SUBTLE_STROKE}
+                    strokeWidth={isTarget ? 2.4 : 1.35}
                   />
-                  <text x={HOUSE_LABEL_POSITIONS[hNum].x} y={HOUSE_LABEL_POSITIONS[hNum].y} fill="rgba(107, 95, 82, 0.18)" fontSize="8.5" fontWeight="700" textAnchor="middle" dominantBaseline="central">
+                  <text x={HOUSE_LABEL_POSITIONS[hNum].x} y={HOUSE_LABEL_POSITIONS[hNum].y} fill={CHART_HOUSE_LABEL} fontSize="12.5" fontWeight="900" textAnchor="middle" dominantBaseline="central">
                     H{hNum}
                   </text>
-                  <text x={HOUSE_SIGN_NUM_POS[hNum].x} y={HOUSE_SIGN_NUM_POS[hNum].y} fill={isTarget ? CARA_COLOR : INK_MUTED} fontSize="10" fontWeight="700" textAnchor="middle" dominantBaseline="central">
+                  <text x={HOUSE_SIGN_NUM_POS[hNum].x} y={HOUSE_SIGN_NUM_POS[hNum].y} fill={isTarget ? CARA_COLOR : INK_SECONDARY} fontSize="12.5" fontWeight="900" textAnchor="middle" dominantBaseline="central">
                     {sign}
                   </text>
 
@@ -562,9 +572,9 @@ export function MultiStreamChartComparator() {
                     return (
                       <g key={p.name} transform={`translate(${xPos}, ${yPos})`}>
                         <title>{`${p.name} (${p.symbol}) at ${p.degree}° ${RASHIS[p.sign - 1].nameEnglish}${p.isRetrograde ? " (Retrograde)" : ""}`}</title>
-                        <rect x="-18" y="-9" width="36" height="18" rx="4" fill={p.color} stroke="rgba(255,255,255,0.2)" strokeWidth="0.8" />
-                        <text y="3" textAnchor="middle" fill="#ffffff" fontSize="9" fontWeight="700" letterSpacing="-0.02em">
-                          {labels.en}({labels.native})
+                        <rect x="-19" y="-10" width="38" height="20" rx="4" fill={p.color} stroke="rgba(255,255,255,0.45)" strokeWidth="1" />
+                        <text y="4" textAnchor="middle" fill="#ffffff" fontSize="11" fontWeight="900">
+                          {labels.en}
                         </text>
                       </g>
                     );
@@ -574,7 +584,7 @@ export function MultiStreamChartComparator() {
             })}
 
             {/* Standard Chart Diagonals */}
-            <g stroke="rgba(156, 122, 47, 0.12)" strokeWidth="1.2" fill="none">
+            <g stroke={CHART_GRID_STROKE} strokeWidth="1.65" fill="none">
               <rect x="10" y="10" width="380" height="380" />
               <line x1="10" y1="10" x2="390" y2="390" />
               <line x1="390" y1="10" x2="10" y2="390" />
@@ -605,7 +615,7 @@ export function MultiStreamChartComparator() {
                   x2={x2}
                   y2={y2}
                   stroke={CARA_COLOR}
-                  strokeWidth="1.8"
+                  strokeWidth="2.8"
                   markerEnd="url(#arrow-parashari-comp)"
                 />
               );
@@ -613,18 +623,18 @@ export function MultiStreamChartComparator() {
 
             {/* Central Circle */}
             <circle cx="200" cy="200" r="44" fill="#fffdf8" stroke={GOLD} strokeWidth="1.2" style={{ filter: "drop-shadow(0px 3px 6px rgba(72,48,16,0.06))" }} />
-            <text x="200" y="203" textAnchor="middle" fill={GOLD_DEEP} fontSize="10" fontWeight="900" letterSpacing="0.05em">PARĀŚARI</text>
+            <text x="200" y="204" textAnchor="middle" fill={GOLD_DEEP} fontSize="11.5" fontWeight="900" letterSpacing="0.05em">PARĀŚARI</text>
           </svg>
         </div>
 
         {/* Panel 2: Jaimini */}
-        <div style={{ flex: "1 1 280px", maxWidth: "300px", display: "flex", flexDirection: "column", alignItems: "center", gap: "8px" }}>
+        <div style={CHART_PANEL_STYLE}>
           <div style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "11.5px", fontWeight: 700, color: DVI_COLOR }}>
             <Layers size={14} /> 2. Jaimini Rāśi-Dṛṣṭi
           </div>
           <svg viewBox="0 0 400 400" style={{ width: "100%", background: "#fffdf8", border: "1px solid rgba(156,122,47,0.12)", borderRadius: "10px", overflow: "visible" }}>
             <defs>
-              <marker id="arrow-jaimini-comp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <marker id="arrow-jaimini-comp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
                 <path d="M 0 0 L 10 5 L 0 10 z" fill={DVI_COLOR} />
               </marker>
             </defs>
@@ -644,13 +654,13 @@ export function MultiStreamChartComparator() {
                   <polygon
                     points={HOUSE_POLYGONS[hNum]}
                     fill={isTarget ? "rgba(67, 56, 202, 0.06)" : (hasAspect ? "rgba(67, 56, 202, 0.02)" : "transparent")}
-                    stroke={isTarget ? DVI_COLOR : "rgba(156, 122, 47, 0.12)"}
-                    strokeWidth={isTarget ? 2 : 1}
+                    stroke={isTarget ? DVI_COLOR : CHART_SUBTLE_STROKE}
+                    strokeWidth={isTarget ? 2.4 : 1.35}
                   />
-                  <text x={HOUSE_LABEL_POSITIONS[hNum].x} y={HOUSE_LABEL_POSITIONS[hNum].y} fill="rgba(107, 95, 82, 0.15)" fontSize="8.5" fontWeight="700" textAnchor="middle" dominantBaseline="central">
+                  <text x={HOUSE_LABEL_POSITIONS[hNum].x} y={HOUSE_LABEL_POSITIONS[hNum].y} fill={CHART_HOUSE_LABEL} fontSize="12.5" fontWeight="900" textAnchor="middle" dominantBaseline="central">
                     H{hNum}
                   </text>
-                  <text x={HOUSE_SIGN_NUM_POS[hNum].x} y={HOUSE_SIGN_NUM_POS[hNum].y} fill={modalityColor} fontSize="10" fontWeight="900" textAnchor="middle" dominantBaseline="central">
+                  <text x={HOUSE_SIGN_NUM_POS[hNum].x} y={HOUSE_SIGN_NUM_POS[hNum].y} fill={modalityColor} fontSize="12.5" fontWeight="900" textAnchor="middle" dominantBaseline="central">
                     {sign}
                   </text>
 
@@ -663,9 +673,9 @@ export function MultiStreamChartComparator() {
                     return (
                       <g key={p.name} transform={`translate(${xPos}, ${yPos})`}>
                         <title>{`${p.name} (${p.symbol}) at ${p.degree}° ${RASHIS[p.sign - 1].nameEnglish}${p.isRetrograde ? " (Retrograde)" : ""}`}</title>
-                        <rect x="-18" y="-9" width="36" height="18" rx="4" fill={p.color} stroke="rgba(255,255,255,0.2)" strokeWidth="0.8" />
-                        <text y="3" textAnchor="middle" fill="#ffffff" fontSize="9" fontWeight="700" letterSpacing="-0.02em">
-                          {labels.en}({labels.native})
+                        <rect x="-19" y="-10" width="38" height="20" rx="4" fill={p.color} stroke="rgba(255,255,255,0.45)" strokeWidth="1" />
+                        <text y="4" textAnchor="middle" fill="#ffffff" fontSize="11" fontWeight="900">
+                          {labels.en}
                         </text>
                       </g>
                     );
@@ -675,7 +685,7 @@ export function MultiStreamChartComparator() {
             })}
 
             {/* Standard Chart Diagonals */}
-            <g stroke="rgba(156, 122, 47, 0.12)" strokeWidth="1.2" fill="none">
+            <g stroke={CHART_GRID_STROKE} strokeWidth="1.65" fill="none">
               <rect x="10" y="10" width="380" height="380" />
               <line x1="10" y1="10" x2="390" y2="390" />
               <line x1="390" y1="10" x2="10" y2="390" />
@@ -694,7 +704,7 @@ export function MultiStreamChartComparator() {
                   d={path}
                   fill="none"
                   stroke={DVI_COLOR}
-                  strokeWidth="1.8"
+                  strokeWidth="2.8"
                   markerEnd="url(#arrow-jaimini-comp)"
                 />
               );
@@ -702,18 +712,18 @@ export function MultiStreamChartComparator() {
 
             {/* Central Circle */}
             <circle cx="200" cy="200" r="44" fill="#fffdf8" stroke={GOLD} strokeWidth="1.2" style={{ filter: "drop-shadow(0px 3px 6px rgba(72,48,16,0.06))" }} />
-            <text x="200" y="203" textAnchor="middle" fill={GOLD_DEEP} fontSize="10" fontWeight="900" letterSpacing="0.05em">JAIMINI</text>
+            <text x="200" y="204" textAnchor="middle" fill={GOLD_DEEP} fontSize="11.5" fontWeight="900" letterSpacing="0.05em">JAIMINI</text>
           </svg>
         </div>
 
         {/* Panel 3: Tājika */}
-        <div style={{ flex: "1 1 280px", maxWidth: "300px", display: "flex", flexDirection: "column", alignItems: "center", gap: "8px" }}>
+        <div style={CHART_PANEL_STYLE}>
           <div style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "11.5px", fontWeight: 700, color: GOLD_DEEP }}>
             <Clock size={14} /> 3. Tājika Orb-Dṛṣṭi
           </div>
           <svg viewBox="0 0 400 400" style={{ width: "100%", background: "#fffdf8", border: "1px solid rgba(156,122,47,0.12)", borderRadius: "10px", overflow: "visible" }}>
             <defs>
-              <marker id="arrow-tajika-comp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <marker id="arrow-tajika-comp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
                 <path d="M 0 0 L 10 5 L 0 10 z" fill={GOLD_DEEP} />
               </marker>
             </defs>
@@ -731,19 +741,19 @@ export function MultiStreamChartComparator() {
                   <polygon
                     points={HOUSE_POLYGONS[hNum]}
                     fill={isTarget ? "rgba(156, 122, 47, 0.06)" : (hasAspect ? "rgba(156, 122, 47, 0.02)" : "transparent")}
-                    stroke={isTarget ? GOLD : "rgba(156, 122, 47, 0.12)"}
-                    strokeWidth={isTarget ? 2 : 1}
+                    stroke={isTarget ? GOLD : CHART_SUBTLE_STROKE}
+                    strokeWidth={isTarget ? 2.4 : 1.35}
                   />
-                  <text x={HOUSE_LABEL_POSITIONS[hNum].x} y={HOUSE_LABEL_POSITIONS[hNum].y} fill="rgba(107, 95, 82, 0.15)" fontSize="8.5" fontWeight="700" textAnchor="middle" dominantBaseline="central">
+                  <text x={HOUSE_LABEL_POSITIONS[hNum].x} y={HOUSE_LABEL_POSITIONS[hNum].y} fill={CHART_HOUSE_LABEL} fontSize="12.5" fontWeight="900" textAnchor="middle" dominantBaseline="central">
                     H{hNum}
                   </text>
-                  <text x={HOUSE_SIGN_NUM_POS[hNum].x} y={HOUSE_SIGN_NUM_POS[hNum].y} fill={isTarget ? GOLD : INK_MUTED} fontSize="10" fontWeight="700" textAnchor="middle" dominantBaseline="central">
+                  <text x={HOUSE_SIGN_NUM_POS[hNum].x} y={HOUSE_SIGN_NUM_POS[hNum].y} fill={isTarget ? GOLD : INK_SECONDARY} fontSize="12.5" fontWeight="900" textAnchor="middle" dominantBaseline="central">
                     {sign}
                   </text>
 
                   {/* Cusp Degree indicator */}
                   {isTarget && (
-                    <text x={HOUSE_CENTERS[hNum].x} y={HOUSE_CENTERS[hNum].y + 12} textAnchor="middle" fill={GOLD_DEEP} fontSize="8.5" fontWeight="700">
+                    <text x={HOUSE_CENTERS[hNum].x} y={HOUSE_CENTERS[hNum].y + 14} textAnchor="middle" fill={GOLD_DEEP} fontSize="10.5" fontWeight="900">
                       Cusp: {targetCuspDegree}°
                     </text>
                   )}
@@ -757,12 +767,12 @@ export function MultiStreamChartComparator() {
                     return (
                       <g key={p.name} transform={`translate(${xPos}, ${yPos})`}>
                         <title>{`${p.name} (${p.symbol}) at ${p.degree}° ${RASHIS[p.sign - 1].nameEnglish}${p.isRetrograde ? " (Retrograde)" : ""}`}</title>
-                        <rect x="-18" y="-9" width="36" height="18" rx="4" fill={p.color} stroke="rgba(255,255,255,0.2)" strokeWidth="0.8" />
-                        <text y="3" textAnchor="middle" fill="#ffffff" fontSize="9" fontWeight="700" letterSpacing="-0.02em">
-                          {labels.en}({labels.native})
+                        <rect x="-19" y="-10" width="38" height="20" rx="4" fill={p.color} stroke="rgba(255,255,255,0.45)" strokeWidth="1" />
+                        <text y="4" textAnchor="middle" fill="#ffffff" fontSize="11" fontWeight="900">
+                          {labels.en}
                         </text>
                         {/* Show planet degree */}
-                        <text y="17" textAnchor="middle" fill={INK_SECONDARY} fontSize="8.5" fontWeight="700">
+                        <text y="19" textAnchor="middle" fill={INK_PRIMARY} fontSize="10.5" fontWeight="900">
                           {p.degree}°{p.isRetrograde ? "R" : ""}
                         </text>
                       </g>
@@ -773,7 +783,7 @@ export function MultiStreamChartComparator() {
             })}
 
             {/* Standard Chart Diagonals */}
-            <g stroke="rgba(156, 122, 47, 0.12)" strokeWidth="1.2" fill="none">
+            <g stroke={CHART_GRID_STROKE} strokeWidth="1.65" fill="none">
               <rect x="10" y="10" width="380" height="380" />
               <line x1="10" y1="10" x2="390" y2="390" />
               <line x1="390" y1="10" x2="10" y2="390" />
@@ -806,7 +816,7 @@ export function MultiStreamChartComparator() {
                   x2={x2}
                   y2={y2}
                   stroke={isBeneficAspect ? "#15803d" : "#b91c1c"}
-                  strokeWidth="1.8"
+                  strokeWidth="2.8"
                   strokeDasharray={link.type === "separating" ? "3,3" : "none"}
                   markerEnd="url(#arrow-tajika-comp)"
                 />
@@ -815,7 +825,7 @@ export function MultiStreamChartComparator() {
 
             {/* Central Circle */}
             <circle cx="200" cy="200" r="44" fill="#fffdf8" stroke={GOLD} strokeWidth="1.2" style={{ filter: "drop-shadow(0px 3px 6px rgba(72,48,16,0.06))" }} />
-            <text x="200" y="203" textAnchor="middle" fill={GOLD_DEEP} fontSize="10" fontWeight="900" letterSpacing="0.05em">TĀJIKA</text>
+            <text x="200" y="204" textAnchor="middle" fill={GOLD_DEEP} fontSize="11.5" fontWeight="900" letterSpacing="0.05em">TĀJIKA</text>
           </svg>
         </div>
 

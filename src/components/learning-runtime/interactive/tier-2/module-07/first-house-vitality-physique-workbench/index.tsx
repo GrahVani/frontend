@@ -297,31 +297,34 @@ export function FirstHouseVitalityPhysiqueWorkbench() {
 
 function VitalitySvg({ lagnaStrength, lordStrength, sunStrength, safeFrame }: { lagnaStrength: Strength; lordStrength: Strength; sunStrength: Strength; safeFrame: boolean }) {
   const nodes = [
-    { label: "Lagna", value: lagnaStrength, x: 110, color: strengthColor(lagnaStrength) },
-    { label: "Lord", value: lordStrength, x: 280, color: strengthColor(lordStrength) },
-    { label: "Sun", value: sunStrength, x: 450, color: strengthColor(sunStrength) },
-    { label: "Frame", value: safeFrame ? "safe" : "repair", x: 620, color: safeFrame ? GREEN : VERMILION },
+    { label: "Lagna", value: lagnaStrength, x: 100, color: strengthColor(lagnaStrength) },
+    { label: "Lord", value: lordStrength, x: 245, color: strengthColor(lordStrength) },
+    { label: "Sun", value: sunStrength, x: 390, color: strengthColor(sunStrength) },
+    { label: "Frame", value: safeFrame ? "safe" : "repair", x: 535, color: safeFrame ? GREEN : VERMILION },
   ];
   return (
-    <svg viewBox="0 0 760 390" role="img" aria-label="First house vitality scorecard flow" style={{ width: "100%", minHeight: 300, margin: "0.7rem 0" }}>
-      <rect x="18" y="18" width="724" height="354" rx="8" fill={SURFACE} stroke={HAIRLINE} />
-      <text x="380" y="52" textAnchor="middle" fill={GOLD} fontSize="13" fontWeight="600">CONSTITUTIONAL WITNESSES, NOT DIAGNOSIS</text>
-      <line x1="110" y1="145" x2="620" y2="145" stroke={HAIRLINE} strokeWidth="4" />
+    <svg viewBox="0 0 640 390" role="img" aria-label="First house vitality scorecard flow" style={{ width: "100%", minHeight: 320, margin: "0.7rem 0" }}>
+      <rect x="18" y="18" width="604" height="354" rx="8" fill={SURFACE} stroke={HAIRLINE} />
+      <text x="320" y="58" textAnchor="middle" fill={GOLD} fontSize="18" fontWeight="700">CONSTITUTIONAL WITNESSES, NOT DIAGNOSIS</text>
+      <line x1="100" y1="145" x2="535" y2="145" stroke={HAIRLINE} strokeWidth="4" />
       {nodes.map((node, index) => (
         <g key={node.label}>
           {index < nodes.length - 1 ? <path d={`M ${node.x + 45} 145 L ${nodes[index + 1].x - 50} 145`} stroke={node.color} strokeWidth="3" opacity="0.55" /> : null}
-          <circle cx={node.x} cy="145" r="40" fill={`${node.color}16`} stroke={node.color} strokeWidth="2.5" />
-          <text x={node.x} y="142" textAnchor="middle" fill={node.color} fontSize="11" fontWeight="600">{node.label}</text>
-          <text x={node.x} y="163" textAnchor="middle" fill={INK_MUTED} fontSize="10">{node.value}</text>
+          <circle cx={node.x} cy="145" r="42" fill={`${node.color}16`} stroke={node.color} strokeWidth="2.5" />
+          <text x={node.x} y="140" textAnchor="middle" fill={node.color} fontSize="15" fontWeight="700">{node.label}</text>
+          <text x={node.x} y="165" textAnchor="middle" fill={INK_SECONDARY} fontSize="13" fontWeight="600">{node.value}</text>
         </g>
       ))}
-      <rect x="98" y="240" width="250" height="56" rx="8" fill={`${strengthColor(lagnaStrength)}12`} stroke={strengthColor(lagnaStrength)} />
-      <text x="223" y="263" textAnchor="middle" fill={strengthColor(lagnaStrength)} fontSize="12" fontWeight="600">Body register</text>
-      <text x="223" y="283" textAnchor="middle" fill={INK_MUTED} fontSize="11">lagna plus lagna lord</text>
-      <rect x="420" y="240" width="250" height="56" rx="8" fill={`${safeFrame ? GREEN : VERMILION}12`} stroke={safeFrame ? GREEN : VERMILION} />
-      <text x="545" y="263" textAnchor="middle" fill={safeFrame ? GREEN : VERMILION} fontSize="12" fontWeight="600">Output boundary</text>
-      <text x="545" y="283" textAnchor="middle" fill={INK_MUTED} fontSize="11">{safeFrame ? "tendency only" : "scope repair"}</text>
-      <text x="380" y="330" textAnchor="middle" fill={INK_SECONDARY} fontSize="12">Strong vitality is useful context; clinical reality always belongs to medical assessment.</text>
+      <rect x="74" y="240" width="220" height="64" rx="8" fill={`${strengthColor(lagnaStrength)}12`} stroke={strengthColor(lagnaStrength)} />
+      <text x="184" y="265" textAnchor="middle" fill={strengthColor(lagnaStrength)} fontSize="15" fontWeight="700">Body register</text>
+      <text x="184" y="289" textAnchor="middle" fill={INK_SECONDARY} fontSize="13">lagna plus lagna lord</text>
+      <rect x="346" y="240" width="220" height="64" rx="8" fill={`${safeFrame ? GREEN : VERMILION}12`} stroke={safeFrame ? GREEN : VERMILION} />
+      <text x="456" y="265" textAnchor="middle" fill={safeFrame ? GREEN : VERMILION} fontSize="15" fontWeight="700">Output boundary</text>
+      <text x="456" y="289" textAnchor="middle" fill={INK_SECONDARY} fontSize="13">{safeFrame ? "tendency only" : "scope repair"}</text>
+      <text x="320" y="337" textAnchor="middle" fill={INK_SECONDARY} fontSize="15">
+        <tspan x="320" dy="0">Strong vitality is useful context;</tspan>
+        <tspan x="320" dy="21">clinical reality belongs to medical assessment.</tspan>
+      </text>
     </svg>
   );
 }

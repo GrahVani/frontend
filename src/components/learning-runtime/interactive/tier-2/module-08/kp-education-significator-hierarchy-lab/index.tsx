@@ -256,31 +256,31 @@ function KpHierarchySvg({
   verdict: { label: string; color: string };
 }) {
   return (
-    <svg viewBox="0 0 760 460" role="img" aria-label="KP education significator hierarchy diagram" style={{ width: "100%", minHeight: 360, display: "block" }}>
-      <rect x="12" y="12" width="736" height="436" rx="20" fill={SURFACE} stroke={HAIRLINE} />
-      <text x="380" y="48" textAnchor="middle" fill={GOLD} fontSize="13" fontWeight="600">KP SIGNIFICATOR HIERARCHY</text>
-      <text x="380" y="76" textAnchor="middle" fill={house.color} fontSize="18" fontWeight="600">{house.title}</text>
-      <text x="380" y="101" textAnchor="middle" fill={INK_SECONDARY} fontSize="12">Owner: {house.owner}</text>
+    <svg viewBox="0 0 640 500" role="img" aria-label="KP education significator hierarchy diagram" style={{ width: "100%", minHeight: 420, display: "block" }}>
+      <rect x="12" y="12" width="616" height="476" rx="18" fill={SURFACE} stroke={HAIRLINE} />
+      <text x="320" y="50" textAnchor="middle" fill={GOLD} fontSize="17" fontWeight="700">KP SIGNIFICATOR HIERARCHY</text>
+      <text x="320" y="82" textAnchor="middle" fill={house.color} fontSize="22" fontWeight="700">{house.title}</text>
+      <text x="320" y="110" textAnchor="middle" fill={INK_SECONDARY} fontSize="14" fontWeight="600">Owner: {house.owner}</text>
 
       {levels.map((level, index) => {
-        const y = 132 + index * 64;
+        const y = 142 + index * 72;
         const hasPlanets = level.planets.length > 0;
         return (
           <g key={level.rank}>
-            <line x1="144" y1={y + 25} x2="616" y2={y + 25} stroke={level.color} strokeOpacity={0.24} strokeWidth="2" />
-            <circle cx="108" cy={y + 25} r="21" fill={level.color} fillOpacity="0.14" stroke={level.color} />
-            <text x="108" y={y + 30} textAnchor="middle" fill={level.color} fontSize="13" fontWeight="600">L{level.rank}</text>
-            <rect x="145" y={y} width="470" height="50" rx="14" fill={hasPlanets ? level.color : SURFACE} fillOpacity={hasPlanets ? "0.1" : "1"} stroke={hasPlanets ? level.color : HAIRLINE} />
-            <text x="165" y={y + 20} fill={level.color} fontSize="12" fontWeight="600">{LEVEL_LABELS[index]}</text>
-            <text x="165" y={y + 38} fill={hasPlanets ? INK_PRIMARY : INK_MUTED} fontSize="13">{hasPlanets ? level.planets.join(", ") : "empty"}</text>
-            <text x="636" y={y + 31} fill={INK_MUTED} fontSize="11">{level.label}</text>
+            <line x1="118" y1={y + 30} x2="542" y2={y + 30} stroke={level.color} strokeOpacity={0.28} strokeWidth="2" />
+            <circle cx="86" cy={y + 30} r="24" fill={level.color} fillOpacity="0.14" stroke={level.color} strokeWidth="1.5" />
+            <text x="86" y={y + 35} textAnchor="middle" fill={level.color} fontSize="15" fontWeight="700">L{level.rank}</text>
+            <rect x="120" y={y} width="390" height="60" rx="14" fill={hasPlanets ? level.color : SURFACE} fillOpacity={hasPlanets ? "0.1" : "1"} stroke={hasPlanets ? level.color : HAIRLINE} />
+            <text x="140" y={y + 24} fill={level.color} fontSize="14" fontWeight="700">{LEVEL_LABELS[index]}</text>
+            <text x="140" y={y + 45} fill={hasPlanets ? INK_PRIMARY : INK_SECONDARY} fontSize="15" fontWeight="600">{hasPlanets ? level.planets.join(", ") : "empty"}</text>
+            <text x="526" y={y + 36} fill={INK_SECONDARY} fontSize="12" fontWeight="600">{level.label}</text>
           </g>
         );
       })}
 
-      <path d="M150 399 C245 355 298 356 378 396 S548 438 620 394" fill="none" stroke={verdict.color} strokeWidth="3" strokeLinecap="round" />
-      <text x="380" y="387" textAnchor="middle" fill={verdict.color} fontSize="12" fontWeight="600">{verdict.label}</text>
-      <text x="380" y="424" textAnchor="middle" fill={INK_SECONDARY} fontSize="12">Ranked: {rankedLine}</text>
+      <path d="M112 438 C205 398 268 398 326 434 S476 472 542 430" fill="none" stroke={verdict.color} strokeWidth="3" strokeLinecap="round" />
+      <text x="320" y="420" textAnchor="middle" fill={verdict.color} fontSize="14" fontWeight="700">{verdict.label}</text>
+      <text x="320" y="462" textAnchor="middle" fill={INK_SECONDARY} fontSize="14" fontWeight="600">Ranked: {rankedLine}</text>
     </svg>
   );
 }

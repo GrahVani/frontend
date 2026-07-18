@@ -1,13 +1,15 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Info, Sparkles, Check, Copy } from "lucide-react";
+import { Sparkles, Check, Copy } from "lucide-react";
 import { ink } from "@/design-tokens/grahvani-learning/colors";
 
 const HAIRLINE = "var(--gl-gold-hairline, rgba(232, 199, 114, 0.28))";
 const SURFACE = "var(--gl-card-surface-solid, #FFF9F0)";
 const INK_PRIMARY = "var(--gl-ink-primary, #2d261e)";
 const GOLD = ink.goldAccent || "#9C7A2F";
+const LABEL_TEXT = "#5f5447";
+const HELPER_TEXT = "#4b5563";
 
 const SHLOKA_WORDS = [
   { word: "नक्षत्राधिपतिः", meaning: "The Nakshatra/Star lord of the planet" },
@@ -92,7 +94,7 @@ export function KpMoneySignificatorsEvaluator() {
 
       {/* Sanskrit Verse with breakdowns */}
       <div className="mb-6 p-4 rounded-xl border bg-white shadow-sm text-center relative" style={{ borderColor: HAIRLINE }}>
-        <div className="absolute top-1 left-2 text-[9px] uppercase font-bold text-gray-400 tracking-wider">
+        <div className="absolute top-1 left-2 text-[9px] uppercase font-bold tracking-wider" style={{ color: LABEL_TEXT }}>
           KP Astrological Maxim (Click words for breakdown)
         </div>
         <div className="py-3 flex flex-wrap justify-center gap-2">
@@ -122,13 +124,13 @@ export function KpMoneySignificatorsEvaluator() {
         {/* Left Column: controls */}
         <div className="lg:col-span-6 space-y-4">
           <div className="p-4 rounded-xl border bg-white shadow-sm space-y-4" style={{ borderColor: HAIRLINE }}>
-            <span className="text-[10px] uppercase font-bold text-gray-400 block border-b pb-1">
+            <span className="text-[10px] uppercase font-bold block border-b pb-1" style={{ color: LABEL_TEXT }}>
               Configuration Panel
             </span>
 
             {/* Target House */}
             <div>
-              <label className="block text-[10px] uppercase font-bold text-gray-500 mb-1">Target House:</label>
+              <label className="block text-[10px] uppercase font-bold mb-1" style={{ color: LABEL_TEXT }}>Target House:</label>
               <div className="flex gap-2">
                 <button
                   onClick={() => setTargetHouse(2)}
@@ -179,7 +181,7 @@ export function KpMoneySignificatorsEvaluator() {
         {/* Right Column: Visual Significator Ladder */}
         <div className="lg:col-span-6 space-y-4">
           <div className="p-4 rounded-xl border bg-white shadow-sm flex flex-col justify-center space-y-4 min-h-[220px]" style={{ borderColor: HAIRLINE }}>
-            <span className="text-[10px] uppercase font-bold text-gray-400 block border-b pb-1 w-full text-center mb-2">
+            <span className="text-[10px] uppercase font-bold block border-b pb-1 w-full text-center mb-2" style={{ color: LABEL_TEXT }}>
               KP Significators Ladder (Click levels for details)
             </span>
 
@@ -203,7 +205,7 @@ export function KpMoneySignificatorsEvaluator() {
                           </span>
                         ))
                       ) : (
-                        <span className="text-gray-400 italic text-[10px]">No planet matches</span>
+                        <span className="italic text-[10px]" style={{ color: HELPER_TEXT }}>No planet matches</span>
                       )}
                     </div>
                   </button>
@@ -217,7 +219,7 @@ export function KpMoneySignificatorsEvaluator() {
       {/* Level Info box */}
       {selectedLevelInfo && (
         <div className="mb-6 p-4 rounded-xl border bg-white shadow-sm space-y-1 animate-fade-in" style={{ borderColor: HAIRLINE }}>
-          <span className="text-[9px] uppercase font-bold text-gray-400 block border-b pb-1">
+          <span className="text-[9px] uppercase font-bold block border-b pb-1" style={{ color: LABEL_TEXT }}>
             Signification Rule Explanation
           </span>
           <p className="text-xs text-gray-700 font-semibold">{levelJustifications[selectedLevelInfo as keyof typeof levelJustifications]}</p>
@@ -228,10 +230,10 @@ export function KpMoneySignificatorsEvaluator() {
       <div className="p-4 rounded-xl border bg-white shadow-sm space-y-3" style={{ borderColor: HAIRLINE }}>
         <div className="flex justify-between items-center border-b pb-2" style={{ borderColor: HAIRLINE }}>
           <div>
-            <span className="text-[9px] uppercase tracking-wider block text-gray-400 font-bold">
+            <span className="text-[9px] uppercase tracking-wider block font-bold" style={{ color: LABEL_TEXT }}>
               Calibrated Interpretations
             </span>
-            <span className="text-[10px] text-gray-500 font-medium italic">
+            <span className="text-[10px] font-medium italic" style={{ color: HELPER_TEXT }}>
               Use this qualitative framing in your client write-ups
             </span>
           </div>
@@ -244,8 +246,8 @@ export function KpMoneySignificatorsEvaluator() {
             {copied ? "Copied" : "Copy Phrasing"}
           </button>
         </div>
-        <blockquote className="text-xs italic text-gray-600 border-l-2 pl-3 py-1 bg-amber-50/10" style={{ borderColor: GOLD }}>
-          "{phrasingText}"
+        <blockquote className="text-xs italic border-l-2 pl-3 py-1 bg-amber-50/10" style={{ borderColor: GOLD, color: HELPER_TEXT }}>
+          &ldquo;{phrasingText}&rdquo;
         </blockquote>
       </div>
     </div>

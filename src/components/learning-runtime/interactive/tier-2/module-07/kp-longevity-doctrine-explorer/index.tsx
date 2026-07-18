@@ -55,6 +55,18 @@ const VIMSHOTTARI_YEARS: Record<GrahaSlug, number> = {
   budha: 17,
 };
 
+const GRAHA_SHORT_LABELS: Record<GrahaSlug, string> = {
+  ketu: "Ke",
+  shukra: "Śu",
+  surya: "Sū",
+  candra: "Ca",
+  mangala: "Ma",
+  rahu: "Rā",
+  guru: "Gu",
+  shani: "Śa",
+  budha: "Bu",
+};
+
 const HOUSE_LORDS: Record<number, GrahaSlug> = {
   0: "mangala",
   1: "shukra",
@@ -370,61 +382,63 @@ function PresetButton({ onClick, children }: { onClick: () => void; children: Re
 }
 
 function SubLordBar({ starLord, offsetArcmin, activeSlug }: { starLord: GrahaSlug; offsetArcmin: number; activeSlug: GrahaSlug }) {
-  const width = 720;
-  const height = 120;
+  const width = 560;
+  const height = 150;
+  const inset = 10;
+  const barWidth = width - inset * 2;
   const startIndex = GRAHA_ORDER.indexOf(starLord);
   let cursor = 0;
   const segments = [];
   for (let i = 0; i < 9; i += 1) {
     const slug = GRAHA_ORDER[(startIndex + i) % 9];
     const spanArcmin = subLordSpanArcmin(slug);
-    const segmentWidth = (spanArcmin / NAKSHATRA_SPAN_ARCMIN) * width;
+    const segmentWidth = (spanArcmin / NAKSHATRA_SPAN_ARCMIN) * barWidth;
     const isActive = slug === activeSlug;
     segments.push({ slug, x: cursor, width: segmentWidth, isActive, spanArcmin });
     cursor += segmentWidth;
   }
-  const markerX = (offsetArcmin / NAKSHATRA_SPAN_ARCMIN) * width;
+  const markerX = (offsetArcmin / NAKSHATRA_SPAN_ARCMIN) * barWidth;
 
   return (
     <svg viewBox={`0 0 ${width} ${height}`} role="img" aria-label="Nakshatra divided into Vimshottari-proportional sub-lords" className="h-auto w-full min-w-0">
-      <rect x="10" y="10" width={width - 20} height={height - 20} rx="12" fill={`${ink.goldAccent}0A`} stroke={HAIRLINE} />
+      <rect x={inset} y="10" width={barWidth} height={height - 20} rx="12" fill={`${ink.goldAccent}0A`} stroke={HAIRLINE} />
       {segments.map((seg) => (
         <g key={seg.slug}>
           <rect
-            x={seg.x + 10}
-            y="42"
+            x={seg.x + inset}
+            y="48"
             width={Math.max(seg.width - 2, 2)}
-            height="46"
+            height="58"
             rx="6"
             fill={seg.isActive ? `${grahas[seg.slug].primary}30` : `${grahas[seg.slug].primary}14`}
             stroke={seg.isActive ? grahas[seg.slug].primary : HAIRLINE}
             strokeWidth={seg.isActive ? 2.5 : 1}
           />
           <text
-            x={seg.x + 10 + seg.width / 2}
-            y="55"
+            x={seg.x + inset + seg.width / 2}
+            y="68"
             textAnchor="middle"
             fill={seg.isActive ? grahas[seg.slug].primary : INK_SECONDARY}
-            fontSize="11"
-            fontWeight="600"
+            fontSize={seg.width < 42 ? "13" : "14"}
+            fontWeight="700"
           >
-            {grahas[seg.slug].iast}
+            {seg.width < 58 ? GRAHA_SHORT_LABELS[seg.slug] : grahas[seg.slug].iast}
           </text>
           <text
-            x={seg.x + 10 + seg.width / 2}
-            y="74"
+            x={seg.x + inset + seg.width / 2}
+            y="91"
             textAnchor="middle"
-            fill={INK_MUTED}
-            fontSize="9"
-            fontWeight="500"
+            fill={INK_SECONDARY}
+            fontSize="12"
+            fontWeight="600"
           >
             {VIMSHOTTARI_YEARS[seg.slug]}y
           </text>
         </g>
       ))}
-      <line x1={markerX + 10} y1="32" x2={markerX + 10} y2="100" stroke={INK_PRIMARY} strokeWidth="2.5" strokeDasharray="4 3" />
-      <polygon points={`${markerX + 10},32 ${markerX + 4},42 ${markerX + 16},42`} fill={INK_PRIMARY} />
-      <text x={markerX + 10} y="28" textAnchor="middle" fill={INK_PRIMARY} fontSize="10" fontWeight="600">
+      <line x1={markerX + inset} y1="34" x2={markerX + inset} y2="118" stroke={INK_PRIMARY} strokeWidth="2.5" strokeDasharray="4 3" />
+      <polygon points={`${markerX + inset},34 ${markerX + inset - 6},46 ${markerX + inset + 6},46`} fill={INK_PRIMARY} />
+      <text x={markerX + inset} y="29" textAnchor="middle" fill={INK_PRIMARY} fontSize="12" fontWeight="700">
         {formatArcmin(offsetArcmin)}
       </text>
     </svg>

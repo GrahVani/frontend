@@ -362,7 +362,12 @@ function ChainSvg({ activeStep }: { activeStep: number }) {
     { id: 7, label: "7th", x: 300, y: 130, color: VERMILION },
   ];
   return (
-    <svg viewBox="0 0 380 170" role="img" aria-label="Bhavat-bhavam chain deriving 2nd and 7th houses from the 8th">
+    <svg
+      viewBox="0 0 380 170"
+      role="img"
+      aria-label="Bhavat-bhavam chain deriving 2nd and 7th houses from the 8th"
+      style={{ display: "block", width: "min(100%, 520px)", margin: "0.75rem auto 0" }}
+    >
       <defs>
         <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
           <polygon points="0 0, 8 3, 0 6" fill={GOLD} />

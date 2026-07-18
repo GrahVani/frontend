@@ -1,13 +1,15 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Info, Sparkles, Check, Copy, AlertTriangle } from "lucide-react";
+import { Sparkles, Check, Copy } from "lucide-react";
 import { ink } from "@/design-tokens/grahvani-learning/colors";
 
 const HAIRLINE = "var(--gl-gold-hairline, rgba(232, 199, 114, 0.28))";
 const SURFACE = "var(--gl-card-surface-solid, #FFF9F0)";
 const INK_PRIMARY = "var(--gl-ink-primary, #2d261e)";
 const GOLD = ink.goldAccent || "#9C7A2F";
+const LABEL_TEXT = "#5f5447";
+const HELPER_TEXT = "#4b5563";
 
 const SHLOKA_WORDS = [
   { word: "कालं गतिं च", meaning: "The timing (kala) and trajectory trend (gati) of finances" },
@@ -119,7 +121,7 @@ export function InvestmentDecisionSynthesis() {
 
       {/* Sanskrit Verse with breakdowns */}
       <div className="mb-6 p-4 rounded-xl border bg-white shadow-sm text-center relative" style={{ borderColor: HAIRLINE }}>
-        <div className="absolute top-1 left-2 text-[9px] uppercase font-bold text-gray-400 tracking-wider">
+        <div className="absolute top-1 left-2 text-[9px] uppercase font-bold tracking-wider" style={{ color: LABEL_TEXT }}>
           Scriptural Competence Boundaries Maxim (Click words for breakdown)
         </div>
         <div className="py-3 flex flex-wrap justify-center gap-2">
@@ -147,7 +149,7 @@ export function InvestmentDecisionSynthesis() {
       {/* Main Grid: Quiz Items and Score Dial */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-6">
         <div className="lg:col-span-8 space-y-4">
-          <span className="text-[10px] uppercase font-bold text-gray-400 block border-b pb-1">
+          <span className="text-[10px] uppercase font-bold block border-b pb-1" style={{ color: LABEL_TEXT }}>
             Astrological Scope Routing Game (Route each client query correctly)
           </span>
 
@@ -156,7 +158,7 @@ export function InvestmentDecisionSynthesis() {
             const isCorrect = answer === item.correctBucket;
             return (
               <div key={item.id} className="p-4 rounded-xl border bg-white shadow-sm space-y-3" style={{ borderColor: HAIRLINE }}>
-                <p className="text-xs font-bold text-gray-800 font-mono">"{item.text}"</p>
+                <p className="text-xs font-bold text-gray-800 font-mono">&ldquo;{item.text}&rdquo;</p>
                 
                 <div className="flex gap-2">
                   <button
@@ -198,7 +200,7 @@ export function InvestmentDecisionSynthesis() {
         {/* Right Column: Score Dial */}
         <div className="lg:col-span-4 space-y-4">
           <div className="p-4 rounded-xl border bg-white shadow-sm flex flex-col items-center justify-center min-h-[220px]" style={{ borderColor: HAIRLINE }}>
-            <span className="text-[10px] uppercase font-bold text-gray-400 block border-b pb-1 w-full text-center mb-6">
+            <span className="text-[10px] uppercase font-bold block border-b pb-1 w-full text-center mb-6" style={{ color: LABEL_TEXT }}>
               Adhikara Ethics Score
             </span>
 
@@ -219,7 +221,7 @@ export function InvestmentDecisionSynthesis() {
               </svg>
               <div className="absolute text-center">
                 <span className="text-xl font-extrabold text-amber-900">{score}%</span>
-                <span className="text-[8px] text-gray-400 block font-bold uppercase tracking-wider">Score</span>
+                <span className="text-[8px] block font-bold uppercase tracking-wider" style={{ color: LABEL_TEXT }}>Score</span>
               </div>
             </div>
             <span className="text-xs font-extrabold text-amber-900 block mt-4 text-center">
@@ -233,10 +235,10 @@ export function InvestmentDecisionSynthesis() {
       <div className="p-4 rounded-xl border bg-white shadow-sm space-y-3" style={{ borderColor: HAIRLINE }}>
         <div className="flex justify-between items-center border-b pb-2" style={{ borderColor: HAIRLINE }}>
           <div>
-            <span className="text-[9px] uppercase tracking-wider block text-gray-400 font-bold">
+            <span className="text-[9px] uppercase tracking-wider block font-bold" style={{ color: LABEL_TEXT }}>
               Calibrated Interpretations
             </span>
-            <span className="text-[10px] text-gray-500 font-medium italic">
+            <span className="text-[10px] font-medium italic" style={{ color: HELPER_TEXT }}>
               Use this qualitative framing in your client write-ups
             </span>
           </div>
@@ -249,8 +251,8 @@ export function InvestmentDecisionSynthesis() {
             {copied ? "Copied" : "Copy Phrasing"}
           </button>
         </div>
-        <blockquote className="text-xs italic text-gray-600 border-l-2 pl-3 py-1 bg-amber-50/10" style={{ borderColor: GOLD }}>
-          "{phrasingText}"
+        <blockquote className="text-xs italic border-l-2 pl-3 py-1 bg-amber-50/10" style={{ borderColor: GOLD, color: HELPER_TEXT }}>
+          &ldquo;{phrasingText}&rdquo;
         </blockquote>
       </div>
     </div>

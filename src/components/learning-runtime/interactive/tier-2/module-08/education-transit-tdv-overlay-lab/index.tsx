@@ -221,39 +221,39 @@ function TransitOverlaySvg({
   ];
 
   return (
-    <svg viewBox="0 0 760 460" role="img" aria-label="Transit dasha vedha overlay diagram" style={{ width: "100%", minHeight: 360, display: "block" }}>
-      <rect x="12" y="12" width="736" height="436" rx="20" fill={SURFACE} stroke={HAIRLINE} />
-      <text x="380" y="48" textAnchor="middle" fill={GOLD} fontSize="13" fontWeight="600">TRANSIT + DASHA + VEDHA</text>
-      <text x="380" y="78" textAnchor="middle" fill={transit.color} fontSize="18" fontWeight="600">{transit.label}</text>
+    <svg viewBox="0 0 640 500" role="img" aria-label="Transit dasha vedha overlay diagram" style={{ width: "100%", minHeight: 420, display: "block" }}>
+      <rect x="12" y="12" width="616" height="476" rx="18" fill={SURFACE} stroke={HAIRLINE} />
+      <text x="320" y="54" textAnchor="middle" fill={GOLD} fontSize="17" fontWeight="700">TRANSIT + DASHA + VEDHA</text>
+      <text x="320" y="88" textAnchor="middle" fill={transit.color} fontSize="22" fontWeight="700">{transit.label}</text>
 
-      <circle cx="170" cy="190" r="58" fill={BLUE} fillOpacity="0.1" stroke={BLUE} />
-      <text x="170" y="185" textAnchor="middle" fill={BLUE} fontSize="13" fontWeight="600">Moon</text>
-      <text x="170" y="207" textAnchor="middle" fill={INK_SECONDARY} fontSize="11">{transit.moonPosition}</text>
+      <circle cx="120" cy="205" r="62" fill={BLUE} fillOpacity="0.1" stroke={BLUE} />
+      <text x="120" y="199" textAnchor="middle" fill={BLUE} fontSize="15" fontWeight="700">Moon</text>
+      <text x="120" y="222" textAnchor="middle" fill={INK_SECONDARY} fontSize="12" fontWeight="600">{transit.moonPosition}</text>
 
-      <circle cx="380" cy="190" r="58" fill={GOLD} fillOpacity="0.1" stroke={GOLD} />
-      <text x="380" y="185" textAnchor="middle" fill={GOLD} fontSize="13" fontWeight="600">Transit</text>
-      <text x="380" y="207" textAnchor="middle" fill={INK_SECONDARY} fontSize="11">stipulated input</text>
+      <circle cx="320" cy="205" r="62" fill={GOLD} fillOpacity="0.1" stroke={GOLD} />
+      <text x="320" y="199" textAnchor="middle" fill={GOLD} fontSize="15" fontWeight="700">Transit</text>
+      <text x="320" y="222" textAnchor="middle" fill={INK_SECONDARY} fontSize="12" fontWeight="600">stipulated input</text>
 
-      <circle cx="590" cy="190" r="58" fill={PURPLE} fillOpacity="0.1" stroke={PURPLE} />
-      <text x="590" y="185" textAnchor="middle" fill={PURPLE} fontSize="13" fontWeight="600">Dasha</text>
-      <text x="590" y="207" textAnchor="middle" fill={INK_SECONDARY} fontSize="11">{insideDashaWindow ? "Venus window" : "not checked"}</text>
+      <circle cx="520" cy="205" r="62" fill={PURPLE} fillOpacity="0.1" stroke={PURPLE} />
+      <text x="520" y="199" textAnchor="middle" fill={PURPLE} fontSize="15" fontWeight="700">Dasha</text>
+      <text x="520" y="222" textAnchor="middle" fill={INK_SECONDARY} fontSize="12" fontWeight="600">{insideDashaWindow ? "Venus window" : "not checked"}</text>
 
-      <path d="M229 190 L321 190" stroke={verdict.color} strokeWidth="4" strokeLinecap="round" />
-      <path d="M439 190 L531 190" stroke={verdict.color} strokeWidth="4" strokeLinecap="round" />
+      <path d="M184 205 L256 205" stroke={verdict.color} strokeWidth="4" strokeLinecap="round" />
+      <path d="M384 205 L456 205" stroke={verdict.color} strokeWidth="4" strokeLinecap="round" />
 
       {steps.map((step, index) => {
-        const x = 134 + index * 164;
+        const x = 116 + index * 136;
         return (
           <g key={step.label}>
-            <rect x={x - 54} y="300" width="108" height="58" rx="14" fill={step.active ? step.color : SURFACE} fillOpacity={step.active ? "0.13" : "1"} stroke={step.active ? step.color : HAIRLINE} />
-            <text x={x} y="324" textAnchor="middle" fill={step.active ? step.color : INK_MUTED} fontSize="12" fontWeight="600">{step.label}</text>
-            <text x={x} y="344" textAnchor="middle" fill={INK_SECONDARY} fontSize="11">{step.active ? "yes" : "no"}</text>
+            <rect x={x - 56} y="318" width="112" height="64" rx="14" fill={step.active ? step.color : SURFACE} fillOpacity={step.active ? "0.13" : "1"} stroke={step.active ? step.color : HAIRLINE} />
+            <text x={x} y="344" textAnchor="middle" fill={step.active ? step.color : INK_SECONDARY} fontSize="14" fontWeight="700">{step.label}</text>
+            <text x={x} y="367" textAnchor="middle" fill={INK_SECONDARY} fontSize="12" fontWeight="600">{step.active ? "yes" : "no"}</text>
           </g>
         );
       })}
 
-      <text x="380" y="406" textAnchor="middle" fill={verdict.color} fontSize="12" fontWeight="600">{verdict.label}</text>
-      <text x="380" y="429" textAnchor="middle" fill={INK_MUTED} fontSize="11">Indicator strength: {score}%</text>
+      <text x="320" y="432" textAnchor="middle" fill={verdict.color} fontSize="15" fontWeight="700">{verdict.label}</text>
+      <text x="320" y="458" textAnchor="middle" fill={INK_SECONDARY} fontSize="12" fontWeight="600">Indicator strength: {score}%</text>
     </svg>
   );
 }
