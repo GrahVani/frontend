@@ -29,6 +29,14 @@ import { useProgressStore } from "@/lib/learning-runtime/progress-store";
 import { getRankFor } from "@/lib/learning-runtime/rank";
 import { useLearningSync } from "@/hooks/learning/useLearningSync";
 import { GamificationPanel } from "./GamificationPanel";
+import {
+  aggregateLearnerProfile,
+  generateAdaptiveRecommendations,
+  generateLearningPath,
+  aggregateLearnerMemory,
+  generateStudyPlan,
+  calculateMomentum,
+} from "@/lib/learning-runtime/profile/profile-service";
 
 /** Format a millisecond time-investment into a learner-readable string. */
 function formatModuleTime(ms: number): string {
@@ -664,6 +672,23 @@ function HeroStatRibbon({
   longestStreak: number;
   reviewDeckCount: number;
 }) {
+  const progressState = useProgressStore();
+  const { studyPlan, momentum } = useMemo(() => {
+    const profile = aggregateLearnerProfile(progressState);
+    const adaptiveRecs = generateAdaptiveRecommendations(profile, progressState);
+    const learningPath = generateLearningPath(profile, progressState);
+    const memory = aggregateLearnerMemory(progressState);
+    const studyPlan = generateStudyPlan(profile, memory, adaptiveRecs, learningPath, progressState);
+    const momentum = calculateMomentum(profile, memory, progressState);
+    return { studyPlan, momentum };
+  }, [progressState]);
+
+  const taskCount = studyPlan.todayTasks.length;
+  const plannerValue = taskCount === 0 ? "0 tasks due" : taskCount === 1 ? "1 task due" : `${taskCount} tasks due`;
+  const plannerSub = masteredCount === 0 && taskCount === 0
+    ? "Personalized study tasks & momentum tracking begin as you start learning."
+    : `Momentum: ${momentum.score}% (${momentum.trend}) · ${studyPlan.estimatedStudyTime > 0 ? `${studyPlan.estimatedStudyTime}m planned today across ${taskCount} task${taskCount === 1 ? "" : "s"}.` : "All daily study tasks completed right on schedule."}`;
+
   const tierPct = tierTotal > 0 ? Math.round((masteredCount / tierTotal) * 100) : 0;
 
   // Review-deck copy is reactive to actual state
@@ -685,7 +710,15 @@ function HeroStatRibbon({
         : "Pass at least one lesson today to extend the streak.";
 
   return (
-    <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "16px", marginTop: "24px" }} className="gl-hero-ribbon">
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "16px", marginTop: "24px" }} className="gl-hero-ribbon">
+      <StatCard
+        icon={<Sparkles size={16} />}
+        accent={GOLD_DEEP}
+        eyebrow="AI Mentor Analytics"
+        value={plannerValue}
+        sub={plannerSub}
+        href="/learn/dashboard"
+      />
       <StatCard
         icon={<Layers size={16} />}
         accent={GOLD_DEEP}

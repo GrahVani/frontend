@@ -14,7 +14,7 @@
 "use client";
 
 import { useState, useEffect, useMemo, useRef } from "react";
-import { Devanagari } from "../@/components/learning-runtime/chrome/typography";
+import { Devanagari } from "@/components/learning-runtime/chrome/typography";
 
 interface Veda {
   slug: "rig" | "yajur" | "sama" | "atharva";
