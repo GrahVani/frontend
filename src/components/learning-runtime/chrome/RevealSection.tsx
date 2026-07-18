@@ -25,12 +25,14 @@ interface RevealSectionProps {
   children: ReactNode;
   /** ms to delay the reveal after intersection — staggers cascading sections. */
   delayMs?: number;
+  /** Optional element id for scroll targets (e.g., section-1) */
+  id?: string;
 }
 
 const useIsomorphicLayoutEffect =
   typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
-export function RevealSection({ children, delayMs = 0 }: RevealSectionProps) {
+export function RevealSection({ children, delayMs = 0, id }: RevealSectionProps) {
   const ref = useRef<HTMLDivElement>(null);
   // Server-render visible; client determines whether to hide before first paint.
   const [revealed, setRevealed] = useState(true);
@@ -77,6 +79,7 @@ export function RevealSection({ children, delayMs = 0 }: RevealSectionProps) {
   return (
     <div
       ref={ref}
+      id={id}
       style={{
         opacity: revealed ? 1 : 0,
         transform: revealed ? "translateY(0)" : "translateY(24px)",

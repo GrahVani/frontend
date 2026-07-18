@@ -214,10 +214,26 @@ export function KpHoraryCuspalVerdictDepthWorkbench() {
 
 export default KpHoraryCuspalVerdictDepthWorkbench;
 
-function classifyChain(chain: typeof PRESETS[PresetKey]["chain"], matter: typeof MATTERS[MatterKey], recordDual: boolean) {
-  return chain.flatMap((link) => {
+interface TouchItem {
+  id: string;
+  label: string;
+  lord: string;
+  houses: number[];
+  note: string;
+  house: number | null;
+  kind: TouchKind;
+}
+
+interface TallySummary {
+  support: number;
+  negate: number;
+  neutral: number;
+}
+
+function classifyChain(chain: typeof PRESETS[PresetKey]["chain"], matter: typeof MATTERS[MatterKey], recordDual: boolean): TouchItem[] {
+  return chain.flatMap((link): TouchItem[] => {
     if (link.houses.length === 0) {
-      return [{ ...link, house: null, kind: "neutral" as TouchKind }];
+      return [{ ...link, house: null, kind: "neutral" }];
     }
     const houses = recordDual ? link.houses : [link.houses[0]];
     return houses.map((house) => ({ ...link, house, kind: classifyHouse(house, matter) }));
@@ -230,8 +246,8 @@ function classifyHouse(house: number, matter: typeof MATTERS[MatterKey]): TouchK
   return "neutral";
 }
 
-function summarize(touches: ReturnType<typeof classifyChain>) {
-  return touches.reduce(
+function summarize(touches: TouchItem[]): TallySummary {
+  return touches.reduce<TallySummary>(
     (acc, touch) => {
       acc[touch.kind] += 1;
       return acc;
@@ -240,7 +256,7 @@ function summarize(touches: ReturnType<typeof classifyChain>) {
   );
 }
 
-function ChainDiagram({ touches, tally, finalVerdict, showSubSub, subSubKind, subSubLord, subSubHouse }: { touches: ReturnType<typeof classifyChain>; tally: ReturnType<typeof summarize>; finalVerdict: string; showSubSub: boolean; subSubKind: TouchKind; subSubLord: string; subSubHouse: number }) {
+function ChainDiagram({ touches, tally, finalVerdict, showSubSub, subSubKind, subSubLord, subSubHouse }: { touches: TouchItem[]; tally: TallySummary; finalVerdict: string; showSubSub: boolean; subSubKind: TouchKind; subSubLord: string; subSubHouse: number }) {
   const visible = touches.slice(0, 7);
 
   return (

@@ -115,7 +115,7 @@ export function mapApiError(error: unknown): MappedError {
 
     // Fallback — generic Error (legacy path, network errors, etc.)
     if (error instanceof Error) {
-        const message = error.message;
+        const message = error.message || '';
 
         // Try to extract error code from message
         for (const [code, mapped] of Object.entries(ERROR_CODE_MAP)) {
