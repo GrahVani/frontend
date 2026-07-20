@@ -103,7 +103,7 @@ export function VarshaphalaPopHoroscopeLiteracyWorkbench() {
   const [tab, setTab] = useState<TabKey>("comparison");
   const [ratings, setRatings] = useState<Record<string, number>>({});
   const [checkedQuestions, setCheckedQuestions] = useState<Set<string>>(new Set());
-  const [redFlagJudgments, setRedFlagJudgments] = useState<Record<string, "undecided" | "redflag" | "ok">(
+  const [redFlagJudgments, setRedFlagJudgments] = useState<Record<string, "undecided" | "redflag" | "ok">>(
     Object.fromEntries(RED_FLAGS.map((r) => [r.id, "undecided"]))
   );
   const [copied, setCopied] = useState(false);
