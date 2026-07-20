@@ -262,15 +262,18 @@ export async function apiFetch<T = unknown>(url: string, options: RequestInit = 
             return response.json();
         } catch (error: unknown) {
             const errorMessage = error instanceof Error ? error.message : String(error);
-            const isNetworkError = errorMessage === 'Failed to fetch' || errorMessage.includes('Network request failed');
+            const isNetworkError = errorMessage === 'Failed to fetch' || errorMessage.includes('Network request failed') || errorMessage.includes('fetch failed');
             if (isNetworkError && attempt < maxRetries - 1) {
                 const delay = Math.pow(2, attempt) * 1000;
                 await new Promise(r => setTimeout(r, delay));
                 attempt++;
                 continue;
             }
+            if (isNetworkError) {
+                throw new ApiError("Service Temporarily Unavailable. Please try again later.", 503, "SERVICE_UNAVAILABLE");
+            }
             throw error;
         }
     }
-    throw new Error('Max retries exceeded');
+    throw new ApiError('Max retries exceeded', 503, "MAX_RETRIES_EXCEEDED");
 }
