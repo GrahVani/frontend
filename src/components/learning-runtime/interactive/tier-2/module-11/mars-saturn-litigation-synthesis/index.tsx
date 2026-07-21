@@ -500,77 +500,80 @@ export function MarsSaturnLitigationSynthesis() {
 function AspectWeb() {
   return (
     <svg
-      viewBox="0 0 300 220"
+      viewBox="0 0 520 300"
       role="img"
       aria-label="Aspect web: Mars in the 12th and Saturn in the 6th aspect each other mutually, and both special-aspect the 3rd house"
-      style={{ width: "100%", maxHeight: 240, display: "block", marginTop: "0.55rem" }}
+      style={{ width: "100%", minHeight: 300, display: "block", marginTop: "0.55rem" }}
     >
-      <rect x={16} y={16} width={268} height={188} rx={8} fill="transparent" stroke={HAIRLINE} />
+      <rect x={16} y={16} width={488} height={268} rx={8} fill="transparent" stroke={HAIRLINE} />
 
       {/* 12th house / Mars */}
-      <circle cx={70} cy={110} r={32} fill={`${VERMILION}${"15"}`} stroke={VERMILION} strokeWidth={3} />
-      <text x={70} y={106} textAnchor="middle" fill={VERMILION} fontSize={12} fontWeight={600}>
+      <circle cx={110} cy={160} r={38} fill={`${VERMILION}${"15"}`} stroke={VERMILION} strokeWidth={3} />
+      <text x={110} y={155} textAnchor="middle" fill={VERMILION} fontSize={14} fontWeight={600}>
         Mars
       </text>
-      <text x={70} y={120} textAnchor="middle" fill={INK_SECONDARY} fontSize={9} fontWeight={600}>
+      <text x={110} y={174} textAnchor="middle" fill={INK_SECONDARY} fontSize={11} fontWeight={600}>
         12th house
       </text>
 
       {/* 6th house / Saturn */}
-      <circle cx={230} cy={110} r={32} fill={`${PURPLE}${"15"}`} stroke={PURPLE} strokeWidth={3} />
-      <text x={230} y={106} textAnchor="middle" fill={PURPLE} fontSize={12} fontWeight={600}>
+      <circle cx={410} cy={160} r={38} fill={`${PURPLE}${"15"}`} stroke={PURPLE} strokeWidth={3} />
+      <text x={410} y={155} textAnchor="middle" fill={PURPLE} fontSize={14} fontWeight={600}>
         Saturn
       </text>
-      <text x={230} y={120} textAnchor="middle" fill={INK_SECONDARY} fontSize={9} fontWeight={600}>
+      <text x={410} y={174} textAnchor="middle" fill={INK_SECONDARY} fontSize={11} fontWeight={600}>
         6th house
       </text>
 
       {/* 3rd house */}
-      <circle cx={150} cy={48} r={26} fill={`${GREEN}${"15"}`} stroke={GREEN} strokeWidth={3} />
-      <text x={150} y={44} textAnchor="middle" fill={GREEN} fontSize={11} fontWeight={600}>
+      <circle cx={260} cy={72} r={38} fill={`${GREEN}${"15"}`} stroke={GREEN} strokeWidth={3} />
+      <text x={260} y={66} textAnchor="middle" fill={GREEN} fontSize={14} fontWeight={600}>
         3rd house
       </text>
-      <text x={150} y={58} textAnchor="middle" fill={INK_SECONDARY} fontSize={9} fontWeight={600}>
+      <text x={260} y={85} textAnchor="middle" fill={INK_SECONDARY} fontSize={11} fontWeight={600}>
         double aspect
       </text>
 
       {/* Mutual aspect arrow */}
       <path
-        d="M 102 110 L 198 110"
+        d="M 148 192 C 220 238, 300 238, 372 192"
         fill="none"
         stroke={BLUE}
-        strokeWidth={3}
+        strokeWidth={4}
         strokeLinecap="round"
         markerStart="url(#webMutualStart)"
         markerEnd="url(#webMutualEnd)"
       />
-      <text x={150} y={132} textAnchor="middle" fill={BLUE} fontSize={9} fontWeight={600}>
+      <rect x={190} y={222} width={140} height={26} rx={6} fill={SURFACE} stroke={`${BLUE}${"55"}`} />
+      <text x={260} y={240} textAnchor="middle" fill={BLUE} fontSize={12} fontWeight={600}>
         mutual 7th drishti
       </text>
 
       {/* Mars 4th aspect to 3rd */}
       <path
-        d="M 88 86 C 100 60, 130 48, 124 48"
+        d="M 130 128 C 156 84, 198 58, 222 64"
         fill="none"
         stroke={VERMILION}
-        strokeWidth={2.5}
-        strokeDasharray="4 3"
+        strokeWidth={3}
+        strokeDasharray="6 4"
         markerEnd="url(#webMars3)"
       />
-      <text x={96} y={58} textAnchor="middle" fill={VERMILION} fontSize={8} fontWeight={600}>
+      <rect x={120} y={72} width={72} height={22} rx={6} fill={SURFACE} stroke={`${VERMILION}${"55"}`} />
+      <text x={156} y={87} textAnchor="middle" fill={VERMILION} fontSize={10} fontWeight={600}>
         Mars 4th
       </text>
 
       {/* Saturn 10th aspect to 3rd */}
       <path
-        d="M 212 86 C 200 60, 170 48, 176 48"
+        d="M 390 128 C 364 84, 322 58, 298 64"
         fill="none"
         stroke={PURPLE}
-        strokeWidth={2.5}
-        strokeDasharray="4 3"
+        strokeWidth={3}
+        strokeDasharray="6 4"
         markerEnd="url(#webSaturn3)"
       />
-      <text x={204} y={58} textAnchor="middle" fill={PURPLE} fontSize={8} fontWeight={600}>
+      <rect x={328} y={72} width={84} height={22} rx={6} fill={SURFACE} stroke={`${PURPLE}${"55"}`} />
+      <text x={370} y={87} textAnchor="middle" fill={PURPLE} fontSize={10} fontWeight={600}>
         Saturn 10th
       </text>
 

@@ -551,7 +551,7 @@ function MarsSaturnDiagram({ layer }: { layer: Layer }) {
         <>
           {/* Mutual aspect arrow */}
           <path
-            d="M 104 90 L 216 90"
+            d="M 100 122 C 138 152, 182 152, 220 122"
             fill="none"
             stroke={BLUE}
             strokeWidth={4}
@@ -567,7 +567,8 @@ function MarsSaturnDiagram({ layer }: { layer: Layer }) {
               <path d="M0,0 L8,3 L0,6 L0,0" fill={BLUE} />
             </marker>
           </defs>
-          <text x={160} y={78} textAnchor="middle" fill={BLUE} fontSize={11} fontWeight={600}>
+          <rect x={92} y={58} width={136} height={24} rx={6} fill={SURFACE} stroke={`${BLUE}${"55"}`} />
+          <text x={160} y={74} textAnchor="middle" fill={BLUE} fontSize={11} fontWeight={600}>
             mutual 7th-house drishti
           </text>
         </>

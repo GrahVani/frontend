@@ -243,7 +243,7 @@ export function MarsPropertyKarakaDepthLab() {
         </div>
       </section>
 
-      <div style={responsiveTwoColumnStyle}>
+      <div style={marsMapGridStyle}>
         <section style={cardStyle}>
           <div style={{ display: "flex", justifyContent: "space-between", gap: "1rem", alignItems: "center", flexWrap: "wrap" }}>
             <div>
@@ -308,12 +308,12 @@ export function MarsPropertyKarakaDepthLab() {
 }
 
 function MarsReachSvg({ marsHouse, dignity, aspectTargets }: { marsHouse: HouseNum; dignity: DignityKey; aspectTargets: HouseNum[] }) {
-  const center = { x: 380, y: 178 };
-  const radius = 118;
+  const center = { x: 340, y: 205 };
+  const radius = 138;
   return (
-    <svg viewBox="0 0 760 430" role="img" aria-label="Mars dignity and special aspect reach map" style={{ width: "100%", minHeight: 330, margin: "0.7rem 0" }}>
-      <rect x="18" y="18" width="724" height="394" rx="8" fill={SURFACE} stroke={HAIRLINE} />
-      <text x="380" y="52" textAnchor="middle" fill={GOLD} fontSize="13" fontWeight="600">MARS AS LAND KARAKA: DIGNITY PLUS REACH</text>
+    <svg viewBox="0 0 680 500" role="img" aria-label="Mars dignity and special aspect reach map" style={{ width: "100%", minHeight: 430, margin: "1rem 0" }}>
+      <rect x="16" y="16" width="648" height="468" rx="10" fill={SURFACE} stroke={HAIRLINE} />
+      <text x="340" y="56" textAnchor="middle" fill={GOLD} fontSize="18" fontWeight="700">MARS AS LAND KARAKA: DIGNITY PLUS REACH</text>
       {([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] as HouseNum[]).map((houseNum, index) => {
         const angle = ((index - 3) / 12) * Math.PI * 2;
         const x = center.x + Math.cos(angle) * radius;
@@ -324,26 +324,26 @@ function MarsReachSvg({ marsHouse, dignity, aspectTargets }: { marsHouse: HouseN
         const color = active ? DIGNITIES[dignity].color : property ? GREEN : target ? BLUE : HAIRLINE;
         return (
           <g key={houseNum}>
-            <circle cx={x} cy={y} r={active ? 25 : target || property ? 21 : 17} fill={active ? `${DIGNITIES[dignity].color}24` : target ? `${BLUE}14` : property ? `${GREEN}14` : "transparent"} stroke={color} strokeWidth={active ? 3 : 1.5} />
-            <text x={x} y={y + 4} textAnchor="middle" fill={active || target || property ? color : INK_SECONDARY} fontSize="12" fontWeight="600">{houseNum}</text>
+            <circle cx={x} cy={y} r={active ? 34 : target || property ? 29 : 22} fill={active ? `${DIGNITIES[dignity].color}24` : target ? `${BLUE}14` : property ? `${GREEN}14` : "transparent"} stroke={color} strokeWidth={active ? 4 : 2} />
+            <text x={x} y={y + 6} textAnchor="middle" fill={active || target || property ? color : INK_SECONDARY} fontSize="16" fontWeight="700">{houseNum}</text>
           </g>
         );
       })}
-      <circle cx={center.x} cy={center.y} r="47" fill={`${DIGNITIES[dignity].color}14`} stroke={DIGNITIES[dignity].color} strokeWidth="3" />
-      <text x={center.x} y={center.y - 7} textAnchor="middle" fill={DIGNITIES[dignity].color} fontSize="13" fontWeight="600">Mars</text>
-      <text x={center.x} y={center.y + 13} textAnchor="middle" fill={INK_MUTED} fontSize="11">{DIGNITIES[dignity].label}</text>
+      <circle cx={center.x} cy={center.y} r="62" fill={`${DIGNITIES[dignity].color}14`} stroke={DIGNITIES[dignity].color} strokeWidth="4" />
+      <text x={center.x} y={center.y - 9} textAnchor="middle" fill={DIGNITIES[dignity].color} fontSize="18" fontWeight="700">Mars</text>
+      <text x={center.x} y={center.y + 17} textAnchor="middle" fill={INK_MUTED} fontSize="14" fontWeight="600">{DIGNITIES[dignity].label}</text>
       {aspectTargets.map((target) => {
         const index = target - 1;
         const angle = ((index - 3) / 12) * Math.PI * 2;
         const x = center.x + Math.cos(angle) * radius;
         const y = center.y + Math.sin(angle) * radius;
-        return <path key={target} d={`M ${center.x} ${center.y} L ${x} ${y}`} stroke={target === 4 ? GREEN : BLUE} strokeWidth={target === 4 ? 4 : 2.5} strokeLinecap="round" opacity="0.55" />;
+        return <path key={target} d={`M ${center.x} ${center.y} L ${x} ${y}`} stroke={target === 4 ? GREEN : BLUE} strokeWidth={target === 4 ? 6 : 4} strokeLinecap="round" opacity="0.55" />;
       })}
-      <rect x="120" y="336" width="220" height="44" rx="8" fill={`${GREEN}12`} stroke={GREEN} />
-      <text x="230" y="363" textAnchor="middle" fill={GREEN} fontSize="12" fontWeight="600">4th house: property target</text>
-      <rect x="420" y="336" width="220" height="44" rx="8" fill={`${BLUE}12`} stroke={BLUE} />
-      <text x="530" y="363" textAnchor="middle" fill={BLUE} fontSize="12" fontWeight="600">blue lines: Mars aspect reach</text>
-      <text x="380" y="402" textAnchor="middle" fill={INK_SECONDARY} fontSize="12">Check dignity first; then check whether Mars occupies or aspects the property house.</text>
+      <rect x="74" y="394" width="244" height="52" rx="9" fill={`${GREEN}12`} stroke={GREEN} strokeWidth="1.5" />
+      <text x="196" y="426" textAnchor="middle" fill={GREEN} fontSize="15" fontWeight="700">4th house: property target</text>
+      <rect x="362" y="394" width="244" height="52" rx="9" fill={`${BLUE}12`} stroke={BLUE} strokeWidth="1.5" />
+      <text x="484" y="426" textAnchor="middle" fill={BLUE} fontSize="15" fontWeight="700">blue lines: Mars aspect reach</text>
+      <text x="340" y="470" textAnchor="middle" fill={INK_SECONDARY} fontSize="14">Check dignity first; then check whether Mars occupies or aspects the property house.</text>
     </svg>
   );
 }
@@ -384,6 +384,13 @@ const responsiveTwoColumnStyle: CSSProperties = {
   display: "grid",
   gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 330px), 1fr))",
   gap: "1rem",
+};
+
+const marsMapGridStyle: CSSProperties = {
+  display: "grid",
+  gridTemplateColumns: "minmax(0, 1.35fr) minmax(260px, 0.65fr)",
+  gap: "1rem",
+  alignItems: "start",
 };
 
 const eyebrowStyle: CSSProperties = {

@@ -135,7 +135,7 @@ export function D4PropertyQualityComparisonLab() {
         </div>
       </section>
 
-      <section style={{ display: "grid", gridTemplateColumns: "minmax(0, 1.08fr) minmax(300px, 0.92fr)", gap: "1rem" }}>
+      <section style={{ display: "grid", gridTemplateColumns: "minmax(0, 1.35fr) minmax(280px, 0.65fr)", gap: "1rem", alignItems: "start" }}>
         <div style={cardStyle}>
           <PropertyQualitySvg thread={thread} verdict={verdict} includeMoonLord={includeMoonLord} />
         </div>
@@ -186,29 +186,29 @@ export function D4PropertyQualityComparisonLab() {
 
 function PropertyQualitySvg({ thread, verdict, includeMoonLord }: { thread: (typeof THREADS)[ThreadKey]; verdict: { label: string; color: string }; includeMoonLord: boolean }) {
   return (
-    <svg viewBox="0 0 760 460" role="img" aria-label="D1 and D4 property quality comparison diagram" style={{ width: "100%", minHeight: 360, display: "block" }}>
-      <rect x="12" y="12" width="736" height="436" rx="20" fill={SURFACE} stroke={HAIRLINE} />
-      <text x="380" y="48" textAnchor="middle" fill={GOLD} fontSize="13" fontWeight="600">D1-D4 QUALITY RESOLUTION</text>
-      <text x="380" y="78" textAnchor="middle" fill={thread.color} fontSize="18" fontWeight="600">{thread.label}: {thread.domain}</text>
+    <svg viewBox="0 0 760 520" role="img" aria-label="D1 and D4 property quality comparison diagram" style={{ width: "100%", minHeight: 440, display: "block" }}>
+      <rect x="12" y="12" width="736" height="496" rx="20" fill={SURFACE} stroke={HAIRLINE} />
+      <text x="380" y="56" textAnchor="middle" fill={GOLD} fontSize="18" fontWeight="700">D1-D4 QUALITY RESOLUTION</text>
+      <text x="380" y="92" textAnchor="middle" fill={thread.color} fontSize="22" fontWeight="700">{thread.label}: {thread.domain}</text>
 
-      <rect x="82" y="130" width="250" height="110" rx="18" fill={GREEN} fillOpacity="0.1" stroke={GREEN} />
-      <text x="207" y="160" textAnchor="middle" fill={GREEN} fontSize="13" fontWeight="600">D1 presence</text>
-      <text x="207" y="192" textAnchor="middle" fill={INK_PRIMARY} fontSize="13">{thread.d1}</text>
+      <rect x="58" y="142" width="282" height="126" rx="18" fill={GREEN} fillOpacity="0.1" stroke={GREEN} strokeWidth="1.5" />
+      <text x="199" y="177" textAnchor="middle" fill={GREEN} fontSize="16" fontWeight="700">D1 presence</text>
+      <text x="199" y="216" textAnchor="middle" fill={INK_PRIMARY} fontSize="15" fontWeight="600">{thread.d1}</text>
 
-      <rect x="428" y="130" width="250" height="110" rx="18" fill={thread.color} fillOpacity="0.1" stroke={thread.color} />
-      <text x="553" y="160" textAnchor="middle" fill={thread.color} fontSize="13" fontWeight="600">D4 delivery</text>
-      <text x="553" y="192" textAnchor="middle" fill={INK_PRIMARY} fontSize="13">{thread.d4}</text>
+      <rect x="420" y="142" width="282" height="126" rx="18" fill={thread.color} fillOpacity="0.1" stroke={thread.color} strokeWidth="1.5" />
+      <text x="561" y="177" textAnchor="middle" fill={thread.color} fontSize="16" fontWeight="700">D4 delivery</text>
+      <text x="561" y="216" textAnchor="middle" fill={INK_PRIMARY} fontSize="15" fontWeight="600">{thread.d4}</text>
 
-      <path d="M334 185 C372 150 388 150 426 185" fill="none" stroke={verdict.color} strokeWidth="4" strokeLinecap="round" />
-      <circle cx="380" cy="185" r="22" fill={verdict.color} fillOpacity="0.14" stroke={verdict.color} />
-      <text x="380" y="190" textAnchor="middle" fill={verdict.color} fontSize="12" fontWeight="600">hold</text>
+      <path d="M342 205 C372 170 388 170 418 205" fill="none" stroke={verdict.color} strokeWidth="6" strokeLinecap="round" />
+      <circle cx="380" cy="205" r="28" fill={verdict.color} fillOpacity="0.14" stroke={verdict.color} strokeWidth="1.5" />
+      <text x="380" y="211" textAnchor="middle" fill={verdict.color} fontSize="14" fontWeight="700">hold</text>
 
-      <rect x="118" y="300" width="524" height="64" rx="18" fill={includeMoonLord ? BLUE : VERMILION} fillOpacity="0.1" stroke={includeMoonLord ? BLUE : VERMILION} />
-      <text x="380" y="327" textAnchor="middle" fill={includeMoonLord ? BLUE : VERMILION} fontSize="13" fontWeight="600">
+      <rect x="92" y="336" width="576" height="76" rx="18" fill={includeMoonLord ? BLUE : VERMILION} fillOpacity="0.1" stroke={includeMoonLord ? BLUE : VERMILION} strokeWidth="1.5" />
+      <text x="380" y="367" textAnchor="middle" fill={includeMoonLord ? BLUE : VERMILION} fontSize="16" fontWeight="700">
         {includeMoonLord ? "D4 Moon lord included: structurally sound" : "D4 Moon lord omitted: reading too negative"}
       </text>
-      <text x="380" y="350" textAnchor="middle" fill={INK_SECONDARY} fontSize="12">Moon in D4 kendra with neutral dignity balances the weak occupants.</text>
-      <text x="380" y="414" textAnchor="middle" fill={verdict.color} fontSize="12" fontWeight="600">{verdict.label}</text>
+      <text x="380" y="394" textAnchor="middle" fill={INK_SECONDARY} fontSize="14" fontWeight="600">Moon in D4 kendra with neutral dignity balances the weak occupants.</text>
+      <text x="380" y="468" textAnchor="middle" fill={verdict.color} fontSize="14" fontWeight="700">{verdict.label}</text>
     </svg>
   );
 }

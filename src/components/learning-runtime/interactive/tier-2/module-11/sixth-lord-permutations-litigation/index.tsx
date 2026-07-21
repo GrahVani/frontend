@@ -518,13 +518,15 @@ function LordWheel({
   const cx = 150;
   const cy = 150;
   const r = 100;
+  const selectedFamily = HOUSE_READINGS[selectedHouse].family;
+  const selectedColor = FAMILIES[selectedFamily].color;
 
   return (
     <svg
-      viewBox="0 0 300 300"
+      viewBox="0 0 760 360"
       role="img"
       aria-label="Twelve-house wheel. The 6th house is fixed; click any house to place the 6th lord there."
-      style={{ width: "100%", maxHeight: 300, display: "block", marginTop: "0.55rem" }}
+      style={{ width: "100%", minHeight: 360, display: "block", marginTop: "0.55rem" }}
     >
       <circle cx={cx} cy={cy} r={r} fill="none" stroke={HAIRLINE} strokeWidth={2} />
       {Array.from({ length: 12 }, (_, i) => i + 1).map((house) => {
@@ -580,7 +582,78 @@ function LordWheel({
         Aquarius
       </text>
 
-      <g transform={`translate(${cx - 40}, ${cy + 62})`}>
+      <rect x="0" y="0" width="760" height="360" fill={SURFACE} />
+      <rect x="18" y="18" width="724" height="324" rx="12" fill={`${GOLD}${"06"}`} stroke={HAIRLINE} />
+
+      <text x="380" y="52" textAnchor="middle" fill={INK_MUTED} fontSize="14" fontWeight={700}>
+        Place the 6th lord
+      </text>
+
+      <rect x="56" y="112" width="190" height="112" rx="14" fill={`${PURPLE}${"10"}`} stroke={PURPLE} strokeWidth="2" />
+      <text x="151" y="148" textAnchor="middle" fill={PURPLE} fontSize="16" fontWeight={700}>
+        Source house
+      </text>
+      <text x="151" y="178" textAnchor="middle" fill={INK_PRIMARY} fontSize="24" fontWeight={700}>
+        6th house
+      </text>
+      <text x="151" y="206" textAnchor="middle" fill={INK_SECONDARY} fontSize="15" fontWeight={600}>
+        Aquarius
+      </text>
+
+      <line x1="250" y1="168" x2="490" y2="168" stroke={selectedColor} strokeWidth="4" strokeLinecap="round" />
+      <path d="M 490 168 L 474 158 L 474 178 Z" fill={selectedColor} />
+      <text x="370" y="148" textAnchor="middle" fill={selectedColor} fontSize="15" fontWeight={700}>
+        lord travels to
+      </text>
+
+      <rect x="500" y="104" width="204" height="128" rx="14" fill={`${selectedColor}${"12"}`} stroke={selectedColor} strokeWidth="2.5" />
+      <text x="602" y="140" textAnchor="middle" fill={selectedColor} fontSize="16" fontWeight={700}>
+        Selected placement
+      </text>
+      <text x="602" y="174" textAnchor="middle" fill={INK_PRIMARY} fontSize="28" fontWeight={700}>
+        {HOUSE_LABELS[selectedHouse]} house
+      </text>
+      <text x="602" y="205" textAnchor="middle" fill={INK_SECONDARY} fontSize="15" fontWeight={600}>
+        {FAMILIES[selectedFamily].label}
+      </text>
+
+      <foreignObject x="60" y="260" width="640" height="58">
+        <div
+          xmlns="http://www.w3.org/1999/xhtml"
+          style={{
+            display: "flex",
+            gap: "6px",
+            flexWrap: "wrap",
+            justifyContent: "center",
+          }}
+        >
+          {Array.from({ length: 12 }, (_, i) => i + 1).map((house) => {
+            const familyColor = FAMILIES[HOUSE_READINGS[house].family].color;
+            const isSelected = house === selectedHouse;
+            return (
+              <button
+                key={house}
+                type="button"
+                onClick={() => onSelect(house)}
+                style={{
+                  width: 42,
+                  height: 32,
+                  borderRadius: 8,
+                  border: `1px solid ${isSelected ? familyColor : HAIRLINE}`,
+                  background: isSelected ? `${familyColor}22` : SURFACE,
+                  color: isSelected ? familyColor : INK_SECONDARY,
+                  fontWeight: 700,
+                  cursor: "pointer",
+                }}
+              >
+                {house}
+              </button>
+            );
+          })}
+        </div>
+      </foreignObject>
+
+      <g transform={`translate(${cx - 40}, ${cy + 62})`} opacity={0} pointerEvents="none">
         <rect x={0} y={0} width={80} height={22} rx={6} fill={`${FAMILIES[HOUSE_READINGS[selectedHouse].family].color}${"15"}`} stroke={FAMILIES[HOUSE_READINGS[selectedHouse].family].color} />
         <text x={40} y={15} textAnchor="middle" fill={FAMILIES[HOUSE_READINGS[selectedHouse].family].color} fontSize={10} fontWeight={600}>
           lord → {HOUSE_LABELS[selectedHouse]}

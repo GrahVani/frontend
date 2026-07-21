@@ -590,13 +590,15 @@ function ParadoxWheel({ face }: { face: Face }) {
   const cy = 150;
   const r = 95;
   const houses = Array.from({ length: 12 }, (_, i) => i + 1);
+  const showDusthana = face === "dusthana" || face === "both";
+  const showUpachaya = face === "upachaya" || face === "both";
 
   return (
     <svg
-      viewBox="0 0 300 300"
+      viewBox="0 0 720 340"
       role="img"
       aria-label="Twelve-house wheel with the 6th house highlighted as both dusthana and upachaya"
-      style={{ width: "100%", maxHeight: 300, display: "block", marginTop: "0.55rem" }}
+      style={{ width: "100%", minHeight: 340, display: "block", marginTop: "0.55rem" }}
     >
       <circle cx={cx} cy={cy} r={r} fill="none" stroke={HAIRLINE} strokeWidth={2} />
       {houses.map((house) => {
@@ -677,6 +679,82 @@ function ParadoxWheel({ face }: { face: Face }) {
           </text>
         </g>
       )}
+
+      <rect x="0" y="0" width="720" height="340" fill={SURFACE} />
+      <rect x="18" y="18" width="684" height="304" rx="12" fill={`${GOLD}${"06"}`} stroke={HAIRLINE} />
+
+      <rect
+        x="250"
+        y="86"
+        width="220"
+        height="140"
+        rx="18"
+        fill={SURFACE}
+        stroke={face === "both" ? BLUE : face === "dusthana" ? VERMILION : GREEN}
+        strokeWidth="3"
+      />
+      <circle cx="360" cy="118" r="24" fill={`${BLUE}${"12"}`} stroke={BLUE} strokeWidth="2" />
+      <text x="360" y="126" textAnchor="middle" fill={BLUE} fontSize="24" fontWeight={700}>
+        6
+      </text>
+      <text x="360" y="164" textAnchor="middle" fill={INK_PRIMARY} fontSize="22" fontWeight={700}>
+        6th house
+      </text>
+      <text x="360" y="194" textAnchor="middle" fill={INK_SECONDARY} fontSize="17" fontWeight={600}>
+        Aquarius
+      </text>
+
+      <line x1="250" y1="156" x2="188" y2="156" stroke={showDusthana ? VERMILION : HAIRLINE} strokeWidth="3" strokeLinecap="round" />
+      <rect
+        x="42"
+        y="96"
+        width="150"
+        height="120"
+        rx="12"
+        fill={showDusthana ? `${VERMILION}${"10"}` : SURFACE}
+        stroke={showDusthana ? VERMILION : HAIRLINE}
+        strokeWidth="2"
+        opacity={showDusthana ? 1 : 0.55}
+      />
+      <text x="117" y="132" textAnchor="middle" fill={showDusthana ? VERMILION : INK_MUTED} fontSize="18" fontWeight={700}>
+        Dusthana
+      </text>
+      <text x="117" y="160" textAnchor="middle" fill={INK_SECONDARY} fontSize="14" fontWeight={600}>
+        pressure
+      </text>
+      <text x="117" y="184" textAnchor="middle" fill={INK_SECONDARY} fontSize="14" fontWeight={600}>
+        conflict
+      </text>
+
+      <line x1="470" y1="156" x2="532" y2="156" stroke={showUpachaya ? GREEN : HAIRLINE} strokeWidth="3" strokeLinecap="round" />
+      <rect
+        x="528"
+        y="96"
+        width="150"
+        height="120"
+        rx="12"
+        fill={showUpachaya ? `${GREEN}${"10"}` : SURFACE}
+        stroke={showUpachaya ? GREEN : HAIRLINE}
+        strokeWidth="2"
+        opacity={showUpachaya ? 1 : 0.55}
+      />
+      <text x="603" y="132" textAnchor="middle" fill={showUpachaya ? GREEN : INK_MUTED} fontSize="18" fontWeight={700}>
+        Upachaya
+      </text>
+      <text x="603" y="160" textAnchor="middle" fill={INK_SECONDARY} fontSize="14" fontWeight={600}>
+        improves
+      </text>
+      <text x="603" y="184" textAnchor="middle" fill={INK_SECONDARY} fontSize="14" fontWeight={600}>
+        with effort
+      </text>
+
+      <text x="360" y="270" textAnchor="middle" fill={face === "both" ? BLUE : INK_MUTED} fontSize="16" fontWeight={700}>
+        {face === "both"
+          ? "Read both labels together: difficulty can become capacity."
+          : face === "dusthana"
+            ? "This view highlights the problem-pressure side."
+            : "This view highlights growth through sustained effort."}
+      </text>
     </svg>
   );
 }

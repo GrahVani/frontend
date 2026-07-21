@@ -474,12 +474,13 @@ function TimelineSvg({
   selectedId: string;
   onSelect: (id: string) => void;
 }) {
-  const totalWidth = 700;
-  const totalHeight = 220;
-  const margin = { top: 40, right: 30, bottom: 50, left: 30 };
+  const totalWidth = 860;
+  const totalHeight = 340;
+  const margin = { top: 62, right: 54, bottom: 58, left: 48 };
   const width = totalWidth - margin.left - margin.right;
   const height = totalHeight - margin.top - margin.bottom;
   const maxAge = 100;
+  const axisY = margin.top + height;
 
   function x(age: number) {
     return margin.left + (age / maxAge) * width;
@@ -492,7 +493,7 @@ function TimelineSvg({
       aria-label="Chart T1 Rahu-linked dasha timeline"
       style={{
         width: "100%",
-        maxHeight: 260,
+        minHeight: 320,
         margin: "0.55rem auto 0",
         display: "block",
       }}
@@ -502,9 +503,9 @@ function TimelineSvg({
       {/* Axis */}
       <line
         x1={margin.left}
-        y1={margin.top + height}
+        y1={axisY}
         x2={margin.left + width}
-        y2={margin.top + height}
+        y2={axisY}
         stroke={INK_MUTED}
         strokeWidth={2}
       />
@@ -512,17 +513,17 @@ function TimelineSvg({
         <g key={age}>
           <line
             x1={x(age)}
-            y1={margin.top + height}
+            y1={axisY}
             x2={x(age)}
-            y2={margin.top + height + 6}
+            y2={axisY + 8}
             stroke={INK_MUTED}
           />
           <text
             x={x(age)}
-            y={margin.top + height + 22}
+            y={axisY + 30}
             textAnchor="middle"
             fill={INK_MUTED}
-            fontSize="11"
+            fontSize="16"
             fontWeight={600}
           >
             {age}
@@ -534,7 +535,7 @@ function TimelineSvg({
         y={totalHeight - 6}
         textAnchor="middle"
         fill={INK_MUTED}
-        fontSize="12"
+        fontSize="17"
         fontWeight={600}
       >
         Age
@@ -545,7 +546,7 @@ function TimelineSvg({
         x1={x(CURRENT_AGE)}
         y1={margin.top - 8}
         x2={x(CURRENT_AGE)}
-        y2={margin.top + height + 8}
+        y2={axisY + 10}
         stroke={VERMILION}
         strokeWidth={2}
         strokeDasharray="4 2"
@@ -555,7 +556,7 @@ function TimelineSvg({
         y={margin.top - 14}
         textAnchor="middle"
         fill={VERMILION}
-        fontSize="11"
+        fontSize="16"
         fontWeight={600}
       >
         present (~{CURRENT_AGE})
@@ -564,15 +565,16 @@ function TimelineSvg({
       {/* Period bars */}
       {PERIODS.map((p, index) => {
         const selected = selectedId === p.id;
-        const y = margin.top + index * 28 + 6;
+        const y = margin.top + index * 33 + 8;
+        const isRahuMd = p.id === "rahu-md";
         return (
           <g key={p.id} style={{ cursor: "pointer" }} onClick={() => onSelect(p.id)}>
             <rect
               x={x(p.startAge)}
               y={y}
               width={x(p.endAge) - x(p.startAge)}
-              height={20}
-              rx={6}
+              height={24}
+              rx={7}
               fill={p.color}
               opacity={selected ? 1 : 0.65}
               stroke={selected ? "#fff" : "none"}
@@ -583,21 +585,39 @@ function TimelineSvg({
               y={y + 14}
               textAnchor="middle"
               fill="#fff"
-              fontSize="10"
+              fontSize="14"
               fontWeight={600}
             >
               {p.md}–{p.bhukti}
             </text>
-            <text
-              x={x(p.endAge) + 6}
-              y={y + 14}
-              textAnchor="start"
-              fill={selected ? p.color : INK_SECONDARY}
-              fontSize="11"
-              fontWeight={600}
-            >
-              {p.note}
-            </text>
+            {isRahuMd ? (
+              <text
+                x={x((p.startAge + p.endAge) / 2)}
+                y={y + 46}
+                textAnchor="middle"
+                fill={selected ? p.color : INK_SECONDARY}
+                fontSize="14"
+                fontWeight={600}
+              >
+                <tspan x={x((p.startAge + p.endAge) / 2)} dy="0">
+                  RÄhu&apos;s own MahÄdaÅ›Ä
+                </tspan>
+                <tspan x={x((p.startAge + p.endAge) / 2)} dy="18">
+                  strongest structural alignment
+                </tspan>
+              </text>
+            ) : (
+              <text
+                x={x(p.endAge) + 10}
+                y={y + 17}
+                textAnchor="start"
+                fill={selected ? p.color : INK_SECONDARY}
+                fontSize="14"
+                fontWeight={600}
+              >
+                {p.note}
+              </text>
+            )}
           </g>
         );
       })}

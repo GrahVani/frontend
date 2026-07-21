@@ -256,28 +256,34 @@ export function ScopeOfCompetenceRouter() {
           <Scale size={18} style={{ color: GOLD }} aria-hidden="true" />
           <p style={eyebrowStyle}>Competence boundary map</p>
         </div>
-        <svg viewBox="0 0 640 160" style={{ width: "100%", height: "auto", marginTop: "0.75rem" }} aria-label="Concentric competence boundaries: chart register at centre, then immigration and financial professionals, then urgent humanitarian resources">
-          <circle cx="320" cy="80" r="35" fill={`${BLUE}${"12"}`} stroke={BLUE} strokeWidth="1.5" />
-          <text x="320" y="77" textAnchor="middle" fontSize="9" fill={INK_PRIMARY} fontWeight={600}>
+        <svg viewBox="0 0 860 320" style={{ width: "100%", minHeight: 320, marginTop: "0.75rem", display: "block" }} aria-label="Competence boundary map separating astrology's chart register from legal, financial, and urgent humanitarian referrals">
+          <circle cx="380" cy="150" r="46" fill={`${BLUE}${"12"}`} stroke={BLUE} strokeWidth="2" />
+          <text x="380" y="145" textAnchor="middle" fontSize="15" fill={INK_PRIMARY} fontWeight={700}>
             Chart register
           </text>
-          <text x="320" y="90" textAnchor="middle" fontSize="8" fill={INK_SECONDARY}>
+          <text x="380" y="166" textAnchor="middle" fontSize="13" fill={INK_SECONDARY}>
             theme · timing
           </text>
 
-          <circle cx="320" cy="80" r="65" fill="none" stroke={PURPLE} strokeWidth="1.5" strokeDasharray="4 3" />
-          <text x="320" y="38" textAnchor="middle" fontSize="9" fill={PURPLE} fontWeight={600}>
+          <circle cx="380" cy="150" r="86" fill="none" stroke={PURPLE} strokeWidth="2" strokeDasharray="7 5" />
+          <rect x="610" y="66" width="214" height="42" rx="8" fill={`${PURPLE}${"10"}`} stroke={`${PURPLE}${"66"}`} />
+          <line x1="466" y1="118" x2="610" y2="87" stroke={PURPLE} strokeWidth="1.5" strokeDasharray="4 4" />
+          <text x="717" y="93" textAnchor="middle" fontSize="16" fill={PURPLE} fontWeight={700}>
             Immigration law / policy
           </text>
-          <text x="320" y="133" textAnchor="middle" fontSize="9" fill={GOLD} fontWeight={600}>
+          <rect x="610" y="132" width="214" height="42" rx="8" fill={`${GOLD}${"12"}`} stroke={`${GOLD}${"66"}`} />
+          <line x1="504" y1="150" x2="610" y2="153" stroke={GOLD} strokeWidth="1.5" strokeDasharray="4 4" />
+          <text x="717" y="159" textAnchor="middle" fontSize="16" fill={GOLD} fontWeight={700}>
             Financial / tax planning
           </text>
 
-          <circle cx="320" cy="80" r="95" fill="none" stroke={VERMILION} strokeWidth="1.5" strokeDasharray="6 4" />
-          <text x="320" y="20" textAnchor="middle" fontSize="9" fill={VERMILION} fontWeight={600}>
+          <circle cx="380" cy="150" r="124" fill="none" stroke={VERMILION} strokeWidth="2" strokeDasharray="9 6" />
+          <rect x="610" y="198" width="214" height="54" rx="8" fill={`${VERMILION}${"0D"}`} stroke={`${VERMILION}${"66"}`} />
+          <line x1="466" y1="182" x2="610" y2="225" stroke={VERMILION} strokeWidth="1.5" strokeDasharray="4 4" />
+          <text x="717" y="218" textAnchor="middle" fontSize="15" fill={VERMILION} fontWeight={700}>
             Urgent humanitarian routing
           </text>
-          <text x="320" y="30" textAnchor="middle" fontSize="8" fill={INK_MUTED}>
+          <text x="717" y="238" textAnchor="middle" fontSize="12" fill={INK_MUTED} fontWeight={600}>
             asylum / refugee support
           </text>
         </svg>

@@ -143,7 +143,7 @@ export function LalKitabPropertyTevaFormulaLab() {
         </div>
       </section>
 
-      <section style={{ display: "grid", gridTemplateColumns: "minmax(0, 1.08fr) minmax(300px, 0.92fr)", gap: "1rem" }}>
+      <section style={{ display: "grid", gridTemplateColumns: "minmax(0, 1.35fr) minmax(280px, 0.65fr)", gap: "1rem", alignItems: "start" }}>
         <div style={cardStyle}>
           <TevaSvg marsSign={marsSign} verdict={verdict} />
         </div>
@@ -194,28 +194,28 @@ export function LalKitabPropertyTevaFormulaLab() {
 
 function TevaSvg({ marsSign, verdict }: { marsSign: (typeof MARS_SIGNS)[MarsSignKey]; verdict: { label: string; color: string } }) {
   return (
-    <svg viewBox="0 0 760 500" role="img" aria-label="Chart P1 Lal Kitab Teva property diagram" style={{ width: "100%", minHeight: 390, display: "block" }}>
-      <rect x="12" y="12" width="736" height="476" rx="20" fill={SURFACE} stroke={HAIRLINE} />
-      <text x="380" y="48" textAnchor="middle" fill={GOLD} fontSize="13" fontWeight="600">CHART P1 FIXED-ARIES TEVA</text>
-      <text x="380" y="76" textAnchor="middle" fill={verdict.color} fontSize="18" fontWeight="600">{verdict.label}</text>
+    <svg viewBox="0 0 760 560" role="img" aria-label="Chart P1 Lal Kitab Teva property diagram" style={{ width: "100%", minHeight: 480, display: "block" }}>
+      <rect x="12" y="12" width="736" height="536" rx="20" fill={SURFACE} stroke={HAIRLINE} />
+      <text x="380" y="56" textAnchor="middle" fill={GOLD} fontSize="18" fontWeight="700">CHART P1 FIXED-ARIES TEVA</text>
+      <text x="380" y="92" textAnchor="middle" fill={verdict.color} fontSize="22" fontWeight="700">{verdict.label}</text>
       {TEVA_BOXES.map((box, index) => {
         const col = index % 4;
         const row = Math.floor(index / 4);
-        const x = 70 + col * 155;
-        const y = 120 + row * 88;
+        const x = 48 + col * 168;
+        const y = 132 + row * 104;
         const isMars = box.box === marsSign.box;
         const isHome = box.box === 4;
         return (
           <g key={box.box}>
-            <rect x={x} y={y} width="132" height="66" rx="12" fill={isMars ? marsSign.color : isHome ? BLUE : SURFACE} fillOpacity={isMars || isHome ? "0.14" : "1"} stroke={isMars ? marsSign.color : isHome ? BLUE : HAIRLINE} />
-            <text x={x + 12} y={y + 20} fill={isMars ? marsSign.color : isHome ? BLUE : INK_MUTED} fontSize="12" fontWeight="600">Box {box.box}</text>
-            <text x={x + 12} y={y + 40} fill={INK_PRIMARY} fontSize="12">{box.sign}</text>
-            <text x={x + 12} y={y + 57} fill={INK_SECONDARY} fontSize="10">{isMars ? "Mars" : box.grahas.join(", ") || "empty"}</text>
+            <rect x={x} y={y} width="144" height="80" rx="12" fill={isMars ? marsSign.color : isHome ? BLUE : SURFACE} fillOpacity={isMars || isHome ? "0.14" : "1"} stroke={isMars ? marsSign.color : isHome ? BLUE : HAIRLINE} strokeWidth={isMars || isHome ? "2" : "1.5"} />
+            <text x={x + 14} y={y + 24} fill={isMars ? marsSign.color : isHome ? BLUE : INK_MUTED} fontSize="14" fontWeight="700">Box {box.box}</text>
+            <text x={x + 14} y={y + 48} fill={INK_PRIMARY} fontSize="14" fontWeight="600">{box.sign}</text>
+            <text x={x + 14} y={y + 68} fill={INK_SECONDARY} fontSize="12" fontWeight="600">{isMars ? "Mars" : box.grahas.join(", ") || "empty"}</text>
           </g>
         );
       })}
-      <rect x="92" y="414" width="576" height="42" rx="14" fill={verdict.color} fillOpacity="0.1" stroke={verdict.color} />
-      <text x="380" y="440" textAnchor="middle" fill={verdict.color} fontSize="12" fontWeight="600">Sign number = box number; Mars property toggle is Aries/Scorpio only.</text>
+      <rect x="78" y="470" width="604" height="52" rx="14" fill={verdict.color} fillOpacity="0.1" stroke={verdict.color} strokeWidth="1.5" />
+      <text x="380" y="502" textAnchor="middle" fill={verdict.color} fontSize="15" fontWeight="700">Sign number = box number; Mars property toggle is Aries/Scorpio only.</text>
     </svg>
   );
 }
