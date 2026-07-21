@@ -1,13 +1,15 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Info, Sparkles, Check, Copy } from "lucide-react";
+import { Sparkles, Check, Copy } from "lucide-react";
 import { ink } from "@/design-tokens/grahvani-learning/colors";
 
 const HAIRLINE = "var(--gl-gold-hairline, rgba(232, 199, 114, 0.28))";
 const SURFACE = "var(--gl-card-surface-solid, #FFF9F0)";
 const INK_PRIMARY = "var(--gl-ink-primary, #2d261e)";
 const GOLD = ink.goldAccent || "#9C7A2F";
+const LABEL_TEXT = "#5f5447";
+const HELPER_TEXT = "#4b5563";
 
 const SHLOKA_WORDS = [
   { word: "दशा-भुक्ति", meaning: "The active planetary periods of Vimshottari" },
@@ -108,7 +110,7 @@ export function KpInvestmentTimingExplorer() {
 
       {/* Sanskrit Verse with breakdowns */}
       <div className="mb-6 p-4 rounded-xl border bg-white shadow-sm text-center relative" style={{ borderColor: HAIRLINE }}>
-        <div className="absolute top-1 left-2 text-[9px] uppercase font-bold text-gray-400 tracking-wider">
+        <div className="absolute top-1 left-2 text-[9px] uppercase font-bold tracking-wider" style={{ color: LABEL_TEXT }}>
           KP Astrological Maxim (Click words for breakdown)
         </div>
         <div className="py-3 flex flex-wrap justify-center gap-2">
@@ -138,13 +140,13 @@ export function KpInvestmentTimingExplorer() {
         {/* Left Column: controls */}
         <div className="lg:col-span-6 space-y-4">
           <div className="p-4 rounded-xl border bg-white shadow-sm space-y-4" style={{ borderColor: HAIRLINE }}>
-            <span className="text-[10px] uppercase font-bold text-gray-400 block border-b pb-1">
+            <span className="text-[10px] uppercase font-bold block border-b pb-1" style={{ color: LABEL_TEXT }}>
               Active Period Timeline Slider
             </span>
 
             {/* Months slider */}
             <div>
-              <div className="flex justify-between text-[10px] uppercase font-bold text-gray-500 mb-1">
+              <div className="flex justify-between text-[10px] uppercase font-bold mb-1" style={{ color: LABEL_TEXT }}>
                 <span>Select Calendar Timeline:</span>
                 <span className="text-amber-900 font-extrabold">{activeDBA.name}</span>
               </div>
@@ -157,7 +159,7 @@ export function KpInvestmentTimingExplorer() {
                 onChange={(e) => setTimeIndex(parseInt(e.target.value))}
                 className="w-full accent-amber-850 cursor-pointer"
               />
-              <div className="flex justify-between text-[8px] text-gray-400 mt-1 font-semibold">
+              <div className="flex justify-between text-[8px] mt-1 font-semibold" style={{ color: LABEL_TEXT }}>
                 <span>Jan</span>
                 <span>Jun</span>
                 <span>Dec</span>
@@ -169,7 +171,7 @@ export function KpInvestmentTimingExplorer() {
         {/* Right Column: Risk / Rating gauge */}
         <div className="lg:col-span-6 space-y-4">
           <div className="p-4 rounded-xl border bg-white shadow-sm flex flex-col justify-center space-y-4 min-h-[200px]" style={{ borderColor: HAIRLINE }}>
-            <span className="text-[10px] uppercase font-bold text-gray-400 block border-b pb-1 w-full text-center">
+            <span className="text-[10px] uppercase font-bold block border-b pb-1 w-full text-center" style={{ color: LABEL_TEXT }}>
               Signification Toggle & Safety Indicator
             </span>
 
@@ -210,10 +212,10 @@ export function KpInvestmentTimingExplorer() {
       <div className="p-4 rounded-xl border bg-white shadow-sm space-y-3" style={{ borderColor: HAIRLINE }}>
         <div className="flex justify-between items-center border-b pb-2" style={{ borderColor: HAIRLINE }}>
           <div>
-            <span className="text-[9px] uppercase tracking-wider block text-gray-400 font-bold">
+            <span className="text-[9px] uppercase tracking-wider block font-bold" style={{ color: LABEL_TEXT }}>
               Calibrated Interpretations
             </span>
-            <span className="text-[10px] text-gray-500 font-medium italic">
+            <span className="text-[10px] font-medium italic" style={{ color: HELPER_TEXT }}>
               Use this qualitative framing in your client write-ups
             </span>
           </div>
@@ -226,8 +228,8 @@ export function KpInvestmentTimingExplorer() {
             {copied ? "Copied" : "Copy Phrasing"}
           </button>
         </div>
-        <blockquote className="text-xs italic text-gray-600 border-l-2 pl-3 py-1 bg-amber-50/10" style={{ borderColor: GOLD }}>
-          "{phrasingText}"
+        <blockquote className="text-xs italic border-l-2 pl-3 py-1 bg-amber-50/10" style={{ borderColor: GOLD, color: HELPER_TEXT }}>
+          &ldquo;{phrasingText}&rdquo;
         </blockquote>
       </div>
     </div>

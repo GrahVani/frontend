@@ -469,37 +469,37 @@ function DecisionFlowSvg() {
       <text x={360} y={40} textAnchor="middle" fill={GOLD} fontSize="13" fontWeight={600}>Parent asks?</text>
 
       {/* No branch */}
-      <path d="M 360 56 L 360 85" stroke={HAIRLINE} strokeWidth="2" />
+      <path d="M 360 56 L 360 85" fill="none" stroke={HAIRLINE} strokeWidth="2" />
       <text x={345} y={76} textAnchor="end" fill={INK_MUTED} fontSize="11">No</text>
       <rect x={260} y={90} width={200} height={44} rx={8} fill={`${GREEN}12`} stroke={GREEN} strokeWidth="2" />
       <text x={360} y={118} textAnchor="middle" fill={GREEN} fontSize="13" fontWeight={600}>Do not volunteer</text>
 
       {/* Yes branch */}
-      <path d="M 420 34 L 520 34" stroke={HAIRLINE} strokeWidth="2" />
+      <path d="M 420 34 L 520 34" fill="none" stroke={HAIRLINE} strokeWidth="2" />
       <text x={470} y={28} textAnchor="middle" fill={INK_MUTED} fontSize="11">Yes</text>
       <rect x={530} y={12} width={170} height={44} rx={8} fill={`${BLUE}12`} stroke={BLUE} strokeWidth="2" />
       <text x={615} y={40} textAnchor="middle" fill={BLUE} fontSize="13" fontWeight={600}>Medical concern?</text>
 
       {/* Medical yes */}
-      <path d="M 615 56 L 615 85" stroke={HAIRLINE} strokeWidth="2" />
+      <path d="M 615 56 L 615 85" fill="none" stroke={HAIRLINE} strokeWidth="2" />
       <text x={625} y={76} textAnchor="start" fill={INK_MUTED} fontSize="11">Yes</text>
       <rect x={520} y={90} width={190} height={44} rx={8} fill={`${BLUE}12`} stroke={BLUE} strokeWidth="2" />
       <text x={615} y={118} textAnchor="middle" fill={BLUE} fontSize="13" fontWeight={600}>Route to paediatrician</text>
 
       {/* Medical no */}
-      <path d="M 700 34 L 700 250 L 615 250" stroke={HAIRLINE} strokeWidth="2" />
+      <path d="M 700 34 L 700 250 L 615 250" fill="none" stroke={HAIRLINE} strokeWidth="2" />
       <text x={705} y={150} textAnchor="start" fill={INK_MUTED} fontSize="11">No</text>
       <rect x={410} y={228} width={200} height={44} rx={8} fill={`${GOLD}12`} stroke={GOLD} strokeWidth="2" />
       <text x={510} y={256} textAnchor="middle" fill={GOLD} fontSize="13" fontWeight={600}>Configuration found?</text>
 
       {/* Config no */}
-      <path d="M 510 272 L 510 300" stroke={HAIRLINE} strokeWidth="2" />
+      <path d="M 510 272 L 510 300" fill="none" stroke={HAIRLINE} strokeWidth="2" />
       <text x={465} y={292} textAnchor="end" fill={INK_MUTED} fontSize="11">No</text>
       <rect x={380} y={305} width={260} height={44} rx={8} fill={`${GREEN}12`} stroke={GREEN} strokeWidth="2" />
       <text x={510} y={333} textAnchor="middle" fill={GREEN} fontSize="13" fontWeight={600}>Plain, bounded reassurance</text>
 
       {/* Config yes */}
-      <path d="M 410 250 L 260 250" stroke={HAIRLINE} strokeWidth="2" />
+      <path d="M 410 250 L 260 250" fill="none" stroke={HAIRLINE} strokeWidth="2" />
       <text x={335} y={240} textAnchor="middle" fill={INK_MUTED} fontSize="11">Yes</text>
       <rect x={20} y={228} width={240} height={44} rx={8} fill={`${VERMILION}12`} stroke={VERMILION} strokeWidth="2" />
       <text x={140} y={250} textAnchor="middle" fill={VERMILION} fontSize="12" fontWeight={600}>Honest, classical,</text>

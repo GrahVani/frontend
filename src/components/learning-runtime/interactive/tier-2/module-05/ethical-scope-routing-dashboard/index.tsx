@@ -1,13 +1,15 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Info, Sparkles, Check, Copy, AlertTriangle, Heart } from "lucide-react";
+import { Sparkles, Check, Copy } from "lucide-react";
 import { ink } from "@/design-tokens/grahvani-learning/colors";
 
 const HAIRLINE = "var(--gl-gold-hairline, rgba(232, 199, 114, 0.28))";
 const SURFACE = "var(--gl-card-surface-solid, #FFF9F0)";
 const INK_PRIMARY = "var(--gl-ink-primary, #2d261e)";
 const GOLD = ink.goldAccent || "#9C7A2F";
+const LABEL_TEXT = "#5f5447";
+const HELPER_TEXT = "#4b5563";
 
 const SHLOKA_WORDS = [
   { word: "अविदित्वा तु", meaning: "Without fully realizing or knowing" },
@@ -160,7 +162,7 @@ export function EthicalScopeRoutingDashboard() {
 
       {/* Sanskrit Verse with breakdowns */}
       <div className="mb-6 p-4 rounded-xl border bg-white shadow-sm text-center relative" style={{ borderColor: HAIRLINE }}>
-        <div className="absolute top-1 left-2 text-[9px] uppercase font-bold text-gray-400 tracking-wider">
+        <div className="absolute top-1 left-2 text-[9px] uppercase font-bold tracking-wider" style={{ color: LABEL_TEXT }}>
           Scriptural Boundary Maxim (Click words for translation)
         </div>
         <div className="py-3 flex flex-wrap justify-center gap-2">
@@ -196,9 +198,9 @@ export function EthicalScopeRoutingDashboard() {
                 key={s.id}
                 onClick={() => setActiveScenarioIdx(idx)}
                 className={`px-3 py-1 text-xs font-bold rounded border cursor-pointer transition-all ${
-                  activeScenarioIdx === idx ? "bg-amber-850 text-white" : "bg-transparent text-gray-500 hover:bg-amber-50"
+                  activeScenarioIdx === idx ? "bg-amber-850 text-white" : "bg-transparent hover:bg-amber-50"
                 }`}
-                style={{ borderColor: HAIRLINE }}
+                style={{ borderColor: HAIRLINE, color: activeScenarioIdx === idx ? undefined : HELPER_TEXT }}
               >
                 Case {s.id}
               </button>
@@ -207,13 +209,13 @@ export function EthicalScopeRoutingDashboard() {
 
           <div className="p-4 rounded-xl border bg-white shadow-sm space-y-4" style={{ borderColor: HAIRLINE }}>
             <div>
-              <span className="text-[9px] uppercase font-bold text-gray-400 block mb-1">Client Query:</span>
-              <p className="text-xs font-bold text-gray-800 italic">"{currentScenario.query}"</p>
+              <span className="text-[9px] uppercase font-bold block mb-1" style={{ color: LABEL_TEXT }}>Client Query:</span>
+              <p className="text-xs font-bold text-gray-800 italic">&ldquo;{currentScenario.query}&rdquo;</p>
             </div>
 
             {/* Options */}
             <div className="space-y-2 pt-2 border-t" style={{ borderColor: HAIRLINE }}>
-              <label className="block text-[10px] uppercase font-bold text-gray-500 mb-1.5">Select Practitioner Action:</label>
+              <label className="block text-[10px] uppercase font-bold mb-1.5" style={{ color: LABEL_TEXT }}>Select Practitioner Action:</label>
               <div className="space-y-2">
                 {currentScenario.options.map((opt, oIdx) => {
                   const isSelected = answers[currentScenario.id] === oIdx;
@@ -241,7 +243,7 @@ export function EthicalScopeRoutingDashboard() {
         {/* Right Column: Ethics speedometer gauge */}
         <div className="lg:col-span-5 space-y-4">
           <div className="p-4 rounded-xl border bg-white shadow-sm flex flex-col items-center justify-center min-h-[220px]" style={{ borderColor: HAIRLINE }}>
-            <span className="text-[10px] uppercase font-bold text-gray-400 block border-b pb-1 w-full text-center mb-6">
+            <span className="text-[10px] uppercase font-bold block border-b pb-1 w-full text-center mb-6" style={{ color: LABEL_TEXT }}>
               Ethics & Adhikara Gauge
             </span>
 
@@ -262,7 +264,7 @@ export function EthicalScopeRoutingDashboard() {
               </svg>
               <div className="absolute text-center">
                 <span className="text-xl font-extrabold text-amber-900">{ethicsIndex}%</span>
-                <span className="text-[8px] text-gray-400 block font-bold uppercase tracking-wider">Index</span>
+                <span className="text-[8px] block font-bold uppercase tracking-wider" style={{ color: LABEL_TEXT }}>Index</span>
               </div>
             </div>
             <span className="text-[10px] font-extrabold text-amber-900 block mt-4 text-center">
@@ -285,10 +287,10 @@ export function EthicalScopeRoutingDashboard() {
             <div className="p-4 rounded-xl border bg-white shadow-sm space-y-3 animate-fade-in" style={{ borderColor: HAIRLINE }}>
               <div className="flex justify-between items-center border-b pb-2" style={{ borderColor: HAIRLINE }}>
                 <div>
-                  <span className="text-[9px] uppercase tracking-wider block text-gray-400 font-bold">
+                  <span className="text-[9px] uppercase tracking-wider block font-bold" style={{ color: LABEL_TEXT }}>
                     Calibrated Interpretations
                   </span>
-                  <span className="text-[10px] text-gray-500 font-medium italic">
+                  <span className="text-[10px] font-medium italic" style={{ color: HELPER_TEXT }}>
                     Copy referral routing statement for client communication
                   </span>
                 </div>
@@ -301,8 +303,8 @@ export function EthicalScopeRoutingDashboard() {
                   {copied ? "Copied" : "Copy Phrasing"}
                 </button>
               </div>
-              <blockquote className="text-xs italic text-gray-600 border-l-2 pl-3 py-1 bg-amber-50/10" style={{ borderColor: GOLD }}>
-                "{activeSelectedOption.phrase}"
+              <blockquote className="text-xs italic border-l-2 pl-3 py-1 bg-amber-50/10" style={{ borderColor: GOLD, color: HELPER_TEXT }}>
+                &ldquo;{activeSelectedOption.phrase}&rdquo;
               </blockquote>
             </div>
           )}

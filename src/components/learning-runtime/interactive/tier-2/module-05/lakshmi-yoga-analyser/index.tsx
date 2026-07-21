@@ -1,13 +1,15 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Info, Sparkles, Check, Copy, X, CheckCircle2, XCircle } from "lucide-react";
+import { Sparkles, Check, Copy, CheckCircle2, XCircle } from "lucide-react";
 import { ink } from "@/design-tokens/grahvani-learning/colors";
 
 const HAIRLINE = "var(--gl-gold-hairline, rgba(232, 199, 114, 0.28))";
 const SURFACE = "var(--gl-card-surface-solid, #FFF9F0)";
 const INK_PRIMARY = "var(--gl-ink-primary, #2d261e)";
 const GOLD = ink.goldAccent || "#9C7A2F";
+const LABEL_TEXT = "#5f5447";
+const HELPER_TEXT = "#4b5563";
 
 const SHLOKA_WORDS = [
   { word: "भाग्येशे", meaning: "The lord of the 9th house of fortune (bhāgyeśa)" },
@@ -76,7 +78,7 @@ export function LakshmiYogaAnalyser() {
 
       {/* Sanskrit Verse with breakdowns */}
       <div className="mb-6 p-4 rounded-xl border bg-white shadow-sm text-center relative" style={{ borderColor: HAIRLINE }}>
-        <div className="absolute top-1 left-2 text-[9px] uppercase font-bold text-gray-400 tracking-wider">
+        <div className="absolute top-1 left-2 text-[9px] uppercase font-bold tracking-wider" style={{ color: LABEL_TEXT }}>
           Sanskrit Classical Verse (Click words for breakdown)
         </div>
         <div className="py-3 flex flex-wrap justify-center gap-2">
@@ -106,13 +108,13 @@ export function LakshmiYogaAnalyser() {
         {/* Left Column: controls */}
         <div className="lg:col-span-6 space-y-4">
           <div className="p-4 rounded-xl border bg-white shadow-sm space-y-4" style={{ borderColor: HAIRLINE }}>
-            <span className="text-[10px] uppercase font-bold text-gray-400 block border-b pb-1">
+            <span className="text-[10px] uppercase font-bold block border-b pb-1" style={{ color: LABEL_TEXT }}>
               Interactive Rule Modulators
             </span>
 
             {/* 9th Lord placement */}
             <div>
-              <label className="block text-[10px] uppercase font-bold text-gray-500 mb-1">9th Lord Placement:</label>
+              <label className="block text-[10px] uppercase font-bold mb-1" style={{ color: LABEL_TEXT }}>9th Lord Placement:</label>
               <div className="flex gap-2">
                 <button
                   onClick={() => setLord9Placement("kendra")}
@@ -137,7 +139,7 @@ export function LakshmiYogaAnalyser() {
 
             {/* 9th Lord Dignity */}
             <div>
-              <label className="block text-[10px] uppercase font-bold text-gray-500 mb-1">9th Lord Dignity:</label>
+              <label className="block text-[10px] uppercase font-bold mb-1" style={{ color: LABEL_TEXT }}>9th Lord Dignity:</label>
               <div className="flex gap-2">
                 <button
                   onClick={() => setLord9Dignity("strong")}
@@ -162,7 +164,7 @@ export function LakshmiYogaAnalyser() {
 
             {/* Lagna Lord Strength */}
             <div>
-              <label className="block text-[10px] uppercase font-bold text-gray-500 mb-1">Lagna Lord Strength:</label>
+              <label className="block text-[10px] uppercase font-bold mb-1" style={{ color: LABEL_TEXT }}>Lagna Lord Strength:</label>
               <div className="flex gap-2">
                 <button
                   onClick={() => setLagnaLordStrength("strong")}
@@ -196,7 +198,7 @@ export function LakshmiYogaAnalyser() {
               boxShadow: checks.all ? "0 4px 20px rgba(156, 122, 47, 0.25)" : "none"
             }}
           >
-            <span className="text-[10px] uppercase font-bold text-gray-400 block border-b pb-1 w-full text-center">
+            <span className="text-[10px] uppercase font-bold block border-b pb-1 w-full text-center" style={{ color: LABEL_TEXT }}>
               Rule Verification Status
             </span>
 
@@ -204,7 +206,7 @@ export function LakshmiYogaAnalyser() {
               {/* Check 1 */}
               <div className="flex items-center gap-2.5 text-xs font-bold">
                 {checks.c1 ? <CheckCircle2 size={16} className="text-green-700" /> : <XCircle size={16} className="text-red-700" />}
-                <span className={checks.c1 ? "text-gray-800" : "text-gray-400 font-medium"}>
+                <span className={checks.c1 ? "text-gray-800" : "font-medium"} style={{ color: checks.c1 ? undefined : HELPER_TEXT }}>
                   Rule 1: 9th Lord placed in Kendra or Trikona
                 </span>
               </div>
@@ -212,7 +214,7 @@ export function LakshmiYogaAnalyser() {
               {/* Check 2 */}
               <div className="flex items-center gap-2.5 text-xs font-bold">
                 {checks.c2 ? <CheckCircle2 size={16} className="text-green-700" /> : <XCircle size={16} className="text-red-700" />}
-                <span className={checks.c2 ? "text-gray-800" : "text-gray-400 font-medium"}>
+                <span className={checks.c2 ? "text-gray-800" : "font-medium"} style={{ color: checks.c2 ? undefined : HELPER_TEXT }}>
                   Rule 2: 9th Lord in exalted or own sign dignity
                 </span>
               </div>
@@ -220,7 +222,7 @@ export function LakshmiYogaAnalyser() {
               {/* Check 3 */}
               <div className="flex items-center gap-2.5 text-xs font-bold">
                 {checks.c3 ? <CheckCircle2 size={16} className="text-green-700" /> : <XCircle size={16} className="text-red-700" />}
-                <span className={checks.c3 ? "text-gray-800" : "text-gray-400 font-medium"}>
+                <span className={checks.c3 ? "text-gray-800" : "font-medium"} style={{ color: checks.c3 ? undefined : HELPER_TEXT }}>
                   Rule 3: Lagna Lord strong and healthy
                 </span>
               </div>
@@ -239,10 +241,10 @@ export function LakshmiYogaAnalyser() {
       <div className="p-4 rounded-xl border bg-white shadow-sm space-y-3" style={{ borderColor: HAIRLINE }}>
         <div className="flex justify-between items-center border-b pb-2" style={{ borderColor: HAIRLINE }}>
           <div>
-            <span className="text-[9px] uppercase tracking-wider block text-gray-400 font-bold">
+            <span className="text-[9px] uppercase tracking-wider block font-bold" style={{ color: LABEL_TEXT }}>
               Calibrated Interpretations
             </span>
-            <span className="text-[10px] text-gray-500 font-medium italic">
+            <span className="text-[10px] font-medium italic" style={{ color: HELPER_TEXT }}>
               Use this qualitative framing in your client write-ups
             </span>
           </div>
@@ -255,8 +257,8 @@ export function LakshmiYogaAnalyser() {
             {copied ? "Copied" : "Copy Phrasing"}
           </button>
         </div>
-        <blockquote className="text-xs italic text-gray-600 border-l-2 pl-3 py-1 bg-amber-50/10" style={{ borderColor: GOLD }}>
-          "{phrasingText}"
+        <blockquote className="text-xs italic border-l-2 pl-3 py-1 bg-amber-50/10" style={{ borderColor: GOLD, color: HELPER_TEXT }}>
+          &ldquo;{phrasingText}&rdquo;
         </blockquote>
       </div>
     </div>

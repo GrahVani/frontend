@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Info, Sparkles, Check, Copy } from "lucide-react";
+import { Sparkles, Check, Copy } from "lucide-react";
 import { ink } from "@/design-tokens/grahvani-learning/colors";
 
 const HAIRLINE = "var(--gl-gold-hairline, rgba(232, 199, 114, 0.28))";
@@ -9,6 +9,10 @@ const SURFACE = "var(--gl-card-surface-solid, #FFF9F0)";
 const INK_PRIMARY = "var(--gl-ink-primary, #2d261e)";
 const INK_SECONDARY = "var(--gl-ink-secondary, #4d4133)";
 const GOLD = ink.goldAccent || "#9C7A2F";
+const LABEL_TEXT = "#5f5447";
+const HELPER_TEXT = "#4b5563";
+const CHART_LINE = "#9b7b42";
+const CHART_LINE_STRONG = "#755521";
 
 const SHLOKA_WORDS = [
   { word: "लग्नेश", meaning: "The lord of the ascendant (1st lord)" },
@@ -41,7 +45,7 @@ export function DhanaYogaPatternVerifier() {
   const [copied, setCopied] = useState(false);
 
   // Verify Dhana Yoga combinations
-  const { isYogaActive, yogaName, phrasingText } = useMemo(() => {
+  const { yogaName, phrasingText } = useMemo(() => {
     let active = false;
     let name = "No Primary Dhana Yoga verified";
     let phrase = "";
@@ -108,7 +112,7 @@ export function DhanaYogaPatternVerifier() {
 
       {/* Sanskrit Verse with breakdowns */}
       <div className="mb-6 p-4 rounded-xl border bg-white shadow-sm text-center relative" style={{ borderColor: HAIRLINE }}>
-        <div className="absolute top-1 left-2 text-[9px] uppercase font-bold text-gray-400 tracking-wider">
+        <div className="absolute top-1 left-2 text-[9px] uppercase font-bold tracking-wider" style={{ color: LABEL_TEXT }}>
           Sanskrit Classical Verse (Click words for breakdown)
         </div>
         <div className="py-3 flex flex-wrap justify-center gap-2">
@@ -139,25 +143,25 @@ export function DhanaYogaPatternVerifier() {
         <div className="lg:col-span-6 space-y-4">
           <div className="p-4 rounded-xl border bg-white shadow-sm space-y-4" style={{ borderColor: HAIRLINE }}>
             <div className="flex justify-between items-center border-b pb-1">
-              <span className="text-[10px] uppercase font-bold text-gray-400">
+              <span className="text-[10px] uppercase font-bold" style={{ color: LABEL_TEXT }}>
                 Pattern Configurator
               </span>
               <div className="flex gap-2">
                 <button 
                   onClick={() => setSelectedLord("2nd")} 
                   className={`text-[9px] font-bold px-2 py-0.5 rounded border transition-all cursor-pointer ${
-                    selectedLord === "2nd" ? "bg-amber-800 text-white" : "bg-transparent text-gray-500"
+                    selectedLord === "2nd" ? "bg-amber-800 text-white" : "bg-transparent"
                   }`}
-                  style={{ borderColor: HAIRLINE }}
+                  style={{ borderColor: HAIRLINE, color: selectedLord === "2nd" ? undefined : HELPER_TEXT }}
                 >
                   Position 2nd Lord
                 </button>
                 <button 
                   onClick={() => setSelectedLord("11th")} 
                   className={`text-[9px] font-bold px-2 py-0.5 rounded border transition-all cursor-pointer ${
-                    selectedLord === "11th" ? "bg-amber-800 text-white" : "bg-transparent text-gray-500"
+                    selectedLord === "11th" ? "bg-amber-800 text-white" : "bg-transparent"
                   }`}
-                  style={{ borderColor: HAIRLINE }}
+                  style={{ borderColor: HAIRLINE, color: selectedLord === "11th" ? undefined : HELPER_TEXT }}
                 >
                   Position 11th Lord
                 </button>
@@ -166,7 +170,7 @@ export function DhanaYogaPatternVerifier() {
 
             {/* 2nd Lord Placement dropdown */}
             <div>
-              <label className="block text-[9px] uppercase font-bold text-gray-500 mb-1">
+              <label className="block text-[9px] uppercase font-bold mb-1" style={{ color: LABEL_TEXT }}>
                 2nd Lord House:
               </label>
               <select
@@ -184,7 +188,7 @@ export function DhanaYogaPatternVerifier() {
 
             {/* 11th Lord Placement dropdown */}
             <div>
-              <label className="block text-[9px] uppercase font-bold text-gray-500 mb-1">
+              <label className="block text-[9px] uppercase font-bold mb-1" style={{ color: LABEL_TEXT }}>
                 11th Lord House:
               </label>
               <select
@@ -205,19 +209,19 @@ export function DhanaYogaPatternVerifier() {
         {/* Right Column: Interactive Chart Visualizer */}
         <div className="lg:col-span-6 space-y-4">
           <div className="p-4 rounded-xl border bg-white shadow-sm flex flex-col items-center justify-center min-h-[250px]" style={{ borderColor: HAIRLINE }}>
-            <span className="text-[10px] uppercase font-bold text-gray-400 block mb-3 w-full text-center">
+            <span className="text-[10px] uppercase font-bold block mb-3 w-full text-center" style={{ color: LABEL_TEXT }}>
               Vedic Chart (Click houses to place active Lord)
             </span>
 
-            <div className="w-48 h-48 bg-[#fbf9f4] border p-1 rounded-lg relative" style={{ borderColor: HAIRLINE }}>
+            <div className="w-48 h-48 bg-[#fbf9f4] border p-1 rounded-lg relative" style={{ borderColor: CHART_LINE_STRONG }}>
               <svg viewBox="0 0 100 100" className="w-full h-full font-serif">
-                <rect x="2" y="2" width="96" height="96" fill="transparent" stroke={HAIRLINE} strokeWidth="0.8" />
-                <line x1="2" y1="2" x2="98" y2="98" stroke={HAIRLINE} strokeWidth="0.6" />
-                <line x1="98" y1="2" x2="2" y2="98" stroke={HAIRLINE} strokeWidth="0.6" />
-                <line x1="50" y1="2" x2="2" y2="50" stroke={HAIRLINE} strokeWidth="0.8" />
-                <line x1="2" y1="50" x2="50" y2="98" stroke={HAIRLINE} strokeWidth="0.8" />
-                <line x1="50" y1="98" x2="98" y2="50" stroke={HAIRLINE} strokeWidth="0.8" />
-                <line x1="98" y1="50" x2="50" y2="2" stroke={HAIRLINE} strokeWidth="0.8" />
+                <rect x="2" y="2" width="96" height="96" fill="transparent" stroke={CHART_LINE_STRONG} strokeWidth="1.2" />
+                <line x1="2" y1="2" x2="98" y2="98" stroke={CHART_LINE} strokeWidth="1" />
+                <line x1="98" y1="2" x2="2" y2="98" stroke={CHART_LINE} strokeWidth="1" />
+                <line x1="50" y1="2" x2="2" y2="50" stroke={CHART_LINE} strokeWidth="1.1" />
+                <line x1="2" y1="50" x2="50" y2="98" stroke={CHART_LINE} strokeWidth="1.1" />
+                <line x1="50" y1="98" x2="98" y2="50" stroke={CHART_LINE} strokeWidth="1.1" />
+                <line x1="98" y1="50" x2="50" y2="2" stroke={CHART_LINE} strokeWidth="1.1" />
 
                 {/* Hotspot polygons */}
                 <polygon points="2,2 50,2 26,26" fill="transparent" className="cursor-pointer hover:fill-amber-100/10" onClick={() => handleHouseClick(2)} />
@@ -229,7 +233,7 @@ export function DhanaYogaPatternVerifier() {
                   const hasLord11 = lord11House === cell.house;
                   return (
                     <g key={cell.house} className="pointer-events-none">
-                      <text x={cell.cx} y={cell.cy + 1} textAnchor="middle" fontSize="4.5" fill={INK_SECONDARY}>
+                      <text x={cell.cx} y={cell.cy + 1} textAnchor="middle" fontSize="5" fontWeight="700" fill={INK_SECONDARY}>
                         {cell.house}
                       </text>
                       {hasLord2 && (
@@ -245,7 +249,7 @@ export function DhanaYogaPatternVerifier() {
             </div>
 
             <div className="text-center mt-3">
-              <span className="text-[10px] uppercase font-bold text-gray-500">Yoga Status:</span>
+              <span className="text-[10px] uppercase font-bold" style={{ color: LABEL_TEXT }}>Yoga Status:</span>
               <span className="text-xs font-bold text-amber-900 block mt-0.5">{yogaName}</span>
             </div>
           </div>
@@ -256,10 +260,10 @@ export function DhanaYogaPatternVerifier() {
       <div className="p-4 rounded-xl border bg-white shadow-sm space-y-3" style={{ borderColor: HAIRLINE }}>
         <div className="flex justify-between items-center border-b pb-2" style={{ borderColor: HAIRLINE }}>
           <div>
-            <span className="text-[9px] uppercase tracking-wider block text-gray-400 font-bold">
+            <span className="text-[9px] uppercase tracking-wider block font-bold" style={{ color: LABEL_TEXT }}>
               Calibrated Interpretations
             </span>
-            <span className="text-[10px] text-gray-500 font-medium italic">
+            <span className="text-[10px] font-medium italic" style={{ color: HELPER_TEXT }}>
               Use this qualitative framing in your client write-ups
             </span>
           </div>
@@ -272,8 +276,8 @@ export function DhanaYogaPatternVerifier() {
             {copied ? "Copied" : "Copy Phrasing"}
           </button>
         </div>
-        <blockquote className="text-xs italic text-gray-600 border-l-2 pl-3 py-1 bg-amber-50/10" style={{ borderColor: GOLD }}>
-          "{phrasingText}"
+        <blockquote className="text-xs italic border-l-2 pl-3 py-1 bg-amber-50/10" style={{ borderColor: GOLD, color: HELPER_TEXT }}>
+          &ldquo;{phrasingText}&rdquo;
         </blockquote>
       </div>
     </div>

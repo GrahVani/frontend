@@ -21,6 +21,7 @@ const GOLD = "#B88421";
 const VERMILION = "#A23A1E";
 const BLUE = "#356CAB";
 const PURPLE = "#6B5AA8";
+const MUTED_FILL = "#F7F1E7";
 
 type PlanetKey = "sun" | "moon" | "mars" | "mercury" | "jupiter" | "venus" | "saturn";
 type OverrideA = "off" | "on";
@@ -382,7 +383,7 @@ function MaheshvaraASvg({ overrideA }: { overrideA: OverrideA }) {
         const isTwelfth = overrideA === "on" && i === 11;
         return (
           <g key={sign.key}>
-            <circle cx={x} cy={y} r={20} fill={isAk ? `${GOLD}22` : isEighth ? `${BLUE}22` : isTwelfth ? `${VERMILION}22` : `${INK_MUTED}14`} stroke={isAk ? GOLD : isEighth ? BLUE : isTwelfth ? VERMILION : HAIRLINE} strokeWidth={isAk || isEighth || isTwelfth ? 3 : 1} />
+            <circle cx={x} cy={y} r={20} fill={isAk ? `${GOLD}22` : isEighth ? `${BLUE}22` : isTwelfth ? `${VERMILION}22` : MUTED_FILL} stroke={isAk ? GOLD : isEighth ? BLUE : isTwelfth ? VERMILION : HAIRLINE} strokeWidth={isAk || isEighth || isTwelfth ? 3 : 1} />
             <text x={x} y={y - 3} textAnchor="middle" fill={INK_PRIMARY} fontSize="10" fontWeight={600}>{sign.label.slice(0, 3)}</text>
             <text x={x} y={y + 9} textAnchor="middle" fill={PLANETS[sign.lord].color} fontSize="9" fontWeight={500}>{PLANETS[sign.lord].short}</text>
           </g>

@@ -255,6 +255,26 @@ function JupiterOverlaySvg({ house, aspectsFifth, aspectsLord }: { house: HouseK
   const lagnaPos = polar(lagnaAngle, lagnaR);
   const fifthPos = polar(fifthAngle, fifthR);
   const lordPos = polar(lordAngle, lordR);
+  const jupiterNodeR = 20;
+  const fifthNodeR = 18;
+  const lordNodeR = 16;
+
+  function edgeLine(from: { x: number; y: number }, to: { x: number; y: number }, fromR: number, toR: number) {
+    const dx = to.x - from.x;
+    const dy = to.y - from.y;
+    const length = Math.sqrt(dx * dx + dy * dy) || 1;
+    const ux = dx / length;
+    const uy = dy / length;
+    return {
+      x1: from.x + ux * fromR,
+      y1: from.y + uy * fromR,
+      x2: to.x - ux * toR,
+      y2: to.y - uy * toR,
+    };
+  }
+
+  const fifthRay = edgeLine(jupiterPos, fifthPos, jupiterNodeR, fifthNodeR);
+  const lordRay = edgeLine(jupiterPos, lordPos, jupiterNodeR, lordNodeR);
 
   return (
     <svg viewBox="0 0 340 220" role="img" aria-label="D7 Jupiter overlay showing Jupiter, Lagna, D7 5th and 5th lord" style={{ width: "100%", maxHeight: 280, margin: "0.4rem auto 0.85rem", display: "block" }}>
@@ -263,6 +283,10 @@ function JupiterOverlaySvg({ house, aspectsFifth, aspectsLord }: { house: HouseK
       {/* Orbits */}
       <circle cx={cx} cy={cy} r={fifthR} fill="none" stroke={HAIRLINE} strokeWidth="1" strokeDasharray="3 3" />
       <circle cx={cx} cy={cy} r={lagnaR} fill="none" stroke={GOLD} strokeWidth="2" />
+
+      {/* Engagement rays */}
+      {aspectsFifth || house === 5 ? <line {...fifthRay} stroke={GREEN} strokeWidth="3" strokeLinecap="round" /> : null}
+      {aspectsLord ? <line {...lordRay} stroke={GREEN} strokeWidth="2" strokeLinecap="round" strokeDasharray="4 3" /> : null}
 
       {/* D7 Lagna */}
       <circle cx={lagnaPos.x} cy={lagnaPos.y} r="14" fill={SURFACE} stroke={GOLD} strokeWidth="2" />
@@ -287,11 +311,6 @@ function JupiterOverlaySvg({ house, aspectsFifth, aspectsLord }: { house: HouseK
       <text x={jupiterPos.x} y={jupiterPos.y + 5} textAnchor="middle" fill="#fff" fontSize="14" fontWeight="600">
         ♃
       </text>
-
-      {/* Engagement rays */}
-      {aspectsFifth ? <line x1={jupiterPos.x} y1={jupiterPos.y} x2={fifthPos.x} y2={fifthPos.y} stroke={GREEN} strokeWidth="3" strokeLinecap="round" /> : null}
-      {aspectsLord ? <line x1={jupiterPos.x} y1={jupiterPos.y} x2={lordPos.x} y2={lordPos.y} stroke={GREEN} strokeWidth="2" strokeLinecap="round" strokeDasharray="4 3" /> : null}
-      {house === 5 ? <line x1={jupiterPos.x} y1={jupiterPos.y} x2={fifthPos.x} y2={fifthPos.y} stroke={GREEN} strokeWidth="3" strokeLinecap="round" /> : null}
 
       {/* Legend */}
       <g transform="translate(28 190)">

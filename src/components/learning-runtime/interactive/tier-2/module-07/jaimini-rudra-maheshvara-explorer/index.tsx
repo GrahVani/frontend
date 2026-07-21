@@ -20,6 +20,7 @@ const GOLD = "#B88421";
 const VERMILION = "#A23A1E";
 const BLUE = "#356CAB";
 const PURPLE = "#6B5AA8";
+const MUTED_FILL = "#F7F1E7";
 
 type PlanetKey = "sun" | "moon" | "mars" | "mercury" | "jupiter" | "venus" | "saturn";
 type Stream = "parashari" | "jaimini";
@@ -325,36 +326,46 @@ export function JaiminiRudraMaheshvaraExplorer() {
 
 function StreamSvg({ stream }: { stream: Stream }) {
   const parashariActive = stream === "parashari";
+  const parashariOpacity = parashariActive ? 1 : 0;
+  const jaiminiOpacity = parashariActive ? 0 : 1;
   return (
-    <svg viewBox="0 0 560 200" role="img" aria-label="Parashari versus Jaimini structural comparison">
+    <svg
+      viewBox="0 0 560 200"
+      role="img"
+      aria-label="Parashari versus Jaimini structural comparison"
+      style={{ display: "block", width: "min(100%, 680px)", margin: "0.75rem auto 0" }}
+    >
       <rect x="24" y="30" width="512" height="140" rx="8" fill={`${parashariActive ? BLUE : PURPLE}0F`} stroke={HAIRLINE} />
-      <rect x="50" y="70" width="110" height="70" rx="6" fill={parashariActive ? `${BLUE}18` : `${INK_MUTED}14`} stroke={parashariActive ? BLUE : HAIRLINE} />
+      <g opacity={parashariOpacity}>
+      <rect x="50" y="70" width="110" height="70" rx="6" fill={parashariActive ? `${BLUE}18` : MUTED_FILL} stroke={parashariActive ? BLUE : HAIRLINE} />
       <text x="105" y="100" textAnchor="middle" fill={parashariActive ? BLUE : INK_MUTED} fontSize="13" fontWeight={600}>Lagna</text>
       <text x="105" y="120" textAnchor="middle" fill={INK_MUTED} fontSize="11" fontWeight={500}>starting point</text>
       <path d="M 170 105 L 230 105" stroke={parashariActive ? BLUE : HAIRLINE} strokeWidth={parashariActive ? 4 : 2} strokeLinecap="round" />
-      <rect x="240" y="65" width="120" height="80" rx="6" fill={parashariActive ? `${BLUE}18` : `${INK_MUTED}14`} stroke={parashariActive ? BLUE : HAIRLINE} />
+      <rect x="240" y="65" width="120" height="80" rx="6" fill={parashariActive ? `${BLUE}18` : MUTED_FILL} stroke={parashariActive ? BLUE : HAIRLINE} />
       <text x="300" y="95" textAnchor="middle" fill={parashariActive ? BLUE : INK_MUTED} fontSize="13" fontWeight={600}>House lordship</text>
       <text x="300" y="115" textAnchor="middle" fill={INK_MUTED} fontSize="11" fontWeight={500}>2nd / 7th rulers</text>
       <text x="300" y="132" textAnchor="middle" fill={INK_MUTED} fontSize="11" fontWeight={500}>mechanical</text>
       <path d="M 370 105 L 430 105" stroke={parashariActive ? BLUE : HAIRLINE} strokeWidth={parashariActive ? 4 : 2} strokeLinecap="round" />
-      <rect x="440" y="70" width="80" height="70" rx="6" fill={parashariActive ? `${BLUE}18` : `${INK_MUTED}14`} stroke={parashariActive ? BLUE : HAIRLINE} />
+      <rect x="440" y="70" width="80" height="70" rx="6" fill={parashariActive ? `${BLUE}18` : MUTED_FILL} stroke={parashariActive ? BLUE : HAIRLINE} />
       <text x="480" y="100" textAnchor="middle" fill={parashariActive ? BLUE : INK_MUTED} fontSize="13" fontWeight={600}>Maraka</text>
       <text x="480" y="120" textAnchor="middle" fill={INK_MUTED} fontSize="11" fontWeight={500}>every chart</text>
+      </g>
 
-      <g opacity={parashariActive ? 0.25 : 1}>
+      <g opacity={jaiminiOpacity}>
         <rect x="50" y="70" width="110" height="70" rx="6" fill={`${PURPLE}18`} stroke={PURPLE} />
-        <text x="105" y="100" textAnchor="middle" fill={PURPLE} fontSize="13" fontWeight={600}>Degree ranking</text>
-        <text x="105" y="120" textAnchor="middle" fill={INK_MUTED} fontSize="11" fontWeight={500}>find AK</text>
+        <text x="105" y="96" textAnchor="middle" fill={PURPLE} fontSize="12" fontWeight={600}>Degree</text>
+        <text x="105" y="112" textAnchor="middle" fill={PURPLE} fontSize="12" fontWeight={600}>ranking</text>
+        <text x="105" y="132" textAnchor="middle" fill={INK_SECONDARY} fontSize="11" fontWeight={500}>find AK</text>
         <path d="M 170 105 L 230 105" stroke={PURPLE} strokeWidth={4} strokeLinecap="round" />
-        <rect x="240" y="65" width="120" height="80" rx="6" fill={`${PURPLE}18`} stroke={PURPLE} />
+        <rect x="240" y="65" width="120" height="86" rx="6" fill={`${PURPLE}18`} stroke={PURPLE} />
         <text x="300" y="95" textAnchor="middle" fill={PURPLE} fontSize="13" fontWeight={600}>Kāraka status</text>
-        <text x="300" y="115" textAnchor="middle" fill={INK_MUTED} fontSize="11" fontWeight={500}>2nd/8th strength</text>
-        <text x="300" y="132" textAnchor="middle" fill={INK_MUTED} fontSize="11" fontWeight={500}>8th from AK</text>
+        <text x="300" y="120" textAnchor="middle" fill={INK_SECONDARY} fontSize="10" fontWeight={500}>2nd/8th strength</text>
+        <text x="300" y="137" textAnchor="middle" fill={INK_SECONDARY} fontSize="10" fontWeight={500}>8th from AK</text>
         <path d="M 370 105 L 430 105" stroke={PURPLE} strokeWidth={4} strokeLinecap="round" />
         <rect x="440" y="70" width="80" height="70" rx="6" fill={`${PURPLE}18`} stroke={PURPLE} />
         <text x="480" y="100" textAnchor="middle" fill={PURPLE} fontSize="13" fontWeight={600}>Rudra /</text>
         <text x="480" y="118" textAnchor="middle" fill={PURPLE} fontSize="13" fontWeight={600}>Maheśvara</text>
-        <text x="480" y="135" textAnchor="middle" fill={INK_MUTED} fontSize="11" fontWeight={500}>chart-specific</text>
+        <text x="480" y="135" textAnchor="middle" fill={INK_SECONDARY} fontSize="10" fontWeight={500}>chart-specific</text>
       </g>
     </svg>
   );
@@ -426,7 +437,7 @@ function MaheshvaraSvg({ akSignIndex, mode }: { akSignIndex: number; mode: Mahes
         const isEighth = i === 7;
         const isTwelfth = mode === "override-a" && i === 11;
         const isSixth = mode === "override-b" && i === 5;
-        let fill = `${INK_MUTED}14`;
+        let fill = MUTED_FILL;
         let stroke = HAIRLINE;
         if (isAk) { fill = `${GOLD}22`; stroke = GOLD; }
         else if (isEighth) { fill = `${BLUE}22`; stroke = BLUE; }

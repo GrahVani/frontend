@@ -215,25 +215,25 @@ function SynthesisSvg({
   showComparison: boolean;
 }) {
   return (
-    <svg viewBox="0 0 760 460" role="img" aria-label="KP and whole-sign education synthesis diagram" style={{ width: "100%", minHeight: 360, display: "block" }}>
-      <rect x="12" y="12" width="736" height="436" rx="20" fill={SURFACE} stroke={HAIRLINE} />
-      <text x="380" y="48" textAnchor="middle" fill={GOLD} fontSize="13" fontWeight="600">CHART E1 EXAM SYNTHESIS</text>
-      <text x="380" y="78" textAnchor="middle" fill={house.color} fontSize="18" fontWeight="600">{house.label} house: {house.domain}</text>
-      <rect x="74" y="125" width="250" height="130" rx="18" fill={GREEN} fillOpacity="0.1" stroke={GREEN} />
-      <text x="199" y="154" textAnchor="middle" fill={GREEN} fontSize="13" fontWeight="600">KP-cuspal mechanism</text>
-      <text x="199" y="187" textAnchor="middle" fill={INK_PRIMARY} fontSize="17">{house.kpCarrier}</text>
-      <text x="199" y="218" textAnchor="middle" fill={INK_SECONDARY} fontSize="12">cusps + significators + dasha</text>
-      <rect x="436" y="125" width="250" height="130" rx="18" fill={showComparison ? BLUE : SURFACE} fillOpacity={showComparison ? "0.1" : "1"} stroke={showComparison ? BLUE : HAIRLINE} />
-      <text x="561" y="154" textAnchor="middle" fill={showComparison ? BLUE : INK_MUTED} fontSize="13" fontWeight="600">Whole-sign mechanism</text>
-      <text x="561" y="187" textAnchor="middle" fill={showComparison ? INK_PRIMARY : INK_MUTED} fontSize="17">{showComparison ? house.wholeCarrier : "hidden"}</text>
-      <text x="561" y="218" textAnchor="middle" fill={INK_SECONDARY} fontSize="12">{showComparison ? "lordship + occupant picture" : "comparison must be restored"}</text>
-      <path d="M327 190 C372 155 388 155 433 190" fill="none" stroke={verdict.color} strokeWidth="4" strokeLinecap="round" />
-      <circle cx="380" cy="190" r="22" fill={verdict.color} fillOpacity="0.14" stroke={verdict.color} />
-      <text x="380" y="195" textAnchor="middle" fill={verdict.color} fontSize="13" fontWeight="600">vs</text>
-      <rect x="118" y="310" width="524" height="72" rx="18" fill={verdict.color} fillOpacity="0.1" stroke={verdict.color} />
-      <text x="380" y="338" textAnchor="middle" fill={verdict.color} fontSize="13" fontWeight="600">{verdict.label}</text>
-      <text x="380" y="363" textAnchor="middle" fill={INK_SECONDARY} fontSize="12">{house.relation}</text>
-      <text x="380" y="425" textAnchor="middle" fill={verdict.color} fontSize="12" fontWeight="600">Synthesis discipline: {score}%</text>
+    <svg viewBox="0 0 640 500" role="img" aria-label="KP and whole-sign education synthesis diagram" style={{ width: "100%", minHeight: 420, display: "block" }}>
+      <rect x="12" y="12" width="616" height="476" rx="18" fill={SURFACE} stroke={HAIRLINE} />
+      <text x="320" y="54" textAnchor="middle" fill={GOLD} fontSize="17" fontWeight="700">CHART E1 EXAM SYNTHESIS</text>
+      <text x="320" y="88" textAnchor="middle" fill={house.color} fontSize="20" fontWeight="700">{house.label} house: {house.domain}</text>
+      <rect x="60" y="140" width="220" height="130" rx="18" fill={GREEN} fillOpacity="0.1" stroke={GREEN} />
+      <text x="170" y="171" textAnchor="middle" fill={GREEN} fontSize="15" fontWeight="700">KP-cuspal mechanism</text>
+      <text x="170" y="207" textAnchor="middle" fill={INK_PRIMARY} fontSize="19" fontWeight="600">{house.kpCarrier}</text>
+      <text x="170" y="239" textAnchor="middle" fill={INK_SECONDARY} fontSize="13" fontWeight="600">cusps + significators + dasha</text>
+      <rect x="360" y="140" width="220" height="130" rx="18" fill={showComparison ? BLUE : SURFACE} fillOpacity={showComparison ? "0.1" : "1"} stroke={showComparison ? BLUE : HAIRLINE} />
+      <text x="470" y="171" textAnchor="middle" fill={showComparison ? BLUE : INK_SECONDARY} fontSize="15" fontWeight="700">Whole-sign mechanism</text>
+      <text x="470" y="207" textAnchor="middle" fill={showComparison ? INK_PRIMARY : INK_SECONDARY} fontSize="19" fontWeight="600">{showComparison ? house.wholeCarrier : "hidden"}</text>
+      <text x="470" y="239" textAnchor="middle" fill={INK_SECONDARY} fontSize="13" fontWeight="600">{showComparison ? "lordship + occupant picture" : "comparison must be restored"}</text>
+      <path d="M284 205 C306 174 334 174 356 205" fill="none" stroke={verdict.color} strokeWidth="4" strokeLinecap="round" />
+      <circle cx="320" cy="205" r="24" fill={verdict.color} fillOpacity="0.14" stroke={verdict.color} />
+      <text x="320" y="211" textAnchor="middle" fill={verdict.color} fontSize="14" fontWeight="700">vs</text>
+      <rect x="82" y="330" width="476" height="82" rx="18" fill={verdict.color} fillOpacity="0.1" stroke={verdict.color} />
+      <text x="320" y="360" textAnchor="middle" fill={verdict.color} fontSize="15" fontWeight="700">{verdict.label}</text>
+      <text x="320" y="388" textAnchor="middle" fill={INK_SECONDARY} fontSize="13" fontWeight="600">{house.relation}</text>
+      <text x="320" y="462" textAnchor="middle" fill={verdict.color} fontSize="14" fontWeight="700">Synthesis discipline: {score}%</text>
     </svg>
   );
 }

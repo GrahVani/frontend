@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Info, Sparkles, Check, Copy } from "lucide-react";
+import { Sparkles, Check, Copy } from "lucide-react";
 import { ink } from "@/design-tokens/grahvani-learning/colors";
 
 const HAIRLINE = "var(--gl-gold-hairline, rgba(232, 199, 114, 0.28))";
@@ -9,6 +9,10 @@ const SURFACE = "var(--gl-card-surface-solid, #FFF9F0)";
 const INK_PRIMARY = "var(--gl-ink-primary, #2d261e)";
 const INK_SECONDARY = "var(--gl-ink-secondary, #4d4133)";
 const GOLD = ink.goldAccent || "#9C7A2F";
+const LABEL_TEXT = "#5f5447";
+const HELPER_TEXT = "#4b5563";
+const CHART_LINE = "#9b7b42";
+const CHART_LINE_STRONG = "#755521";
 
 const SHLOKA_WORDS = [
   { word: "मेषलग्ने", meaning: "With Aries as the fixed ascendant/Lagna (1st house = Aries)" },
@@ -99,7 +103,7 @@ export function LalKitabMoneyFormulaRevisited() {
 
       {/* Sanskrit Verse with breakdowns */}
       <div className="mb-6 p-4 rounded-xl border bg-white shadow-sm text-center relative" style={{ borderColor: HAIRLINE }}>
-        <div className="absolute top-1 left-2 text-[9px] uppercase font-bold text-gray-400 tracking-wider">
+        <div className="absolute top-1 left-2 text-[9px] uppercase font-bold tracking-wider" style={{ color: LABEL_TEXT }}>
           Sanskrit Verse Reference (Click words for breakdown)
         </div>
         <div className="py-3 flex flex-wrap justify-center gap-2">
@@ -130,25 +134,25 @@ export function LalKitabMoneyFormulaRevisited() {
         <div className="lg:col-span-5 space-y-4">
           <div className="p-4 rounded-xl border bg-white shadow-sm space-y-4" style={{ borderColor: HAIRLINE }}>
             <div className="flex justify-between items-center border-b pb-1">
-              <span className="text-[10px] uppercase font-bold text-gray-400">
+              <span className="text-[10px] uppercase font-bold" style={{ color: LABEL_TEXT }}>
                 Lal Kitab Configurator
               </span>
               <div className="flex gap-2">
                 <button 
                   onClick={() => setSelectedPlanet("jupiter")} 
                   className={`text-[9px] font-bold px-2 py-0.5 rounded border transition-all cursor-pointer ${
-                    selectedPlanet === "jupiter" ? "bg-amber-800 text-white" : "bg-transparent text-gray-500"
+                    selectedPlanet === "jupiter" ? "bg-amber-800 text-white" : "bg-transparent"
                   }`}
-                  style={{ borderColor: HAIRLINE }}
+                  style={{ borderColor: HAIRLINE, color: selectedPlanet === "jupiter" ? undefined : HELPER_TEXT }}
                 >
                   Position Jupiter
                 </button>
                 <button 
                   onClick={() => setSelectedPlanet("saturn")} 
                   className={`text-[9px] font-bold px-2 py-0.5 rounded border transition-all cursor-pointer ${
-                    selectedPlanet === "saturn" ? "bg-amber-800 text-white" : "bg-transparent text-gray-500"
+                    selectedPlanet === "saturn" ? "bg-amber-800 text-white" : "bg-transparent"
                   }`}
-                  style={{ borderColor: HAIRLINE }}
+                  style={{ borderColor: HAIRLINE, color: selectedPlanet === "saturn" ? undefined : HELPER_TEXT }}
                 >
                   Position Saturn
                 </button>
@@ -157,7 +161,7 @@ export function LalKitabMoneyFormulaRevisited() {
 
             {/* Placements */}
             <div>
-              <label className="block text-[9px] uppercase font-bold text-gray-500 mb-1">Jupiter House:</label>
+              <label className="block text-[9px] uppercase font-bold mb-1" style={{ color: LABEL_TEXT }}>Jupiter House:</label>
               <select
                 value={jupHouse}
                 onChange={(e) => setJupHouse(parseInt(e.target.value))}
@@ -171,7 +175,7 @@ export function LalKitabMoneyFormulaRevisited() {
             </div>
 
             <div>
-              <label className="block text-[9px] uppercase font-bold text-gray-500 mb-1">Saturn House:</label>
+              <label className="block text-[9px] uppercase font-bold mb-1" style={{ color: LABEL_TEXT }}>Saturn House:</label>
               <select
                 value={satHouse}
                 onChange={(e) => setSatHouse(parseInt(e.target.value))}
@@ -189,19 +193,19 @@ export function LalKitabMoneyFormulaRevisited() {
         {/* Right Column: Interactive Chart Visualizer */}
         <div className="lg:col-span-7 space-y-4">
           <div className="p-4 rounded-xl border bg-white shadow-sm flex flex-col items-center justify-center min-h-[250px]" style={{ borderColor: HAIRLINE }}>
-            <span className="text-[10px] uppercase font-bold text-gray-400 block mb-3 w-full text-center">
+            <span className="text-[10px] uppercase font-bold block mb-3 w-full text-center" style={{ color: LABEL_TEXT }}>
               Fixed Aries Lagna Chart (Click houses to place active Planet)
             </span>
 
-            <div className="w-48 h-48 bg-[#fbf9f4] border p-1 rounded-lg relative" style={{ borderColor: HAIRLINE }}>
+            <div className="w-48 h-48 bg-[#fbf9f4] border p-1 rounded-lg relative" style={{ borderColor: CHART_LINE_STRONG }}>
               <svg viewBox="0 0 100 100" className="w-full h-full font-serif">
-                <rect x="2" y="2" width="96" height="96" fill="transparent" stroke={HAIRLINE} strokeWidth="0.8" />
-                <line x1="2" y1="2" x2="98" y2="98" stroke={HAIRLINE} strokeWidth="0.6" />
-                <line x1="98" y1="2" x2="2" y2="98" stroke={HAIRLINE} strokeWidth="0.6" />
-                <line x1="50" y1="2" x2="2" y2="50" stroke={HAIRLINE} strokeWidth="0.8" />
-                <line x1="2" y1="50" x2="50" y2="98" stroke={HAIRLINE} strokeWidth="0.8" />
-                <line x1="50" y1="98" x2="98" y2="50" stroke={HAIRLINE} strokeWidth="0.8" />
-                <line x1="98" y1="50" x2="50" y2="2" stroke={HAIRLINE} strokeWidth="0.8" />
+                <rect x="2" y="2" width="96" height="96" fill="transparent" stroke={CHART_LINE_STRONG} strokeWidth="1.2" />
+                <line x1="2" y1="2" x2="98" y2="98" stroke={CHART_LINE} strokeWidth="1" />
+                <line x1="98" y1="2" x2="2" y2="98" stroke={CHART_LINE} strokeWidth="1" />
+                <line x1="50" y1="2" x2="2" y2="50" stroke={CHART_LINE} strokeWidth="1.1" />
+                <line x1="2" y1="50" x2="50" y2="98" stroke={CHART_LINE} strokeWidth="1.1" />
+                <line x1="50" y1="98" x2="98" y2="50" stroke={CHART_LINE} strokeWidth="1.1" />
+                <line x1="98" y1="50" x2="50" y2="2" stroke={CHART_LINE} strokeWidth="1.1" />
 
                 {/* Hotspot polygons to capture direct clicks */}
                 {NORTH_HOUSE_COORDS.map((cell) => {
@@ -221,7 +225,7 @@ export function LalKitabMoneyFormulaRevisited() {
                         onClick={() => handleHouseClick(cell.house)}
                       />
                       <g className="pointer-events-none">
-                        <text x={cell.cx} y={cell.cy + 1.5} textAnchor="middle" fontSize="4.5" fill={INK_SECONDARY}>
+                        <text x={cell.cx} y={cell.cy + 1.5} textAnchor="middle" fontSize="5" fontWeight="700" fill={INK_SECONDARY}>
                           {cell.house}
                         </text>
                         {hasJup && (
@@ -238,7 +242,7 @@ export function LalKitabMoneyFormulaRevisited() {
             </div>
 
             <div className="text-center mt-3">
-              <span className="text-[10px] uppercase font-bold text-gray-500">Teva Status:</span>
+              <span className="text-[10px] uppercase font-bold" style={{ color: LABEL_TEXT }}>Teva Status:</span>
               <span className="text-xs font-bold text-amber-900 block mt-0.5 animate-pulse">
                 {isDharmee ? "Dharmee Teva (Righteous)" : isPaapi ? "Paapi Teva (Malefic)" : "Standard Teva"}
               </span>
@@ -251,10 +255,10 @@ export function LalKitabMoneyFormulaRevisited() {
       <div className="p-4 rounded-xl border bg-white shadow-sm space-y-3" style={{ borderColor: HAIRLINE }}>
         <div className="flex justify-between items-center border-b pb-2" style={{ borderColor: HAIRLINE }}>
           <div>
-            <span className="text-[9px] uppercase tracking-wider block text-gray-400 font-bold">
+            <span className="text-[9px] uppercase tracking-wider block font-bold" style={{ color: LABEL_TEXT }}>
               Calibrated Interpretations
             </span>
-            <span className="text-[10px] text-gray-500 font-medium italic">
+            <span className="text-[10px] font-medium italic" style={{ color: HELPER_TEXT }}>
               Use this qualitative framing in your client write-ups
             </span>
           </div>
@@ -267,8 +271,8 @@ export function LalKitabMoneyFormulaRevisited() {
             {copied ? "Copied" : "Copy Phrasing"}
           </button>
         </div>
-        <blockquote className="text-xs italic text-gray-600 border-l-2 pl-3 py-1 bg-amber-50/10" style={{ borderColor: GOLD }}>
-          "{phrasingText}"
+        <blockquote className="text-xs italic border-l-2 pl-3 py-1 bg-amber-50/10" style={{ borderColor: GOLD, color: HELPER_TEXT }}>
+          &ldquo;{phrasingText}&rdquo;
         </blockquote>
       </div>
     </div>

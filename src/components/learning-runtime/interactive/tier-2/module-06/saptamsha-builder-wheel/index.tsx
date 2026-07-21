@@ -11,6 +11,8 @@ const HAIRLINE = "var(--gl-gold-hairline)";
 const SURFACE = "var(--gl-card-surface-solid)";
 const GREEN = "#2F7D55";
 const GOLD = "#B88421";
+const GOLD_LINE = "#9b7b42";
+const GOLD_WASH = "#F6EBD2";
 const VERMILION = "#A23A1E";
 const BLUE = "#356CAB";
 const PURPLE = "#6B5AA8";
@@ -227,8 +229,8 @@ function PartWheel({ part, deg }: { part: number; deg: number }) {
   const pointer = polar(pointerAngle, outerR + 12);
 
   return (
-    <svg viewBox="0 0 340 260" role="img" aria-label="Saptamsha part wheel showing seven divisions of the sign" style={{ width: "100%", maxHeight: 320, margin: "0.4rem auto 0.85rem", display: "block" }}>
-      <rect x="10" y="10" width="320" height="240" rx="10" fill={`${GOLD}05`} stroke={HAIRLINE} strokeWidth="1.5" />
+    <svg viewBox="0 0 340 278" role="img" aria-label="Saptamsha part wheel showing seven divisions of the sign" style={{ width: "100%", maxHeight: 340, margin: "0.4rem auto 0.85rem", display: "block" }}>
+      <rect x="10" y="10" width="320" height="258" rx="10" fill={`${GOLD}05`} stroke={HAIRLINE} strokeWidth="1.5" />
 
       {/* Seven segments */}
       {Array.from({ length: 7 }, (_, i) => {
@@ -239,8 +241,8 @@ function PartWheel({ part, deg }: { part: number; deg: number }) {
           <path
             key={i}
             d={arcPath(start, end, innerR, outerR)}
-            fill={active ? `${GREEN}22` : `${HAIRLINE}22`}
-            stroke={active ? GREEN : HAIRLINE}
+            fill={active ? `${GREEN}22` : GOLD_WASH}
+            stroke={active ? GREEN : GOLD_LINE}
             strokeWidth={active ? 2.5 : 1}
           />
         );
@@ -278,7 +280,7 @@ function PartWheel({ part, deg }: { part: number; deg: number }) {
       </text>
 
       {/* Legend */}
-      <g transform="translate(28 225)">
+      <g transform="translate(28 248)">
         <rect x="0" y="-6" width="12" height="12" rx="3" fill={`${GREEN}22`} stroke={GREEN} strokeWidth="1.5" />
         <text x="18" y="4" fill={INK_SECONDARY} fontSize="10" fontWeight="600">
           Active part

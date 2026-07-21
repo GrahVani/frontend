@@ -9,6 +9,10 @@ const SURFACE = "var(--gl-card-surface-solid, #FFF9F0)";
 const INK_PRIMARY = "var(--gl-ink-primary, #2d261e)";
 const INK_SECONDARY = "var(--gl-ink-secondary, #4d4133)";
 const GOLD = ink.goldAccent || "#9C7A2F";
+const LABEL_TEXT = "#5f5447";
+const HELPER_TEXT = "#4b5563";
+const CHART_LINE = "#9b7b42";
+const CHART_LINE_STRONG = "#755521";
 
 const SHLOKA_WORDS = [
   { word: "उपायेन", meaning: "Through the application of traditional Lal Kitab remedies (Upayas)" },
@@ -121,7 +125,7 @@ export function LalKitabLossFormulasEvaluator() {
 
       {/* Sanskrit Verse with breakdowns */}
       <div className="mb-6 p-4 rounded-xl border bg-white shadow-sm text-center relative" style={{ borderColor: HAIRLINE }}>
-        <div className="absolute top-1 left-2 text-[9px] uppercase font-bold text-gray-400 tracking-wider">
+        <div className="absolute top-1 left-2 text-[9px] uppercase font-bold tracking-wider" style={{ color: LABEL_TEXT }}>
           Sanskrit Maxim (Click words for breakdown)
         </div>
         <div className="py-3 flex flex-wrap justify-center gap-2">
@@ -151,17 +155,17 @@ export function LalKitabLossFormulasEvaluator() {
         {/* Left Column: controls */}
         <div className="lg:col-span-6 space-y-4">
           <div className="p-4 rounded-xl border bg-white shadow-sm space-y-4" style={{ borderColor: HAIRLINE }}>
-            <span className="text-[10px] uppercase font-bold text-gray-400 block border-b pb-1">
+            <span className="text-[10px] uppercase font-bold block border-b pb-1" style={{ color: LABEL_TEXT }}>
               Affliction Selector
             </span>
 
             {/* Affliction selection */}
             <div>
-              <label className="block text-[10px] uppercase font-bold text-gray-500 mb-1">Select Affliction:</label>
+              <label className="block text-[10px] uppercase font-bold mb-1" style={{ color: LABEL_TEXT }}>Select Affliction:</label>
               <select
                 value={affliction}
                 onChange={(e) => {
-                  setAffliction(e.target.value as any);
+                  setAffliction(e.target.value as "merc3" | "ven8" | "sunsat");
                   setSelectedRemedy("none");
                 }}
                 className="w-full text-xs p-2 border rounded bg-transparent font-semibold focus:ring-amber-800 cursor-pointer"
@@ -175,7 +179,7 @@ export function LalKitabLossFormulasEvaluator() {
 
             {/* Remedy multiple-choice selector */}
             <div className="space-y-2 pt-2">
-              <label className="block text-[10px] uppercase font-bold text-gray-500 mb-1">Calibrate Correct Upaya:</label>
+              <label className="block text-[10px] uppercase font-bold mb-1" style={{ color: LABEL_TEXT }}>Calibrate Correct Upaya:</label>
               <div className="space-y-1.5">
                 {remedyOptions.map((opt) => (
                   <button
@@ -200,25 +204,25 @@ export function LalKitabLossFormulasEvaluator() {
         {/* Right Column: Chart highlighting and explanation */}
         <div className="lg:col-span-6 space-y-4">
           <div className="p-4 rounded-xl border bg-white shadow-sm flex flex-col items-center justify-center min-h-[250px]" style={{ borderColor: HAIRLINE }}>
-            <span className="text-[10px] uppercase font-bold text-gray-400 block mb-3 w-full text-center">
+            <span className="text-[10px] uppercase font-bold block mb-3 w-full text-center" style={{ color: LABEL_TEXT }}>
               Chart Highlight (Afflicted: House {houseNum})
             </span>
 
-            <div className="w-36 h-36 bg-[#fbf9f4] border p-1 rounded-lg relative" style={{ borderColor: HAIRLINE }}>
+            <div className="w-36 h-36 bg-[#fbf9f4] border p-1 rounded-lg relative" style={{ borderColor: CHART_LINE_STRONG }}>
               <svg viewBox="0 0 100 100" className="w-full h-full font-serif">
-                <rect x="2" y="2" width="96" height="96" fill="transparent" stroke={HAIRLINE} strokeWidth="0.8" />
-                <line x1="2" y1="2" x2="98" y2="98" stroke={HAIRLINE} strokeWidth="0.6" />
-                <line x1="98" y1="2" x2="2" y2="98" stroke={HAIRLINE} strokeWidth="0.6" />
-                <line x1="50" y1="2" x2="2" y2="50" stroke={HAIRLINE} strokeWidth="0.8" />
-                <line x1="2" y1="50" x2="50" y2="98" stroke={HAIRLINE} strokeWidth="0.8" />
-                <line x1="50" y1="98" x2="98" y2="50" stroke={HAIRLINE} strokeWidth="0.8" />
-                <line x1="98" y1="50" x2="50" y2="2" stroke={HAIRLINE} strokeWidth="0.8" />
+                <rect x="2" y="2" width="96" height="96" fill="transparent" stroke={CHART_LINE_STRONG} strokeWidth="1.2" />
+                <line x1="2" y1="2" x2="98" y2="98" stroke={CHART_LINE} strokeWidth="1" />
+                <line x1="98" y1="2" x2="2" y2="98" stroke={CHART_LINE} strokeWidth="1" />
+                <line x1="50" y1="2" x2="2" y2="50" stroke={CHART_LINE} strokeWidth="1.1" />
+                <line x1="2" y1="50" x2="50" y2="98" stroke={CHART_LINE} strokeWidth="1.1" />
+                <line x1="50" y1="98" x2="98" y2="50" stroke={CHART_LINE} strokeWidth="1.1" />
+                <line x1="98" y1="50" x2="50" y2="2" stroke={CHART_LINE} strokeWidth="1.1" />
 
                 {NORTH_HOUSE_COORDS.map((cell) => {
                   const isAfflicted = cell.house === houseNum;
                   return (
                     <g key={cell.house}>
-                      <text x={cell.cx} y={cell.cy + 1} textAnchor="middle" fontSize="4.5" fill={INK_SECONDARY}>
+                      <text x={cell.cx} y={cell.cy + 1} textAnchor="middle" fontSize="5" fontWeight="700" fill={INK_SECONDARY}>
                         {cell.house}
                       </text>
                       {isAfflicted && (
@@ -242,7 +246,7 @@ export function LalKitabLossFormulasEvaluator() {
       {/* Explanatory cards */}
       <div className="mb-6 space-y-4">
         <div className="p-4 rounded-xl border bg-white shadow-sm space-y-2 leading-relaxed" style={{ borderColor: HAIRLINE }}>
-          <span className="text-[9px] uppercase font-bold text-gray-400 block border-b pb-1">
+          <span className="text-[9px] uppercase font-bold block border-b pb-1" style={{ color: LABEL_TEXT }}>
             Affliction Description
           </span>
           <p className="text-xs text-gray-700 font-semibold">{text}</p>
@@ -282,10 +286,10 @@ export function LalKitabLossFormulasEvaluator() {
       <div className="p-4 rounded-xl border bg-white shadow-sm space-y-3" style={{ borderColor: HAIRLINE }}>
         <div className="flex justify-between items-center border-b pb-2" style={{ borderColor: HAIRLINE }}>
           <div>
-            <span className="text-[9px] uppercase tracking-wider block text-gray-400 font-bold">
+            <span className="text-[9px] uppercase tracking-wider block font-bold" style={{ color: LABEL_TEXT }}>
               Calibrated Interpretations
             </span>
-            <span className="text-[10px] text-gray-500 font-medium italic">
+            <span className="text-[10px] font-medium italic" style={{ color: HELPER_TEXT }}>
               Use this qualitative framing in your client write-ups
             </span>
           </div>
@@ -298,8 +302,8 @@ export function LalKitabLossFormulasEvaluator() {
             {copied ? "Copied" : "Copy Phrasing"}
           </button>
         </div>
-        <blockquote className="text-xs italic text-gray-600 border-l-2 pl-3 py-1 bg-amber-50/10" style={{ borderColor: GOLD }}>
-          "{phrasingText}"
+        <blockquote className="text-xs italic border-l-2 pl-3 py-1 bg-amber-50/10" style={{ borderColor: GOLD, color: HELPER_TEXT }}>
+          &ldquo;{phrasingText}&rdquo;
         </blockquote>
       </div>
     </div>
