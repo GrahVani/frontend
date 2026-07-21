@@ -13,6 +13,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
+import { getCurriculumRoot } from "./curriculum-path";
 
 export interface CurriculumLesson {
   /** "lesson-01-jyotisha-as-vedanga" */
@@ -78,8 +79,7 @@ const TIER_META: Record<1 | 2 | 3, { title: string; isAvailable: boolean }> = {
 
 /** Resolve the curriculum directory absolute path. */
 function curriculumRoot(): string {
-  // Frontend is at /Users/.../Grahvani/frontend ; curriculum at /Users/.../Grahvani/curriculum
-  return path.resolve(process.cwd(), "../curriculum");
+  return getCurriculumRoot();
 }
 
 /** Extract "Module 01 — Introduction to Jyotiṣa" → "Introduction to Jyotiṣa". */
