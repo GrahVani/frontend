@@ -105,7 +105,7 @@ export function WorkedSynthesisStatementBuilder() {
   const [native, setNative] = useState<NativeKey>("kavya");
   const [register, setRegister] = useState<RegisterKey>("technical");
   const [selectedFindingIds, setSelectedFindingIds] = useState<Set<string>>(new Set());
-  const [judgments, setJudgments] = useState<Record<string, "undecided" | "overclaim" | "correct">(
+  const [judgments, setJudgments] = useState<Record<string, "undecided" | "overclaim" | "correct">>(
     Object.fromEntries(SPOT_STATEMENTS.map((s) => [s.id, "undecided"]))
   );
   const [copied, setCopied] = useState(false);

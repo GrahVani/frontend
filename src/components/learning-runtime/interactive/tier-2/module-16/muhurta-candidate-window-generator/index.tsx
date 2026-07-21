@@ -22,6 +22,7 @@ const ACCENT = "var(--gl-gold-accent)";
 const GREEN = "#2F7D55";
 const GOLD = "#B88421";
 const VERMILION = "#A23A1E";
+const BLUE = "#2660A4";
 
 const EVENTS = ["Marriage", "Gṛha-praveśa", "Business-launch", "Surgery", "Journey", "Saṁskāra"] as const;
 type EventType = (typeof EVENTS)[number];

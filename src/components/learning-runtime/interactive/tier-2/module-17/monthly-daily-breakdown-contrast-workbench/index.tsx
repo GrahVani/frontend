@@ -195,7 +195,7 @@ export function MonthlyDailyBreakdownContrastWorkbench() {
                 </div>
                 <span style={{ color: INK_MUTED, fontSize: "0.85rem", fontWeight: 700 }}>Varṣeśa = Venus</span>
               </div>
-              <Timeline sequence={KAVYA_SEQUENCE} highlightPlanet={null} />
+              <Timeline sequence={KAVYA_SEQUENCE} />
               <div style={{ display: "grid", gap: "0.55rem", marginTop: "0.85rem" }}>
                 {KAVYA_SEQUENCE.map((p) => {
                   const tags = KAVYA_CONVERGENCE[p.planet] || [];
@@ -238,7 +238,7 @@ export function MonthlyDailyBreakdownContrastWorkbench() {
                     <h3 style={{ margin: 0, color: candidate.color, fontSize: "1.1rem" }}>{candidate.label}</h3>
                     <span style={{ color: INK_MUTED, fontSize: "0.78rem", fontWeight: 700 }}>{candidate.note}</span>
                   </div>
-                  <Timeline sequence={candidate.sequence} highlightPlanet={null} />
+                  <Timeline sequence={candidate.sequence} />
                 </section>
               ))}
             </>

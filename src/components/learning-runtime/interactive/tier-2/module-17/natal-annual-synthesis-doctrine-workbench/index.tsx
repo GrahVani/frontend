@@ -133,7 +133,7 @@ export function NatalAnnualSynthesisDoctrineWorkbench() {
   const [tab, setTab] = useState<TabKey>("sequence");
   const [native, setNative] = useState<NativeKey>("kavya");
   const [expandedStep, setExpandedStep] = useState<StepKey | null>("year-lord");
-  const [judgments, setJudgments] = useState<Record<string, "undecided" | "mistake" | "correct">(
+  const [judgments, setJudgments] = useState<Record<string, "undecided" | "mistake" | "correct">>(
     Object.fromEntries(MISTAKES.map((m) => [m.id, "undecided"]))
   );
   const [copied, setCopied] = useState(false);
