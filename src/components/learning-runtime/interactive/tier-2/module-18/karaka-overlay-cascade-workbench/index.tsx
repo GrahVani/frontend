@@ -163,7 +163,7 @@ function getTatkalika(distance: number): "friend" | "enemy" {
 
 function getCompound(
   naisargika: "friend" | "neutral" | "enemy",
-  tatkalika: "friend" | "enemy"
+  tatkalika: "friend" | "neutral" | "enemy"
 ): Compound {
   if (naisargika === "friend" && tatkalika === "friend") return "Adhi-Mitra";
   if (
@@ -200,16 +200,14 @@ function getCombinedRead(
   const karaka = KARAKA[ad];
   const spouseNote =
     karaka.spouseFor === gender
-      ? `; ${LORDS[ad].label} also serves as the ${
-          gender === "female" ? "husband" : "wife"
-        }-karaka under the ${gender}-chart convention`
+      ? `; ${LORDS[ad].label} also serves as the ${gender === "female" ? "husband" : "wife"
+      }-karaka under the ${gender}-chart convention`
       : "";
   const domains = karaka.domains.join(", ") + spouseNote;
 
   if (collapse) {
-    return `${LORDS[ad].label} is ${compound.toLowerCase()} and signifies ${domains}. Therefore, those matters will simply go ${
-      compound === "Adhi-Mitra" || compound === "Mitra" ? "well" : "badly"
-    }.`;
+    return `${LORDS[ad].label} is ${compound.toLowerCase()} and signifies ${domains}. Therefore, those matters will simply go ${compound === "Adhi-Mitra" || compound === "Mitra" ? "well" : "badly"
+      }.`;
   }
 
   return `Moon/${LORDS[ad].label} antardaśā brings ${domains} into focus. The Panchadha layer is ${compound.toLowerCase()}, so this domain tends to run ${getTextureWord(

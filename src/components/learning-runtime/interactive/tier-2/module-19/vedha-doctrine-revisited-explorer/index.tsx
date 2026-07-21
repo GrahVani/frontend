@@ -22,6 +22,7 @@ const GREEN = "#2F7D55";
 const VERMILION = "#A23A1E";
 const PURPLE = "#6B5AA8";
 const AMBER = "#B88421";
+const MOON = "#356CAB";
 
 const PLANETS = ["Sun", "Moon", "Mars", "Mercury", "Jupiter", "Venus", "Saturn"];
 const OCCUPANTS = ["None", "Sun", "Moon", "Mars", "Mercury", "Jupiter", "Venus", "Saturn"];

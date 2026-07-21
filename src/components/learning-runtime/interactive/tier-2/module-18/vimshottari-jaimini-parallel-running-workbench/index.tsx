@@ -29,6 +29,7 @@ const BLUE = "#356CAB";
 const PURPLE = "#6B5AA8";
 const GREEN = "#2F7D55";
 const AMBER = "#B88421";
+const GOLD = "#B88421";
 const VERMILION = "#A23A1E";
 
 const SCENARIOS: Record<ScenarioKey, {

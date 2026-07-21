@@ -33,7 +33,7 @@ type SignKey =
   | "aquarius"
   | "pisces";
 type Naisargika = "friend" | "neutral" | "enemy";
-type Tatkalika = "friend" | "enemy";
+type Tatkalika = "friend" | "neutral" | "enemy";
 type Compound =
   | "Adhi-Mitra"
   | "Mitra"
