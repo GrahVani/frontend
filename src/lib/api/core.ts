@@ -39,7 +39,10 @@ export function getAccessToken(): string | null {
 
 export function decodeJwtExp(token: string): number | null {
     try {
-        const payload = JSON.parse(atob(token.split('.')[1]));
+        let base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+        const pad = base64.length % 4;
+        if (pad) base64 += '='.repeat(4 - pad);
+        const payload = JSON.parse(atob(base64));
         return payload.exp || null;
     } catch {
         return null;
@@ -57,9 +60,11 @@ export function isTokenExpiringSoon(token: string, thresholdSeconds: number = 60
 // refresh failures from other errors and show appropriate UI
 export class AuthRefreshError extends Error {
     public readonly cause: unknown;
-    constructor(message: string, cause?: unknown) {
+    public readonly isAuthFailure: boolean;
+    constructor(message: string, isAuthFailure: boolean = true, cause?: unknown) {
         super(message);
         this.name = 'AuthRefreshError';
+        this.isAuthFailure = isAuthFailure;
         this.cause = cause;
     }
 }
@@ -113,8 +118,10 @@ export async function refreshAccessToken(): Promise<string | null> {
 
             if (!response.ok) {
                 const errorBody = await response.text().catch(() => '');
+                const isAuthFailure = response.status === 400 || response.status === 401 || response.status === 403;
                 throw new AuthRefreshError(
-                    `Token refresh failed with status ${response.status}: ${errorBody}`
+                    `Token refresh failed with status ${response.status}: ${errorBody}`,
+                    isAuthFailure
                 );
             }
 
@@ -127,11 +134,12 @@ export async function refreshAccessToken(): Promise<string | null> {
                 return newAccessToken;
             }
 
-            throw new AuthRefreshError('Token refresh response missing accessToken');
+            throw new AuthRefreshError('Token refresh response missing accessToken', true);
         } catch (error: unknown) {
             if (error instanceof AuthRefreshError) throw error;
             throw new AuthRefreshError(
                 'Token refresh failed due to network or parsing error',
+                false,
                 error
             );
         } finally {
@@ -235,7 +243,12 @@ export async function apiFetch<T = unknown>(url: string, options: RequestInit = 
                         if (refreshErr instanceof ApiError) {
                             throw refreshErr;
                         }
-                        // Refresh itself failed — fall through to clear tokens
+                        // If refresh threw an AuthRefreshError due to network/5xx (isAuthFailure=false), do NOT clear session!
+                        if (refreshErr instanceof AuthRefreshError && !refreshErr.isAuthFailure) {
+                            console.warn(`[apiFetch] Token refresh temporarily failed due to network/server error for ${url}. Retaining session.`);
+                            throw refreshErr;
+                        }
+                        // Refresh itself failed due to true auth expiration/revocation — fall through to clear tokens
                         console.error(`[apiFetch] Token refresh failed for ${url}:`, refreshErr);
                     }
 
