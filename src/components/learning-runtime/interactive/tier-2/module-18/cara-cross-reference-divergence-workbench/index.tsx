@@ -138,6 +138,7 @@ export function CaraCrossReferenceDivergenceWorkbench() {
       count: hypoCount,
       landing: SIGNS[hypoLandingIdx],
       landingHouse: hypoLandingHouse,
+      exceptionApplies: true,
       finalSign: SIGNS[hypoFinalIdx],
     };
   }, []);

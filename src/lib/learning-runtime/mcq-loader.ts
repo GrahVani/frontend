@@ -11,8 +11,12 @@ import { promises as fs } from "fs";
 import path from "path";
 import type { McqBank, McqOption, McqQuestion, SpacedRepetitionCard, QuestionType, Difficulty } from "./mcq-types";
 import type { BloomLevel, SourceRef } from "./types";
+import { getCurriculumRoot } from "./curriculum-path";
 
-const CURRICULUM_ROOT = path.resolve(process.cwd(), "..", "curriculum");
+function getRoot(): string {
+  return getCurriculumRoot();
+}
+
 
 function asSourceRefs(raw: unknown): SourceRef[] {
   if (!Array.isArray(raw)) return [];
@@ -71,7 +75,7 @@ function normaliseQuestion(raw: unknown): McqQuestion {
  * Example: `assessment-bank/tier-1-mcq-bank/jyotisha-as-vedanga.json`
  */
 export async function loadMcqBank(relativePath: string): Promise<McqBank | null> {
-  const absolute = path.join(CURRICULUM_ROOT, relativePath);
+  const absolute = path.join(getRoot(), relativePath);
   try {
     const raw = await fs.readFile(absolute, "utf-8");
     const parsed = JSON.parse(raw) as Record<string, unknown>;

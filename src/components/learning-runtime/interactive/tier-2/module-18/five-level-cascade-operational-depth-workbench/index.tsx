@@ -703,7 +703,7 @@ function CascadeSvg({
   activeLevel: LevelKey;
   onSelect: (level: LevelKey) => void;
 }) {
-  const sizes = [
+  const sizes: Array<{ level: LevelKey; x: number; y: number; w: number; h: number; r: number }> = [
     { level: "md", x: 30, y: 20, w: 500, h: 220, r: 48 },
     { level: "ad", x: 70, y: 50, w: 420, h: 180, r: 40 },
     { level: "pd", x: 110, y: 80, w: 340, h: 140, r: 32 },
@@ -841,7 +841,7 @@ function LevelTable({
                   onClick={() => onSelect(row.lord)}
                   style={{
                     background: isSelected ? `${LORDS[row.lord].color}12` : "transparent",
-                    cursor: onSelect ? "pointer" : "default",
+                    cursor: "pointer",
                   }}
                 >
                   <td style={tdStyle}>

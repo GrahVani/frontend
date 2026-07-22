@@ -512,6 +512,20 @@ const cardStyle: CSSProperties = {
   padding: "1rem",
 };
 
+const thStyle: CSSProperties = {
+  padding: "0.6rem 0.75rem",
+  textAlign: "left",
+  fontWeight: 600,
+  color: GOLD,
+  borderBottom: `1px solid ${HAIRLINE}`,
+};
+
+const tdStyle: CSSProperties = {
+  padding: "0.6rem 0.75rem",
+  borderBottom: `1px solid ${HAIRLINE}`,
+  color: INK_PRIMARY,
+};
+
 const eyebrowStyle: CSSProperties = {
   margin: 0,
   fontSize: "0.68rem",

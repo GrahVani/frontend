@@ -118,11 +118,11 @@ export function DeeperSubPeriodsCascadeWorkbench() {
   const directJumpOffset =
     prdTargetIndex > 0 ? (selectedSd.duration * precedingSum) / 120 : 0;
 
-  const levels = [
+  const levels: Array<{ key: string; label: string; lord: LordKey; start: number; end: number; span: string; color: string; }> = [
     { key: "md", label: "Mahādaśā", lord: "moon", start: MD_START_AGE, end: mdEndAge, span: "10 years", color: BLUE },
     { key: "ad", label: "Antardaśā", lord: "mars", start: AD_START_AGE, end: adEndAge, span: "~213 days", color: GREEN },
-    { key: "pd", label: "Pratyantardaśā", lord: pdLord, start: PD_START_AGE, end: pdEndAge, span: `${formatHours(PD_HOURS, unitMode)}`, color: GOLD },
-    { key: "sd", label: "Sūkṣma-daśā", lord: selectedSd.lord, start: SD_START_AGE, end: sdEndAge, span: `${formatHours(SD_HOURS, unitMode)}`, color: PURPLE },
+    { key: "pd", label: "Pratyantardaśā", lord: pdLord as LordKey, start: PD_START_AGE, end: pdEndAge, span: `${formatHours(PD_HOURS, unitMode)}`, color: GOLD },
+    { key: "sd", label: "Sūkṣma-daśā", lord: selectedSd.lord as LordKey, start: SD_START_AGE, end: sdEndAge, span: `${formatHours(SD_HOURS, unitMode)}`, color: PURPLE },
     { key: "prd", label: "Prāṇa-daśā", lord: "saturn", start: SD_START_AGE, end: sdEndAge, span: `${formatHours(selectedSd.duration, unitMode)}`, color: VERMILION },
   ];
 

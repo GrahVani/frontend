@@ -14,6 +14,7 @@ const GREEN = "#2F7D55";
 const VERMILION = "#A23A1E";
 const BLUE = "#356CAB";
 const PURPLE = "#6B5AA8";
+const AMBER = "#D97706";
 
 type Lens = "both" | "parashari" | "kp";
 

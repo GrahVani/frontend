@@ -119,6 +119,7 @@ const KAVYA_DIGNITY: Record<LordKey, DignityKey> = {
   jupiter: "strong",
   saturn: "strong",
   sun: "mixed",
+  moon: "strong",
   mercury: "strong",
   mars: "strong",
   venus: "weak",
@@ -226,67 +227,53 @@ function getCompound(
   if (naisargika === "friend" && tatkalika === "friend") return "Adhi-Mitra";
   if (
     (naisargika === "friend" && tatkalika === "enemy") ||
-    (naisargika === "enemy" && tatkalika === "friend") ||
-    (naisargika === "neutral" && tatkalika === "neutral")
+    (naisargika === "enemy" && tatkalika === "friend")
   )
     return "Sama";
-  if (
-    (naisargika === "friend" && tatkalika === "neutral") ||
-    (naisargika === "neutral" && tatkalika === "friend")
-  )
-    return "Mitra";
-  if (
-    (naisargika === "neutral" && tatkalika === "enemy") ||
-    (naisargika === "enemy" && tatkalika === "neutral")
-  )
-    return "Shatru";
+  if (naisargika === "neutral" && tatkalika === "friend") return "Mitra";
+  if (naisargika === "neutral" && tatkalika === "enemy") return "Shatru";
   return "Adhi-Shatru";
 }
 
 function getInterpretiveRead(compound: Compound, dignity: DignityKey): string {
   if (compound === "Adhi-Mitra") {
-    return `Strong support ${
-      dignity === "weak"
+    return `Strong support ${dignity === "weak"
         ? "thinned by the AD lord's weaker dignity — still cooperative, but with less capacity to deliver."
         : dignity === "mixed"
-        ? "with moderate delivery; the relationship itself carries the read."
-        : "with real capacity to deliver — the most cooperative texture in the system."
-    }`;
+          ? "with moderate delivery; the relationship itself carries the read."
+          : "with real capacity to deliver — the most cooperative texture in the system."
+      }`;
   }
   if (compound === "Mitra") {
-    return `Supportive baseline ${
-      dignity === "weak"
+    return `Supportive baseline ${dignity === "weak"
         ? "but the AD lord is under-resourced, so the cooperation is weaker than it looks."
         : dignity === "mixed"
-        ? "with ordinary delivery; a genuinely cooperative sub-period."
-        : "and well-resourced — a smooth, cooperative sub-period."
-    }`;
+          ? "with ordinary delivery; a genuinely cooperative sub-period."
+          : "and well-resourced — a smooth, cooperative sub-period."
+      }`;
   }
   if (compound === "Sama") {
-    return `No strong Panchadha push ${
-      dignity === "weak"
+    return `No strong Panchadha push ${dignity === "weak"
         ? "and weaker dignity tilts the read toward effort; context matters more."
         : dignity === "mixed"
-        ? "— dignity is also mixed, so house-lordship and transits dominate."
-        : "but strong dignity gives the AD lord capacity to shape the period constructively."
-    }`;
+          ? "— dignity is also mixed, so house-lordship and transits dominate."
+          : "but strong dignity gives the AD lord capacity to shape the period constructively."
+      }`;
   }
   if (compound === "Shatru") {
-    return `Friction-leaning baseline ${
-      dignity === "weak"
+    return `Friction-leaning baseline ${dignity === "weak"
         ? "with under-resourced AD lord — the friction runs harder and has less built-in capacity to offset it."
         : dignity === "mixed"
-        ? "with moderate capacity; active management is still called for."
-        : "but the AD lord is well-resourced — friction with capacity to meet it."
-    }`;
+          ? "with moderate capacity; active management is still called for."
+          : "but the AD lord is well-resourced — friction with capacity to meet it."
+      }`;
   }
-  return `Strongest opposition ${
-    dignity === "weak"
+  return `Strongest opposition ${dignity === "weak"
       ? "and under-resourced AD lord — the hardest-leaning texture."
       : dignity === "mixed"
-      ? "with moderate capacity; still the most actively opposed baseline."
-      : "offset partly by AD lord strength — still opposed, but not helpless."
-  }`;
+        ? "with moderate capacity; still the most actively opposed baseline."
+        : "offset partly by AD lord strength — still opposed, but not helpless."
+    }`;
 }
 
 export function MitraSamaShatruBhuktiYogaWorkbench() {
@@ -498,8 +485,8 @@ export function MitraSamaShatruBhuktiYogaWorkbench() {
                 activeDignity === "strong"
                   ? GREEN
                   : activeDignity === "weak"
-                  ? VERMILION
-                  : GOLD
+                    ? VERMILION
+                    : GOLD
               }
             />
             <MiniFact
@@ -548,8 +535,8 @@ export function MitraSamaShatruBhuktiYogaWorkbench() {
               activeDignity === "strong"
                 ? GREEN
                 : activeDignity === "weak"
-                ? VERMILION
-                : GOLD
+                  ? VERMILION
+                  : GOLD
             }
           >
             <div style={{ display: "flex", flexWrap: "wrap", gap: "0.45rem" }}>
@@ -566,8 +553,8 @@ export function MitraSamaShatruBhuktiYogaWorkbench() {
                     key === "strong"
                       ? GREEN
                       : key === "weak"
-                      ? VERMILION
-                      : GOLD
+                        ? VERMILION
+                        : GOLD
                   )}
                 >
                   {DIGNITIES[key].label}
@@ -890,12 +877,12 @@ function TextureSvg({
     compound === "Adhi-Mitra"
       ? 110
       : compound === "Mitra"
-      ? 185
-      : compound === "Sama"
-      ? 280
-      : compound === "Shatru"
-      ? 375
-      : 450;
+        ? 185
+        : compound === "Sama"
+          ? 280
+          : compound === "Shatru"
+            ? 375
+            : 450;
 
   return (
     <svg

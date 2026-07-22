@@ -26,8 +26,11 @@ import path from "path";
 import matter from "gray-matter";
 import { splitSections } from "./markdown-parser";
 import type { LessonFrontMatter, ParsedLesson } from "./types";
+import { getCurriculumRoot } from "./curriculum-path";
 
-const CURRICULUM_ROOT = path.resolve(process.cwd(), "..", "curriculum");
+function getRoot(): string {
+  return getCurriculumRoot();
+}
 
 /**
  * Pad a URL number to two digits. "1" → "01", "12" → "12".
@@ -101,7 +104,7 @@ export async function resolveLessonPath(
   const chapterN = padTwo(chapter);
   const lessonN = padTwo(lesson);
 
-  const tierDir = await findDirByPrefix(CURRICULUM_ROOT, `tier-${tierN}-`);
+  const tierDir = await findDirByPrefix(getRoot(), `tier-${tierN}-`);
   const moduleDir = await findDirByPrefix(tierDir, `module-${moduleN}-`);
   const chapterDir = await findDirByPrefix(moduleDir, `chapter-${chapterN}-`);
   const lessonFile = await findFileByPrefix(chapterDir, `lesson-${lessonN}-`);

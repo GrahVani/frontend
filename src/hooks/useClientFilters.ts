@@ -99,6 +99,7 @@ export function useClientFilters() {
         city: filters.city || undefined,
         sortBy: filters.sortBy,
         sortOrder: filters.sortOrder,
+        myClientsOnly: true,
     }), [filters]);
 
     return {
