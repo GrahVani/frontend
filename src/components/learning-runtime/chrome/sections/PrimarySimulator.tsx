@@ -7,17 +7,20 @@
  */
 
 import { MarkdownContent } from "../MarkdownContent";
-import { loadInteractive } from "../../interactive/dynamic-loader";
+import { loadInteractive } from "../../interactive/module-registry";
+
 import { SectionHeader } from "../SectionHeader";
 import { presentationFor } from "../../lib/section-meta";
 import { Sparkles } from "lucide-react";
 import type { LessonSection, LessonFrontMatter } from "@/lib/learning-runtime/types";
-import { LessonProvider } from "@/components/learning-runtime/interactive/tier-1/module-4/rashi-attribute-wheel";
+import { LessonProvider } from "@/components/learning-runtime/interactive/lib/lesson-context";
 
 interface PrimarySimulatorProps {
   section: LessonSection;
   frontMatter: LessonFrontMatter;
 }
+
+type InteractiveModule = Record<string, unknown>;
 
 /**
  * Per-lesson §7 flagship overrides. Constitution §10.1 names §7 the Primary
@@ -99,6 +102,9 @@ const SECTION_7_OVERRIDES: Readonly<Record<string, string>> = {
   "confidentiality-and-data-handling-applied": "reading-documentation-template",
   "worked-write-up-1-marriage-question": "reading-documentation-template",
   "worked-write-up-2-career-change-question": "reading-documentation-template",
+  // ─── Module 22: Case-Study Library (frontmatter declares only component_type) ───
+  "marriage-case-4-couple-with-existing-marriage-difficulty-question": "marriage-case-4-couple-with-existing-marriage-difficulty-question",
+  "marriage-case-5-second-marriage-question-with-ethical-framing": "marriage-case-5-second-marriage-question-with-ethical-framing",
   // ─── Module 05: Wealth & Finance ───
   "the-2nd-house-significations-revisited-for-wealth": "second-house-wealth-evaluator",
   "the-11th-house-significations-revisited-for-gains": "eleventh-house-gains-evaluator",
@@ -124,6 +130,44 @@ const SECTION_7_OVERRIDES: Readonly<Record<string, string>> = {
   "worked-synthesis-the-overall-wealth-promise-question": "overall-wealth-promise-synthesis",
   "worked-synthesis-the-investment-decision-question-with-scope-routing": "investment-decision-synthesis",
   "scope-of-competence-stock-picks-financial-planning-tax-advice": "ethical-scope-routing-dashboard",
+  "worked-synthesis-marriage-question-5-streams": "worked-synthesis-marriage-question-5-streams",
+  "worked-synthesis-career-question-5-streams": "worked-synthesis-career-question-5-streams",
+  "worked-synthesis-health-question-5-streams-with-ethical-framing": "worked-synthesis-health-question-5-streams-with-ethical-framing",
+  "worked-synthesis-spiritual-path-question-5-streams": "worked-synthesis-spiritual-path-question-5-streams",
+  "the-stream-orientation-self-audit-applied": "stream-orientation-self-audit-tool",
+  "honest-commitment-under-uncertainty-when-divergences-are-extensive": "honest-commitment-under-uncertainty",
+  "recognising-and-avoiding-synthesis-paralysis": "synthesis-paralysis-diagnostic-workbench",
+  "the-bridge-into-case-study-library-practice": "case-study-library-bridge-workbench",
+  "the-composite-chart-concept-and-its-pitfalls": "composite-chart-pitfall-workbench",
+  "constructing-the-composite-chart-mathematical-midpoint-method": "composite-chart-midpoint-builder-workbench",
+  "reading-the-composite-chart-as-relational-artifact-not-natal": "composite-chart-relational-artifact-workbench",
+  "worked-example-composite-chart-on-a-couple": "composite-chart-worked-reading-workbench",
+  "house-overlay-synastry-one-chart-planets-on-others-houses": "house-overlay-synastry-workbench",
+  "cross-aspects-and-mutual-dignities": "cross-aspect-mutual-dignity-workbench",
+  "jaimini-upapada-synastry": "jaimini-upapada-synastry-workbench",
+  "the-family-chart-network-concept": "family-chart-network-concept-workbench",
+  "integrating-parents-children-grandparents-where-relevant": "family-chart-network-integration-workbench",
+  "family-pattern-analysis-recurring-themes-across-generations": "family-pattern-theme-workbench",
+  "cuspal-sub-lord-judgment-applied-to-horary-questions": "kp-horary-cuspal-verdict-depth-workbench",
+  "significator-chain-analysis-for-horary-yes-no": "kp-horary-significator-pool-workbench",
+  "worked-example-kp-horary-marriage-question": "kp-horary-marriage-depth-workbench",
+  "worked-example-kp-horary-litigation-outcome-question": "kp-horary-litigation-depth-workbench",
+  "kp-horary-for-lost-object-questions": "kp-horary-lost-object-workbench",
+  "kp-horary-for-missing-person-questions": "kp-horary-missing-person-care-workbench",
+  "kp-horary-for-event-outcome-questions": "kp-horary-event-outcome-classifier-workbench",
+  "worked-example-kp-horary-lost-object-with-direction-prediction": "kp-horary-lost-object-worked-direction",
+  "parashari-prashna-the-classical-doctrine": "parashari-prashna-doctrine-workbench",
+  "question-house-identification-in-parashari-prashna": "parashari-prashna-house-identifier",
+  "planet-significator-analysis-at-prashna-time-parashari-style": "parashari-prashna-weighing-procedure",
+  "worked-example-parashari-prashna-on-a-real-question": "parashari-prashna-worked-career",
+  "ruling-planets-as-universal-prashna-layer": "ruling-planets-universal-overlay",
+  "computing-rps-for-the-prashna-moment-revisited-at-depth": "ruling-planets-computation-depth",
+  "applying-rps-to-confirm-or-disconfirm-prashna-readings-from-other-systems": "ruling-planets-confirm-disconfirm-classifier",
+  "worked-example-rp-overlay-on-multi-system-prashna": "ruling-planets-dual-chart-overlay",
+  "the-multi-system-prashna-synthesis-discipline": "multi-system-prashna-synthesis-discipline",
+  "worked-multi-system-prashna-marriage-question": "worked-multi-system-prashna-marriage",
+  "prashna-as-overlay-on-natal-work-not-replacement": "prashna-natal-overlay-discipline",
+  "prashna-ethical-framing-and-the-prashna-literacy-bar": "prashna-ethical-literacy-bar",
   // M3-C1-L1's §7 = Tithi Calculator Dojo (step-by-step formula breakdown +
   // editable longitudes + preset scenarios). §4 keeps the tithi-angle-visualizer.
   "tithi-as-12-degrees-of-sun-moon-angle": "tithi-as-12-degrees-explorer",
@@ -258,6 +302,16 @@ const SECTION_7_OVERRIDES: Readonly<Record<string, string>> = {
   "pushya-the-nourisher": "nakshatra-profile",
   "ashlesha-the-entwiner-naga-domain": "nakshatra-profile",
   "ashlesha-the-entwining-serpent": "nakshatra-profile",
+};
+
+const SHARED_INTERACTIVE_KEYS: Readonly<Record<string, string>> = {
+  "marriage-synthesis-workbench": "tier-2/module-01/marriage-synthesis-workbench",
+  "multi-domain-synthesis-workbench": "tier-2/module-01/multi-domain-synthesis-workbench",
+};
+
+const EXTRA_INTERACTIVE_LOADERS: Readonly<Record<string, () => Promise<InteractiveModule>>> = {
+  "marriage-scope-competence-router": () =>
+    import("@/components/learning-runtime/interactive/marriage-scope-competence-router/index"),
 };
 
 /** Slugs whose §7 interactive needs extra horizontal space (e.g. large SVG wheel + sidebar). */
@@ -464,318 +518,59 @@ const WIDE_LAYOUT_SLUGS = new Set([
 ]);
 
 export async function PrimarySimulator({ section, frontMatter: fm }: PrimarySimulatorProps) {
+  const componentKey = fm.interactive?.component || fm.interactive?.componentType;
   const componentType = fm.interactive?.componentType || fm.interactive?.component;
   const specFile = fm.interactive?.specFile;
   const enabled = fm.interactive?.enabled ?? false;
 
   const overrideKey = SECTION_7_OVERRIDES[fm.slug];
-  const interactiveKey = overrideKey ?? componentType;
+  const interactiveKey = overrideKey ?? componentKey;
+  const shouldRenderInteractive = Boolean(enabled || overrideKey);
+  const moduleKey = fm.tier === 2 ? String(fm.module).padStart(2, "0") : String(fm.module);
   
   let InteractiveComponent = null;
 
-  // Direct folder routing for Tier 1 Module 1 (bypassing the alphabetical registry)
-  if (fm.tier === 1 && fm.module === 1 && interactiveKey) {
-    try {
-      // By appending /index, Turbopack knows it's only looking for JS/TS index files, ignoring READMEs
-      const mod = await import(`../../interactive/tier-1/module-1/${interactiveKey}/index`);
-      // Find the first exported component (or default)
+  if (fm.tier && fm.module && interactiveKey) {
+    // Build the tier-module key matching directory structure:
+    // tier-1 uses "module-1" (no padding), tier-2 uses "module-01" (padded)
+    const tierModule = `tier-${fm.tier}/module-${moduleKey}`;
+
+    // Try direct module path first
+    let mod = await loadInteractive(tierModule, interactiveKey);
+
+    // Fallback: if interactiveKey was component, try componentType if different
+    if (!mod && fm.interactive?.componentType && interactiveKey !== fm.interactive.componentType) {
+      mod = await loadInteractive(tierModule, fm.interactive.componentType);
+    }
+
+    // Try shared interactive keys (cross-module components)
+    if (!mod && SHARED_INTERACTIVE_KEYS[interactiveKey]) {
+      const sharedPath = SHARED_INTERACTIVE_KEYS[interactiveKey];
+      const lastSlash = sharedPath.lastIndexOf("/");
+      if (lastSlash > 0) {
+        mod = await loadInteractive(
+          sharedPath.substring(0, lastSlash),
+          sharedPath.substring(lastSlash + 1)
+        );
+      }
+    }
+
+    // Fallback: extra interactive loaders (one-off overrides)
+    if (!mod && EXTRA_INTERACTIVE_LOADERS[interactiveKey]) {
+      try {
+        mod = await EXTRA_INTERACTIVE_LOADERS[interactiveKey]();
+      } catch (err) {
+        console.error(`Failed to load extra interactive for ${interactiveKey}`, err);
+      }
+    }
+
+    if (mod) {
       const exportName = Object.keys(mod).find(key => key !== 'default') || 'default';
       InteractiveComponent = mod[exportName];
-    } catch (err) {
-      console.error(`Failed to load direct component for Tier 1 Module 1: ${interactiveKey}`, err);
     }
   }
 
-  // Direct folder routing for Tier 1 Module 2
-  if (fm.tier === 1 && fm.module === 2 && interactiveKey) {
-    try {
-      const mod = await import(`../../interactive/tier-1/module-2/${interactiveKey}/index`);
-      const exportName = Object.keys(mod).find(key => key !== 'default') || 'default';
-      InteractiveComponent = mod[exportName];
-    } catch (err) {
-      console.error(`Failed to load direct component for Tier 1 Module 2: ${interactiveKey}`, err);
-    }
-  }
 
-  // Direct folder routing for Tier 1 Module 3
-  if (fm.tier === 1 && fm.module === 3 && interactiveKey) {
-    try {
-      const mod = await import(`../../interactive/tier-1/module-3/${interactiveKey}/index`);
-      const exportName = Object.keys(mod).find(key => key !== 'default') || 'default';
-      InteractiveComponent = mod[exportName];
-    } catch (err) {
-      console.error(`Failed to load direct component for Tier 1 Module 3: ${interactiveKey}`, err);
-    }
-  }
-
-  // Direct folder routing for Tier 1 Module 4
-  if (fm.tier === 1 && fm.module === 4 && interactiveKey) {
-    try {
-      const mod = await import(`../../interactive/tier-1/module-4/${interactiveKey}/index`);
-      const exportName = Object.keys(mod).find(key => key !== 'default') || 'default';
-      InteractiveComponent = mod[exportName];
-    } catch (err) {
-      console.error(`Failed to load direct component for Tier 1 Module 4: ${interactiveKey}`, err);
-    }
-  }
-
-  // Direct folder routing for Tier 1 Module 5
-  if (fm.tier === 1 && fm.module === 5 && interactiveKey) {
-    try {
-      const mod = await import(`../../interactive/tier-1/module-5/${interactiveKey}/index`);
-      const exportName = Object.keys(mod).find(key => key !== 'default') || 'default';
-      InteractiveComponent = mod[exportName];
-    } catch (err) {
-      console.error(`Failed to load direct component for Tier 1 Module 5: ${interactiveKey}`, err);
-    }
-  }
-
-  // Direct folder routing for Tier 1 Module 6
-  if (fm.tier === 1 && fm.module === 6 && interactiveKey) {
-    try {
-      const mod = await import(`../../interactive/tier-1/module-6/${interactiveKey}/index`);
-      const exportName = Object.keys(mod).find(key => key !== 'default') || 'default';
-      InteractiveComponent = mod[exportName];
-    } catch (err) {
-      console.error(`Failed to load direct component for Tier 1 Module 6: ${interactiveKey}`, err);
-    }
-  }
-
-  // Direct folder routing for Tier 1 Module 7
-  if (fm.tier === 1 && fm.module === 7 && interactiveKey) {
-    try {
-      const mod = await import(`../../interactive/tier-1/module-7/${interactiveKey}/index`);
-      const exportName = Object.keys(mod).find(key => key !== 'default') || 'default';
-      InteractiveComponent = mod[exportName];
-    } catch (err) {
-      console.error(`Failed to load direct component for Tier 1 Module 7: ${interactiveKey}`, err);
-    }
-  }
-
-  // Direct folder routing for Tier 1 Module 8
-  if (fm.tier === 1 && fm.module === 8 && interactiveKey) {
-    try {
-      const mod = await import(`../../interactive/tier-1/module-8/${interactiveKey}/index`);
-      const exportName = Object.keys(mod).find(key => key !== 'default') || 'default';
-      InteractiveComponent = mod[exportName];
-    } catch (err) {
-      console.error(`Failed to load direct component for Tier 1 Module 8: ${interactiveKey}`, err);
-    }
-  }
-
-  // Direct folder routing for Tier 1 Module 9
-  if (fm.tier === 1 && fm.module === 9 && interactiveKey) {
-    try {
-      const mod = await import(`../../interactive/tier-1/module-9/${interactiveKey}/index`);
-      const exportName = Object.keys(mod).find(key => key !== 'default') || 'default';
-      InteractiveComponent = mod[exportName];
-    } catch (err) {
-      console.error(`Failed to load direct component for Tier 1 Module 9: ${interactiveKey}`, err);
-    }
-  }
-
-  // Direct folder routing for Tier 1 Module 10
-  if (fm.tier === 1 && fm.module === 10 && interactiveKey) {
-    try {
-      const mod = await import(`../../interactive/tier-1/module-10/${interactiveKey}/index`);
-      const exportName = Object.keys(mod).find(key => key !== 'default') || 'default';
-      InteractiveComponent = mod[exportName];
-    } catch (err) {
-      console.error(`Failed to load direct component for Tier 1 Module 10: ${interactiveKey}`, err);
-    }
-  }
-
-  // Direct folder routing for Tier 1 Module 11
-  if (fm.tier === 1 && fm.module === 11 && interactiveKey) {
-    try {
-      const mod = await import(`../../interactive/tier-1/module-11/${interactiveKey}/index`);
-      const exportName = Object.keys(mod).find(key => key !== 'default') || 'default';
-      InteractiveComponent = mod[exportName];
-    } catch (err) {
-      console.error(`Failed to load direct component for Tier 1 Module 11: ${interactiveKey}`, err);
-    }
-  }
-
-  // Direct folder routing for Tier 1 Module 12
-  if (fm.tier === 1 && fm.module === 12 && interactiveKey) {
-    try {
-      const mod = await import(`../../interactive/tier-1/module-12/${interactiveKey}/index`);
-      const exportName = Object.keys(mod).find(key => key !== 'default') || 'default';
-      InteractiveComponent = mod[exportName];
-    } catch (err) {
-      console.error(`Failed to load direct component for Tier 1 Module 12: ${interactiveKey}`, err);
-    }
-  }
-
-  // Direct folder routing for Tier 1 Module 13
-  if (fm.tier === 1 && fm.module === 13 && interactiveKey) {
-    try {
-      const mod = await import(`../../interactive/tier-1/module-13/${interactiveKey}/index`);
-      const exportName = Object.keys(mod).find(key => key !== 'default') || 'default';
-      InteractiveComponent = mod[exportName];
-    } catch (err) {
-      console.error(`Failed to load direct component for Tier 1 Module 13: ${interactiveKey}`, err);
-    }
-  }
-
-  // Direct folder routing for Tier 1 Module 14
-  if (fm.tier === 1 && fm.module === 14 && interactiveKey) {
-    try {
-      const mod = await import(`../../interactive/tier-1/module-14/${interactiveKey}/index`);
-      const exportName = Object.keys(mod).find(key => key !== 'default') || 'default';
-      InteractiveComponent = mod[exportName];
-    } catch (err) {
-      console.error(`Failed to load direct component for Tier 1 Module 14: ${interactiveKey}`, err);
-    }
-  }
-
-  // Direct folder routing for Tier 1 Module 15
-  if (fm.tier === 1 && fm.module === 15 && interactiveKey) {
-    try {
-      const mod = await import(`../../interactive/tier-1/module-15/${interactiveKey}/index`);
-      const exportName = Object.keys(mod).find(key => key !== 'default') || 'default';
-      InteractiveComponent = mod[exportName];
-    } catch (err) {
-      console.error(`Failed to load direct component for Tier 1 Module 15: ${interactiveKey}`, err);
-    }
-  }
-
-  // Direct folder routing for Tier 1 Module 16
-  if (fm.tier === 1 && fm.module === 16 && interactiveKey) {
-    try {
-      const mod = await import(`../../interactive/tier-1/module-16/${interactiveKey}/index`);
-      const exportName = Object.keys(mod).find(key => key !== 'default') || 'default';
-      InteractiveComponent = mod[exportName];
-    } catch (err) {
-      console.error(`Failed to load direct component for Tier 1 Module 16: ${interactiveKey}`, err);
-    }
-  }
-
-  // Direct folder routing for Tier 1 Module 17
-  if (fm.tier === 1 && fm.module === 17 && interactiveKey) {
-    try {
-      const mod = await import(`../../interactive/tier-1/module-17/${interactiveKey}/index`);
-      const exportName = Object.keys(mod).find(key => key !== 'default') || 'default';
-      InteractiveComponent = mod[exportName];
-    } catch (err) {
-      console.error(`Failed to load direct component for Tier 1 Module 17: ${interactiveKey}`, err);
-    }
-  }
-
-  // Direct folder routing for Tier 1 Module 18
-  if (fm.tier === 1 && fm.module === 18 && interactiveKey) {
-    try {
-      const mod = await import(`../../interactive/tier-1/module-18/${interactiveKey}/index`);
-      const exportName = Object.keys(mod).find(key => key !== 'default') || 'default';
-      InteractiveComponent = mod[exportName];
-    } catch (err) {
-      console.error(`Failed to load direct component for Tier 1 Module 18: ${interactiveKey}`, err);
-    }
-  }
-
-  // Direct folder routing for Tier 1 Module 19
-  if (fm.tier === 1 && fm.module === 19 && interactiveKey) {
-    try {
-      const mod = await import(`../../interactive/tier-1/module-19/${interactiveKey}/index`);
-      const exportName = Object.keys(mod).find(key => key !== 'default') || 'default';
-      InteractiveComponent = mod[exportName];
-    } catch (err) {
-      console.error(`Failed to load direct component for Tier 1 Module 19: ${interactiveKey}`, err);
-    }
-  }
-
-  // Direct folder routing for Tier 1 Module 20
-  if (fm.tier === 1 && fm.module === 20 && interactiveKey) {
-    try {
-      const mod = await import(`../../interactive/tier-1/module-20/${interactiveKey}/index`);
-      const exportName = Object.keys(mod).find(key => key !== 'default') || 'default';
-      InteractiveComponent = mod[exportName];
-    } catch (err) {
-      console.error(`Failed to load direct component for Tier 1 Module 20: ${interactiveKey}`, err);
-    }
-  }
-
-  // Direct folder routing for Tier 1 Module 21
-  if (fm.tier === 1 && fm.module === 21 && interactiveKey) {
-    try {
-      const mod = await import(`../../interactive/tier-1/module-21/${interactiveKey}/index`);
-      const exportName = Object.keys(mod).find(key => key !== 'default') || 'default';
-      InteractiveComponent = mod[exportName];
-    } catch (err) {
-      console.error(`Failed to load direct component for Tier 1 Module 21: ${interactiveKey}`, err);
-    }
-  }
-
-  // Direct folder routing for Tier 1 Module 22
-  if (fm.tier === 1 && fm.module === 22 && interactiveKey) {
-    try {
-      const mod = await import(`../../interactive/tier-1/module-22/${interactiveKey}/index`);
-      const exportName = Object.keys(mod).find(key => key !== 'default') || 'default';
-      InteractiveComponent = mod[exportName];
-    } catch (err) {
-      console.error(`Failed to load direct component for Tier 1 Module 22: ${interactiveKey}`, err);
-    }
-  }
-
-  // Direct folder routing for Tier 1 Module 23
-  if (fm.tier === 1 && fm.module === 23 && interactiveKey) {
-    try {
-      const mod = await import(`../../interactive/tier-1/module-23/${interactiveKey}/index`);
-      const exportName = Object.keys(mod).find(key => key !== 'default') || 'default';
-      InteractiveComponent = mod[exportName];
-    } catch (err) {
-      console.error(`Failed to load direct component for Tier 1 Module 23: ${interactiveKey}`, err);
-    }
-  }
-
-  // Direct folder routing for Tier 1 Module 24
-  if (fm.tier === 1 && fm.module === 24 && interactiveKey) {
-    try {
-      const mod = await import(`../../interactive/tier-1/module-24/${interactiveKey}/index`);
-      const exportName = Object.keys(mod).find(key => key !== 'default') || 'default';
-      InteractiveComponent = mod[exportName];
-    } catch (err) {
-      console.error(`Failed to load direct component for Tier 1 Module 24: ${interactiveKey}`, err);
-    }
-  }
-
-  // Direct folder routing for Tier 2 Module 1
-  if (fm.tier === 2 && fm.module === 1 && interactiveKey) {
-    try {
-      const mod = await import(`../../interactive/tier-2/module-01/${interactiveKey}/index`);
-      const exportName = Object.keys(mod).find(key => key !== 'default') || 'default';
-      InteractiveComponent = mod[exportName];
-    } catch (err) {
-      console.error(`Failed to load direct component for Tier 2 Module 1: ${interactiveKey}`, err);
-    }
-  }
-
-  // Direct folder routing for Tier 2 Module 2
-  if (fm.tier === 2 && fm.module === 2 && interactiveKey) {
-    try {
-      const mod = await import(`../../interactive/tier-2/module-02/${interactiveKey}/index`);
-      const exportName = Object.keys(mod).find(key => key !== 'default') || 'default';
-      InteractiveComponent = mod[exportName];
-    } catch (err) {
-      console.error(`Failed to load direct component for Tier 2 Module 2: ${interactiveKey}`, err);
-    }
-  }
-
-  // Direct folder routing for Tier 2 Module 3
-  if (fm.tier === 2 && fm.module === 3 && interactiveKey) {
-    try {
-      const mod = await import(`../../interactive/tier-2/module-03/${interactiveKey}/index`);
-      const exportName = Object.keys(mod).find(key => key !== 'default') || 'default';
-      InteractiveComponent = mod[exportName];
-    } catch (err) {
-      console.error(`Failed to load direct component for Tier 2 Module 3: ${interactiveKey}`, err);
-    }
-  }
-
-  // Fallback to alphabetical bucket loader
-  if (!InteractiveComponent && interactiveKey) {
-    InteractiveComponent = await loadInteractive(interactiveKey);
-  }
 
   const useWideLayout = WIDE_LAYOUT_SLUGS.has(fm.slug);
 
@@ -802,12 +597,12 @@ export async function PrimarySimulator({ section, frontMatter: fm }: PrimarySimu
         })()}
       </div>
 
-      {enabled && InteractiveComponent ? (
+      {shouldRenderInteractive && InteractiveComponent ? (
         /* Wrap in LessonProvider so interactives can read the lesson slug for context-aware defaults. */
         <LessonProvider value={{ slug: fm.slug }}>
           <InteractiveComponent />
         </LessonProvider>
-      ) : enabled && componentType ? (
+      ) : shouldRenderInteractive && componentType ? (
         <div
           className="gl-surface-twilight-glass p-8 text-center"
           style={{ minHeight: "320px", display: "flex", flexDirection: "column", justifyContent: "center" }}

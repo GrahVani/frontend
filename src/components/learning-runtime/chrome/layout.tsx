@@ -21,6 +21,9 @@ import { useProgressStore } from "@/lib/learning-runtime/progress-store";
 import type { LessonSection, LessonFrontMatter } from "@/lib/learning-runtime/types";
 import { LessonJourneyRail } from "./LessonJourneyRail";
 import { SectionAwareMarginalia } from "./SectionAwareMarginalia";
+import { TutorPanel } from "@/components/learning-runtime/tutor/TutorPanel";
+import { useTutorStore } from "@/store/useTutorStore";
+import { generateRecommendation } from "@/lib/learning-runtime/interactive/guidance-engine";
 
 interface LessonShellProps {
   sections: LessonSection[];
@@ -67,6 +70,74 @@ export function LessonShell({
     });
     return () => observers.forEach((io) => io.disconnect());
   }, [sections, lessonSlug, markSectionViewed]);
+
+  const syncLessonContext = useTutorStore((s) => s.syncLessonContext);
+  const setCurrentLesson = useTutorStore((s) => s.setCurrentLesson);
+  const setCurrentSection = useTutorStore((s) => s.setCurrentSection);
+  const setInteractive = useTutorStore((s) => s.setInteractive);
+  const clearLessonContext = useTutorStore((s) => s.clearLessonContext);
+
+  // Sync lesson metadata to store
+  useEffect(() => {
+    syncLessonContext({
+      slug: frontMatter.slug,
+      title: frontMatter.title,
+      learningOutcomes: frontMatter.learningOutcomes,
+      prerequisites: frontMatter.prerequisites,
+    });
+    setCurrentLesson(frontMatter.slug);
+
+    const activeInteractive = frontMatter.interactive?.component || frontMatter.interactive?.componentType;
+    if (frontMatter.interactive?.enabled && activeInteractive) {
+      setInteractive(activeInteractive);
+    } else {
+      setInteractive(null);
+    }
+
+    return () => {
+      clearLessonContext();
+    };
+  }, [frontMatter, syncLessonContext, setCurrentLesson, setInteractive, clearLessonContext]);
+
+  // Sync current section scroll updates
+  useEffect(() => {
+    setCurrentSection(activeSectionNumber);
+
+    const activeInteractive = frontMatter.interactive?.component || frontMatter.interactive?.componentType;
+    // If active section has an interactive or is flagship (§7), update currentInteractive
+    if (activeSectionNumber === "7" && frontMatter.interactive?.enabled && activeInteractive) {
+      setInteractive(activeInteractive);
+    } else if (activeSectionNumber === "4" && frontMatter.interactive?.enabled && activeInteractive) {
+      setInteractive(activeInteractive);
+    }
+  }, [activeSectionNumber, frontMatter, setCurrentSection, setInteractive]);
+
+  // Synchronize AI Tutor Guidance recommendations
+  const setTutorRecommendation = useTutorStore((s) => s.setTutorRecommendation);
+  const lessonContext = useTutorStore((s) => s.lessonContext);
+  const interactiveContext = useTutorStore((s) => s.interactiveContext);
+  const interactionState = useTutorStore((s) => s.interactionState);
+  const sectionsViewed = lesson?.sectionsViewed || [];
+
+  useEffect(() => {
+    const rec = generateRecommendation(
+      lessonContext,
+      interactiveContext,
+      interactionState,
+      sectionsViewed,
+      activeSectionNumber,
+      sections
+    );
+    setTutorRecommendation(rec);
+  }, [
+    lessonContext,
+    interactiveContext,
+    interactionState,
+    sectionsViewed,
+    activeSectionNumber,
+    sections,
+    setTutorRecommendation
+  ]);
 
   useEffect(() => {
     const current = lesson?.lessonCompletedAt ?? null;
@@ -220,6 +291,8 @@ export function LessonShell({
           onDismiss={() => setShowCelebration(false)}
         />
       )}
+
+      <TutorPanel lessonSlug={lessonSlug} sections={sections} />
     </div>
   );
 }

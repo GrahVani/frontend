@@ -4,8 +4,8 @@
   "private": true,
   "sideEffects": false,
   "scripts": {
-    "dev": "set NODE_OPTIONS=--max-old-space-size=4096 && next dev",
-    "build": "next build",
+    "dev": "set NODE_OPTIONS=--max-old-space-size=8192 && next dev --webpack",
+    "build": "git clone https://${GITHUB_TOKEN}@github.com/GrahVani/curriculum.git ../curriculum || true && next build",
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run",

@@ -23,7 +23,6 @@ import {
   ConceptTheatre,
   SlokaBlock,
   WorkedExample,
-  PrimarySimulator,
   MistakeCardDeck,
   MemoryAnchorDeck,
   Summary,
@@ -43,6 +42,11 @@ const LessonScenes = dynamic(() =>
 const MCQFlow = dynamic(() =>
   import("@/components/learning-runtime/chrome/sections/MCQFlow").then(
     (m) => m.MCQFlow,
+  ),
+);
+const PrimarySimulator = dynamic(() =>
+  import("@/components/learning-runtime/chrome/sections/PrimarySimulator").then(
+    (m) => m.PrimarySimulator,
   ),
 );
 

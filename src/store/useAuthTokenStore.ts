@@ -11,8 +11,8 @@ interface AuthTokenState {
 }
 
 export const useAuthTokenStore = create<AuthTokenState>((set) => ({
-  accessToken: null,
-  refreshToken: null,
+  accessToken: typeof window !== "undefined" ? localStorage.getItem("accessToken") : null,
+  refreshToken: typeof window !== "undefined" ? localStorage.getItem("refreshToken") : null,
   isRefreshing: false,
 
   setTokens: (accessToken, refreshToken) => {
@@ -36,9 +36,21 @@ export const useAuthTokenStore = create<AuthTokenState>((set) => ({
       localStorage.removeItem("refreshToken");
       localStorage.removeItem("accessToken"); // Clean up legacy storage
       localStorage.removeItem("user");
+      localStorage.removeItem("user_meta"); // Clear cached profile
     }
     set({ accessToken: null, refreshToken: null });
   },
 
   setIsRefreshing: (v) => set({ isRefreshing: v }),
 }));
+
+// Cross-tab synchronization: keep Zustand state in sync when another tab updates/clears tokens
+if (typeof window !== "undefined") {
+  window.addEventListener("storage", (event) => {
+    if (event.key === "accessToken" || event.key === "refreshToken" || event.key === null) {
+      const accessToken = localStorage.getItem("accessToken");
+      const refreshToken = localStorage.getItem("refreshToken");
+      useAuthTokenStore.setState({ accessToken, refreshToken });
+    }
+  });
+}

@@ -33,8 +33,39 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
     const { data: rawUser = null, isLoading: loading, refetch: refreshProfile } = useUserProfile();
-    const user = rawUser as UserProfile | null;
+    
+    // Fallback to local storage if API is still loading
+    const [cachedUser, setCachedUser] = React.useState<UserProfile | null>(null);
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            try {
+                const stored = localStorage.getItem("user_meta");
+                if (stored) {
+                    setCachedUser(JSON.parse(stored));
+                }
+            } catch (e) {
+                // Ignore parse errors
+            }
+        }
+    }, []);
+
+    const user = (rawUser as UserProfile | null) || cachedUser;
     const { loginMutation, logoutMutation } = useAuthMutations();
+
+    // Cache user on successful fetch
+    useEffect(() => {
+        if (rawUser && typeof window !== "undefined") {
+            const userMeta = {
+                id: rawUser.id,
+                email: rawUser.email,
+                name: rawUser.name,
+                role: rawUser.role,
+                avatarUrl: rawUser.avatarUrl,
+            };
+            localStorage.setItem("user_meta", JSON.stringify(userMeta));
+            setCachedUser(userMeta as UserProfile);
+        }
+    }, [rawUser]);
 
     const login = useCallback(async (credentials: LoginCredentials) => {
         await loginMutation.mutateAsync(credentials);

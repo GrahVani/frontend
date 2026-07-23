@@ -115,14 +115,14 @@ export function LessonJourneyRail({
       style={{
         display: "flex",
         flexDirection: "column",
-        gap: "20px",
+        gap: "22px",
         fontFamily: "var(--font-sans), system-ui, sans-serif",
       }}
     >
       {/* Chapter + lesson context */}
       <div
         style={{
-          padding: "16px 18px",
+          padding: "20px 22px",
           background: "linear-gradient(180deg, rgba(255, 249, 234, 0.92) 0%, rgba(250, 239, 216, 0.85) 100%)",
           border: "1px solid rgba(156, 122, 47, 0.30)",
           borderRadius: "12px",
@@ -151,7 +151,7 @@ export function LessonJourneyRail({
             letterSpacing: "0.12em",
             color: "var(--gl-gold-accent)",
             fontWeight: 700,
-            marginBottom: "6px",
+            marginBottom: "8px",
           }}
         >
           Tier {frontMatter.tier} · Module {frontMatter.module} · Chapter {frontMatter.chapter} · Lesson {frontMatter.sequence}
@@ -165,7 +165,7 @@ export function LessonJourneyRail({
               fontStyle: "italic",
               fontSize: "14px",
               color: "var(--gl-ink-secondary)",
-              marginBottom: "8px",
+              marginBottom: "10px",
               lineHeight: 1.35,
               fontWeight: 500,
             }}
@@ -176,7 +176,7 @@ export function LessonJourneyRail({
         <p
           style={{
             fontFamily: "var(--font-cormorant), serif",
-            fontSize: "18px",
+            fontSize: "22px",
             fontWeight: 600,
             color: "var(--gl-ink-primary)",
             lineHeight: 1.3,
@@ -192,7 +192,7 @@ export function LessonJourneyRail({
             style={{
               fontFamily: "var(--font-cormorant), serif",
               fontStyle: "italic",
-              fontSize: "14px",
+              fontSize: "16px",
               color: "var(--gl-ink-primary)",
               marginTop: "3px",
               lineHeight: 1.45,
@@ -207,7 +207,7 @@ export function LessonJourneyRail({
             lang="sa"
             style={{
               fontFamily: "var(--font-devanagari), serif",
-              fontSize: "15px",
+              fontSize: "17px",
               color: "var(--gl-gold-accent)",
               marginTop: "6px",
               lineHeight: 1.45,
@@ -221,8 +221,8 @@ export function LessonJourneyRail({
         {/* Lesson-level progress bar (gold thread) */}
         <div
           style={{
-            marginTop: "12px",
-            height: "3px",
+            marginTop: "14px",
+            height: "4px",
             borderRadius: "999px",
             background: "rgba(156, 122, 47, 0.18)",
             overflow: "hidden",
@@ -252,7 +252,7 @@ export function LessonJourneyRail({
         <p
           style={{
             marginTop: "8px",
-            fontSize: "14px",
+            fontSize: "15px",
             color: "var(--gl-ink-secondary)",
             display: "flex",
             alignItems: "center",
@@ -272,7 +272,7 @@ export function LessonJourneyRail({
           aria-hidden="true"
           style={{
             position: "absolute",
-            left: "11px",
+            left: "13px",
             top: "12px",
             bottom: "12px",
             width: "2px",
@@ -286,7 +286,7 @@ export function LessonJourneyRail({
           return (
             <li
               key={section.number}
-              style={{ position: "relative", paddingLeft: "32px", paddingBottom: "12px" }}
+              style={{ position: "relative", paddingLeft: "38px", paddingBottom: "16px" }}
             >
               <a
                 href={`#sec-${section.number.replace(".", "-")}`}
@@ -298,7 +298,7 @@ export function LessonJourneyRail({
                   gap: "1px",
                   textDecoration: "none",
                   borderRadius: "6px",
-                  padding: "4px 8px 4px 4px",
+                  padding: "7px 10px 7px 6px",
                   marginLeft: "-4px",
                   background: isActive ? "rgba(232, 199, 114, 0.10)" : "transparent",
                   transition: "background 250ms cubic-bezier(0.32, 0.72, 0.24, 1)",
@@ -310,9 +310,9 @@ export function LessonJourneyRail({
                   style={{
                     position: "absolute",
                     left: "2px",
-                    top: "4px",
-                    width: "20px",
-                    height: "20px",
+                    top: "7px",
+                    width: "24px",
+                    height: "24px",
                     borderRadius: "50%",
                     background: isViewed
                       ? `radial-gradient(circle at 30% 30%, #F5DDA0 0%, ${presentation.accentHex} 100%)`
@@ -330,12 +330,12 @@ export function LessonJourneyRail({
                   }}
                 >
                   {isViewed && !isActive && (
-                    <CheckCircle2 size={10} style={{ color: "rgba(255, 249, 234, 0.95)" }} />
+                    <CheckCircle2 size={12} style={{ color: "rgba(255, 249, 234, 0.95)" }} />
                   )}
                 </span>
                 <span
                   style={{
-                    fontSize: "15px",
+                    fontSize: "17px",
                     fontWeight: isActive ? 700 : 600,
                     color: isActive
                       ? presentation.accentHex
@@ -350,7 +350,7 @@ export function LessonJourneyRail({
                 </span>
                 <span
                   style={{
-                    fontSize: "13px",
+                    fontSize: "14px",
                     color: "var(--gl-ink-secondary)",
                     fontFamily: "var(--font-cormorant), serif",
                     fontStyle: "italic",
