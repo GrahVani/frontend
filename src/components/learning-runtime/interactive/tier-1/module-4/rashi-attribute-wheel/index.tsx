@@ -60,7 +60,7 @@ function getDefaultRashiFromSlug(slug?: string): number {
     "kumbha-aquarius-the-airy-fixed": 11,
     "meena-pisces-the-watery-mutable": 12,
   };
-  return (slug && map[slug]) ?? 1;
+  return (slug ? map[slug] : undefined) ?? 1;
 }
 
 /* ─── SVG Wheel sub-component ─── */
