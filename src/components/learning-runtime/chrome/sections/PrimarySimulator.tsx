@@ -526,7 +526,7 @@ export async function PrimarySimulator({ section, frontMatter: fm }: PrimarySimu
   const overrideKey = SECTION_7_OVERRIDES[fm.slug];
   const interactiveKey = overrideKey ?? componentKey;
   const shouldRenderInteractive = Boolean(enabled || overrideKey);
-  const moduleKey = String(fm.module).padStart(2, "0");
+  const moduleKey = fm.tier === 2 ? String(fm.module).padStart(2, "0") : String(fm.module);
   
   let InteractiveComponent = null;
 
