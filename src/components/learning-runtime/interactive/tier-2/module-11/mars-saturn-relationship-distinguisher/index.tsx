@@ -472,7 +472,7 @@ function RelationshipDiagram({ mode }: { mode: ModeKey }) {
           </text>
 
           <path
-            d="M 104 84 L 216 84"
+            d="M 108 126 C 142 150, 178 150, 212 126"
             fill="none"
             stroke={BLUE}
             strokeWidth={4}
@@ -480,7 +480,8 @@ function RelationshipDiagram({ mode }: { mode: ModeKey }) {
             markerStart="url(#mutualStart)"
             markerEnd="url(#mutualEnd)"
           />
-          <text x={160} y={70} textAnchor="middle" fill={BLUE} fontSize={10} fontWeight={600}>
+          <rect x={104} y={22} width={112} height={24} rx={6} fill={SURFACE} stroke={`${BLUE}${"55"}`} />
+          <text x={160} y={38} textAnchor="middle" fill={BLUE} fontSize={10} fontWeight={600}>
             mutual 7th drishti
           </text>
           <defs>

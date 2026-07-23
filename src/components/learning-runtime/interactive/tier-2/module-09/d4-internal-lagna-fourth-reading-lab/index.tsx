@@ -111,7 +111,7 @@ export function D4InternalLagnaFourthReadingLab() {
         </div>
       </section>
 
-      <section style={{ display: "grid", gridTemplateColumns: "minmax(0, 1.08fr) minmax(300px, 0.92fr)", gap: "1rem" }}>
+      <section style={{ display: "grid", gridTemplateColumns: "minmax(0, 1.35fr) minmax(280px, 0.65fr)", gap: "1rem", alignItems: "start" }}>
         <div style={cardStyle}>
           <D4ReadingSvg readingMode={readingMode} verdict={verdict} />
         </div>
@@ -163,25 +163,25 @@ export function D4InternalLagnaFourthReadingLab() {
 
 function D4ReadingSvg({ readingMode, verdict }: { readingMode: ReadingMode; verdict: { label: string; color: string } }) {
   return (
-    <svg viewBox="0 0 760 460" role="img" aria-label="D4 Lagna and fourth house internal reading diagram" style={{ width: "100%", minHeight: 360, display: "block" }}>
-      <rect x="12" y="12" width="736" height="436" rx="20" fill={SURFACE} stroke={HAIRLINE} />
-      <text x="380" y="48" textAnchor="middle" fill={GOLD} fontSize="13" fontWeight="600">CHART P1 D4 INTERNAL READING</text>
-      <text x="380" y="78" textAnchor="middle" fill={verdict.color} fontSize="18" fontWeight="600">{verdict.label}</text>
+    <svg viewBox="0 0 760 520" role="img" aria-label="D4 Lagna and fourth house internal reading diagram" style={{ width: "100%", minHeight: 440, display: "block" }}>
+      <rect x="12" y="12" width="736" height="496" rx="20" fill={SURFACE} stroke={HAIRLINE} />
+      <text x="380" y="56" textAnchor="middle" fill={GOLD} fontSize="18" fontWeight="700">CHART P1 D4 INTERNAL READING</text>
+      <text x="380" y="92" textAnchor="middle" fill={verdict.color} fontSize="22" fontWeight="700">{verdict.label}</text>
       {D4_FACTS.map((fact, index) => {
         const x = 134 + (index % 3) * 246;
-        const y = index < 3 ? 160 : 270;
+        const y = index < 3 ? 184 : 314;
         const active = readingMode === "d4" || fact.label !== "Lagna lord";
         return (
           <g key={fact.label}>
-            <rect x={x - 84} y={y - 42} width="168" height="84" rx="14" fill={active ? fact.color : VERMILION} fillOpacity={active ? "0.12" : "0.18"} stroke={active ? fact.color : VERMILION} />
-            <text x={x} y={y - 15} textAnchor="middle" fill={active ? fact.color : VERMILION} fontSize="12" fontWeight="600">{fact.label}</text>
-            <text x={x} y={y + 7} textAnchor="middle" fill={INK_PRIMARY} fontSize="13">{fact.value}</text>
-            <text x={x} y={y + 28} textAnchor="middle" fill={INK_MUTED} fontSize="10">{fact.note}</text>
+            <rect x={x - 92} y={y - 50} width="184" height="100" rx="15" fill={active ? fact.color : VERMILION} fillOpacity={active ? "0.12" : "0.18"} stroke={active ? fact.color : VERMILION} strokeWidth="1.5" />
+            <text x={x} y={y - 18} textAnchor="middle" fill={active ? fact.color : VERMILION} fontSize="15" fontWeight="700">{fact.label}</text>
+            <text x={x} y={y + 9} textAnchor="middle" fill={INK_PRIMARY} fontSize="15" fontWeight="600">{fact.value}</text>
+            <text x={x} y={y + 35} textAnchor="middle" fill={INK_MUTED} fontSize="12" fontWeight="600">{fact.note}</text>
           </g>
         );
       })}
-      <path d="M154 374 C260 335 311 335 380 374 S522 416 606 374" fill="none" stroke={verdict.color} strokeWidth="3" strokeLinecap="round" />
-      <text x="380" y="413" textAnchor="middle" fill={INK_SECONDARY} fontSize="12">{readingMode === "d4" ? "Each D4 lord is judged by its D4 placement." : "Borrowing D1 Mars exaltation hides the D4 finding."}</text>
+      <path d="M154 428 C260 376 311 376 380 428 S522 480 606 428" fill="none" stroke={verdict.color} strokeWidth="5" strokeLinecap="round" />
+      <text x="380" y="470" textAnchor="middle" fill={INK_SECONDARY} fontSize="14" fontWeight="600">{readingMode === "d4" ? "Each D4 lord is judged by its D4 placement." : "Borrowing D1 Mars exaltation hides the D4 finding."}</text>
     </svg>
   );
 }

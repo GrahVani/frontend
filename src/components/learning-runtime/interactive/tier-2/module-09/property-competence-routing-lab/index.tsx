@@ -165,7 +165,7 @@ export function PropertyCompetenceRoutingLab() {
         </div>
       </section>
 
-      <section style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(330px, 100%), 1fr))", gap: "1rem" }}>
+      <section style={{ display: "grid", gridTemplateColumns: "minmax(0, 1.35fr) minmax(280px, 0.65fr)", gap: "1rem", alignItems: "start" }}>
         <div style={cardStyle}>
           <RoutingSvg scenario={scenario} status={status} />
         </div>
@@ -224,26 +224,26 @@ function RoutingSvg({ scenario, status }: { scenario: (typeof SCENARIOS)[Scenari
   ];
 
   return (
-    <svg viewBox="0 0 820 500" role="img" aria-label="Property scope of competence routing diagram" style={{ width: "100%", minHeight: 390, display: "block" }}>
-      <rect x="12" y="12" width="796" height="476" rx="20" fill={SURFACE} stroke={HAIRLINE} />
-      <text x="410" y="48" textAnchor="middle" fill={GOLD} fontSize="13" fontWeight="600">PROPERTY SCOPE ROUTING</text>
-      <text x="410" y="78" textAnchor="middle" fill={status.color} fontSize="18" fontWeight="600">{status.label}</text>
+    <svg viewBox="0 0 820 560" role="img" aria-label="Property scope of competence routing diagram" style={{ width: "100%", minHeight: 480, display: "block" }}>
+      <rect x="12" y="12" width="796" height="536" rx="20" fill={SURFACE} stroke={HAIRLINE} />
+      <text x="410" y="56" textAnchor="middle" fill={GOLD} fontSize="18" fontWeight="700">PROPERTY SCOPE ROUTING</text>
+      <text x="410" y="92" textAnchor="middle" fill={status.color} fontSize="22" fontWeight="700">{status.label}</text>
 
       {domains.map((domain) => (
         <g key={domain.label}>
-          <rect x={domain.x - 62} y={domain.y - 52} width="124" height="104" rx="16" fill={domain.color} fillOpacity="0.1" stroke={domain.color} />
-          <text x={domain.x} y={domain.y - 12} textAnchor="middle" fill={domain.color} fontSize="13" fontWeight="600">{domain.label}</text>
-          <text x={domain.x} y={domain.y + 16} textAnchor="middle" fill={INK_SECONDARY} fontSize="10">{domain.text}</text>
+          <rect x={domain.x - 72} y={domain.y - 58} width="144" height="116" rx="16" fill={domain.color} fillOpacity="0.1" stroke={domain.color} strokeWidth="1.5" />
+          <text x={domain.x} y={domain.y - 14} textAnchor="middle" fill={domain.color} fontSize="15" fontWeight="700">{domain.label}</text>
+          <text x={domain.x} y={domain.y + 18} textAnchor="middle" fill={INK_SECONDARY} fontSize="12" fontWeight="600">{domain.text}</text>
         </g>
       ))}
 
-      <path d="M136 248 C250 304 518 304 604 248" fill="none" stroke={scenario.color} strokeWidth="4" strokeLinecap="round" />
-      <rect x="218" y="316" width="384" height="104" rx="16" fill={scenario.color} fillOpacity="0.1" stroke={scenario.color} />
-      <text x="410" y="348" textAnchor="middle" fill={scenario.color} fontSize="14" fontWeight="600">{scenario.domain}</text>
-      <text x="410" y="378" textAnchor="middle" fill={INK_PRIMARY} fontSize="12">{scenario.mode === "decline" ? "decline unsafe certainty" : scenario.mode === "care" ? "care first, then route" : "route to qualified expertise"}</text>
-      <text x="410" y="402" textAnchor="middle" fill={INK_SECONDARY} fontSize="11">Astrology stays as context, not replacement.</text>
+      <path d="M136 260 C250 330 518 330 604 260" fill="none" stroke={scenario.color} strokeWidth="6" strokeLinecap="round" />
+      <rect x="198" y="348" width="424" height="116" rx="16" fill={scenario.color} fillOpacity="0.1" stroke={scenario.color} strokeWidth="1.5" />
+      <text x="410" y="384" textAnchor="middle" fill={scenario.color} fontSize="17" fontWeight="700">{scenario.domain}</text>
+      <text x="410" y="418" textAnchor="middle" fill={INK_PRIMARY} fontSize="14" fontWeight="600">{scenario.mode === "decline" ? "decline unsafe certainty" : scenario.mode === "care" ? "care first, then route" : "route to qualified expertise"}</text>
+      <text x="410" y="447" textAnchor="middle" fill={INK_SECONDARY} fontSize="13" fontWeight="600">Astrology stays as context, not replacement.</text>
 
-      <text x="410" y="462" textAnchor="middle" fill={INK_SECONDARY} fontSize="12">Routing is credibility and care in high-stakes property decisions.</text>
+      <text x="410" y="526" textAnchor="middle" fill={INK_SECONDARY} fontSize="14" fontWeight="600">Routing is credibility and care in high-stakes property decisions.</text>
     </svg>
   );
 }

@@ -1,0 +1,5 @@
+{
+  "extends": "../tsconfig.json",
+  "include": ["../src/components/learning-runtime/interactive/tier-2/module-21/from-chart-state-to-remedial-indication/chart-state-derivation-workbench.tsx"],
+  "exclude": []
+}

@@ -125,7 +125,7 @@ export function KpPropertySignificatorTimingLab() {
         </div>
       </section>
 
-      <section style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(320px, 100%), 1fr))", gap: "1rem" }}>
+      <section style={{ display: "grid", gridTemplateColumns: "minmax(0, 1.35fr) minmax(280px, 0.65fr)", gap: "1rem", alignItems: "start" }}>
         <div style={cardStyle}>
           <TimingSvg windows={visibleWindows} status={status} showDeduplication={showDeduplication} separateMeasures={separateMeasures} />
         </div>
@@ -174,38 +174,38 @@ export function KpPropertySignificatorTimingLab() {
 
 function TimingSvg({ windows, status, showDeduplication, separateMeasures }: { windows: typeof WINDOWS; status: { label: string; color: string }; showDeduplication: boolean; separateMeasures: boolean }) {
   return (
-    <svg viewBox="0 0 800 500" role="img" aria-label="KP fourth house significator hierarchy and property timing diagram" style={{ width: "100%", minHeight: 380, display: "block" }}>
-      <rect x="12" y="12" width="776" height="476" rx="20" fill={SURFACE} stroke={HAIRLINE} />
-      <text x="400" y="46" textAnchor="middle" fill={GOLD} fontSize="13" fontWeight="600">KP 4TH SIGNIFICATORS + TIMING</text>
-      <text x="400" y="76" textAnchor="middle" fill={status.color} fontSize="18" fontWeight="600">{status.label}</text>
+    <svg viewBox="0 0 800 560" role="img" aria-label="KP fourth house significator hierarchy and property timing diagram" style={{ width: "100%", minHeight: 480, display: "block" }}>
+      <rect x="12" y="12" width="776" height="536" rx="20" fill={SURFACE} stroke={HAIRLINE} />
+      <text x="400" y="56" textAnchor="middle" fill={GOLD} fontSize="18" fontWeight="700">KP 4TH SIGNIFICATORS + TIMING</text>
+      <text x="400" y="92" textAnchor="middle" fill={status.color} fontSize="22" fontWeight="700">{status.label}</text>
 
       {LEVELS.map((level, index) => (
         <g key={`${level.level}-${index}`}>
-          <rect x={54 + index * 174} y="122" width="148" height="82" rx="14" fill={level.color} fillOpacity="0.1" stroke={level.color} />
-          <text x={128 + index * 174} y="150" textAnchor="middle" fill={level.color} fontSize="12" fontWeight="600">{level.level}</text>
-          <text x={128 + index * 174} y="173" textAnchor="middle" fill={INK_PRIMARY} fontSize="13">{level.planet}</text>
-          <text x={128 + index * 174} y="192" textAnchor="middle" fill={INK_SECONDARY} fontSize="10">{index === 0 ? "occupant-star" : index === 1 ? "occupant" : index === 2 ? "lord-star" : "house lord"}</text>
+          <rect x={42 + index * 184} y="130" width="158" height="92" rx="14" fill={level.color} fillOpacity="0.1" stroke={level.color} strokeWidth="1.5" />
+          <text x={121 + index * 184} y="160" textAnchor="middle" fill={level.color} fontSize="15" fontWeight="700">{level.level}</text>
+          <text x={121 + index * 184} y="187" textAnchor="middle" fill={INK_PRIMARY} fontSize="15" fontWeight="600">{level.planet}</text>
+          <text x={121 + index * 184} y="210" textAnchor="middle" fill={INK_SECONDARY} fontSize="12" fontWeight="600">{index === 0 ? "occupant-star" : index === 1 ? "occupant" : index === 2 ? "lord-star" : "house lord"}</text>
         </g>
       ))}
 
-      <path d="M128 230 C205 268 304 268 376 230" fill="none" stroke={showDeduplication ? BLUE : VERMILION} strokeWidth="4" strokeLinecap="round" />
-      <text x="252" y="282" textAnchor="middle" fill={showDeduplication ? BLUE : VERMILION} fontSize="12" fontWeight="600">{showDeduplication ? "Moon de-duplicated to top rank" : "Moon counted twice by mistake"}</text>
+      <path d="M121 252 C205 302 304 302 389 252" fill="none" stroke={showDeduplication ? BLUE : VERMILION} strokeWidth="6" strokeLinecap="round" />
+      <text x="255" y="320" textAnchor="middle" fill={showDeduplication ? BLUE : VERMILION} fontSize="15" fontWeight="700">{showDeduplication ? "Moon de-duplicated to top rank" : "Moon counted twice by mistake"}</text>
 
-      <line x1="120" y1="342" x2="680" y2="342" stroke={HAIRLINE} strokeWidth="2" />
+      <line x1="120" y1="390" x2="680" y2="390" stroke={HAIRLINE} strokeWidth="2" />
       {windows.map((window, index) => {
         const x = 150 + index * 250;
         return (
           <g key={window.planet}>
-            <circle cx={x} cy="342" r="20" fill={window.color} fillOpacity="0.16" stroke={window.color} strokeWidth="3" />
-            <text x={x} y="347" textAnchor="middle" fill={window.color} fontSize="11" fontWeight="600">{window.planet}</text>
-            <text x={x} y="390" textAnchor="middle" fill={INK_PRIMARY} fontSize="12">{window.age}</text>
-            <text x={x} y="411" textAnchor="middle" fill={INK_SECONDARY} fontSize="11">{window.calendar}</text>
-            <text x={x} y="435" textAnchor="middle" fill={separateMeasures ? window.color : GOLD} fontSize="10">{separateMeasures ? window.note : "single blended rank"}</text>
+            <circle cx={x} cy="390" r="25" fill={window.color} fillOpacity="0.16" stroke={window.color} strokeWidth="4" />
+            <text x={x} y="396" textAnchor="middle" fill={window.color} fontSize="13" fontWeight="700">{window.planet}</text>
+            <text x={x} y="444" textAnchor="middle" fill={INK_PRIMARY} fontSize="14" fontWeight="600">{window.age}</text>
+            <text x={x} y="468" textAnchor="middle" fill={INK_SECONDARY} fontSize="12" fontWeight="600">{window.calendar}</text>
+            <text x={x} y="494" textAnchor="middle" fill={separateMeasures ? window.color : GOLD} fontSize="11" fontWeight="600">{separateMeasures ? window.note : "single blended rank"}</text>
           </g>
         );
       })}
 
-      <text x="400" y="468" textAnchor="middle" fill={INK_SECONDARY} fontSize="12">Timing requires both house significance and calendar activation.</text>
+      <text x="400" y="532" textAnchor="middle" fill={INK_SECONDARY} fontSize="14" fontWeight="600">Timing requires both house significance and calendar activation.</text>
     </svg>
   );
 }

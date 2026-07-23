@@ -127,7 +127,7 @@ export function KpPropertyFourthCuspSubLordLab() {
         </div>
       </section>
 
-      <section style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(300px, 100%), 1fr))", gap: "1rem" }}>
+      <section style={{ display: "grid", gridTemplateColumns: "minmax(0, 1.35fr) minmax(280px, 0.65fr)", gap: "1rem", alignItems: "start" }}>
         <div style={cardStyle}>
           <KpCuspSvg scenario={scenario} verdict={verdict} converges={converges} diverges={diverges} />
         </div>
@@ -178,31 +178,31 @@ export function KpPropertyFourthCuspSubLordLab() {
 
 function KpCuspSvg({ scenario, verdict, converges, diverges }: { scenario: (typeof SCENARIOS)[ScenarioKey]; verdict: { label: string; color: string }; converges: boolean; diverges: boolean }) {
   return (
-    <svg viewBox="0 0 760 460" role="img" aria-label="KP fourth cusp sub-lord property diagram" style={{ width: "100%", minHeight: 360, display: "block" }}>
-      <rect x="12" y="12" width="736" height="436" rx="20" fill={SURFACE} stroke={HAIRLINE} />
-      <text x="380" y="48" textAnchor="middle" fill={GOLD} fontSize="13" fontWeight="600">KP 4TH CUSP PROPERTY CHECK</text>
-      <text x="380" y="78" textAnchor="middle" fill={verdict.color} fontSize="18" fontWeight="600">{verdict.label}</text>
+    <svg viewBox="0 0 760 520" role="img" aria-label="KP fourth cusp sub-lord property diagram" style={{ width: "100%", minHeight: 440, display: "block" }}>
+      <rect x="12" y="12" width="736" height="496" rx="20" fill={SURFACE} stroke={HAIRLINE} />
+      <text x="380" y="56" textAnchor="middle" fill={GOLD} fontSize="18" fontWeight="700">KP 4TH CUSP PROPERTY CHECK</text>
+      <text x="380" y="92" textAnchor="middle" fill={verdict.color} fontSize="22" fontWeight="700">{verdict.label}</text>
 
-      <rect x="76" y="130" width="190" height="96" rx="16" fill={BLUE} fillOpacity="0.1" stroke={BLUE} />
-      <text x="171" y="160" textAnchor="middle" fill={BLUE} fontSize="13" fontWeight="600">Exact 4th cusp</text>
-      <text x="171" y="187" textAnchor="middle" fill={INK_PRIMARY} fontSize="13">Cap 17d41m18s</text>
-      <text x="171" y="208" textAnchor="middle" fill={INK_SECONDARY} fontSize="11">Shravana / Moon</text>
+      <rect x="46" y="142" width="210" height="112" rx="16" fill={BLUE} fillOpacity="0.1" stroke={BLUE} strokeWidth="1.5" />
+      <text x="151" y="178" textAnchor="middle" fill={BLUE} fontSize="16" fontWeight="700">Exact 4th cusp</text>
+      <text x="151" y="210" textAnchor="middle" fill={INK_PRIMARY} fontSize="15" fontWeight="600">Cap 17d41m18s</text>
+      <text x="151" y="234" textAnchor="middle" fill={INK_SECONDARY} fontSize="13" fontWeight="600">Shravana / Moon</text>
 
-      <rect x="286" y="130" width="188" height="96" rx="16" fill={converges ? GREEN : PURPLE} fillOpacity="0.1" stroke={converges ? GREEN : PURPLE} />
-      <text x="380" y="160" textAnchor="middle" fill={converges ? GREEN : PURPLE} fontSize="13" fontWeight="600">Sub-lord vs rasi-lord</text>
-      <text x="380" y="188" textAnchor="middle" fill={INK_PRIMARY} fontSize="13">{scenario.subLord} / {scenario.rasiLord}</text>
-      <text x="380" y="209" textAnchor="middle" fill={INK_SECONDARY} fontSize="11">{converges ? "same planet" : "different planets"}</text>
+      <rect x="275" y="142" width="210" height="112" rx="16" fill={converges ? GREEN : PURPLE} fillOpacity="0.1" stroke={converges ? GREEN : PURPLE} strokeWidth="1.5" />
+      <text x="380" y="178" textAnchor="middle" fill={converges ? GREEN : PURPLE} fontSize="16" fontWeight="700">Sub-lord vs rasi-lord</text>
+      <text x="380" y="211" textAnchor="middle" fill={INK_PRIMARY} fontSize="15" fontWeight="600">{scenario.subLord} / {scenario.rasiLord}</text>
+      <text x="380" y="235" textAnchor="middle" fill={INK_SECONDARY} fontSize="13" fontWeight="600">{converges ? "same planet" : "different planets"}</text>
 
-      <rect x="494" y="130" width="190" height="96" rx="16" fill={diverges ? GOLD : GREEN} fillOpacity="0.1" stroke={diverges ? GOLD : GREEN} />
-      <text x="589" y="160" textAnchor="middle" fill={diverges ? GOLD : GREEN} fontSize="13" fontWeight="600">Saturn house</text>
-      <text x="589" y="188" textAnchor="middle" fill={INK_PRIMARY} fontSize="13">WS {scenario.wholeHouse} / KP {scenario.placidusHouse}</text>
-      <text x="589" y="209" textAnchor="middle" fill={INK_SECONDARY} fontSize="11">{diverges ? "document divergence" : "same placement"}</text>
+      <rect x="504" y="142" width="210" height="112" rx="16" fill={diverges ? GOLD : GREEN} fillOpacity="0.1" stroke={diverges ? GOLD : GREEN} strokeWidth="1.5" />
+      <text x="609" y="178" textAnchor="middle" fill={diverges ? GOLD : GREEN} fontSize="16" fontWeight="700">Saturn house</text>
+      <text x="609" y="211" textAnchor="middle" fill={INK_PRIMARY} fontSize="15" fontWeight="600">WS {scenario.wholeHouse} / KP {scenario.placidusHouse}</text>
+      <text x="609" y="235" textAnchor="middle" fill={INK_SECONDARY} fontSize="13" fontWeight="600">{diverges ? "document divergence" : "same placement"}</text>
 
-      <path d="M155 310 C255 260 505 260 605 310" fill="none" stroke={verdict.color} strokeWidth="4" strokeLinecap="round" />
-      <circle cx="380" cy="290" r="28" fill={verdict.color} fillOpacity="0.14" stroke={verdict.color} />
-      <text x="380" y="295" textAnchor="middle" fill={verdict.color} fontSize="12" fontWeight="600">hold</text>
-      <text x="380" y="374" textAnchor="middle" fill={INK_SECONDARY} fontSize="12">Structural convergence tells which planet is central; favourability needs the full Saturn condition.</text>
-      <text x="380" y="414" textAnchor="middle" fill={verdict.color} fontSize="12" fontWeight="600">{scenario.label}</text>
+      <path d="M150 352 C254 292 506 292 610 352" fill="none" stroke={verdict.color} strokeWidth="6" strokeLinecap="round" />
+      <circle cx="380" cy="326" r="34" fill={verdict.color} fillOpacity="0.14" stroke={verdict.color} strokeWidth="1.5" />
+      <text x="380" y="333" textAnchor="middle" fill={verdict.color} fontSize="14" fontWeight="700">hold</text>
+      <text x="380" y="420" textAnchor="middle" fill={INK_SECONDARY} fontSize="14" fontWeight="600">Structural convergence tells which planet is central; favourability needs the full Saturn condition.</text>
+      <text x="380" y="468" textAnchor="middle" fill={verdict.color} fontSize="15" fontWeight="700">{scenario.label}</text>
     </svg>
   );
 }

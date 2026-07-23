@@ -123,7 +123,7 @@ export function HomePurchaseConfidenceSynthesisLab() {
         </div>
       </section>
 
-      <section style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(330px, 100%), 1fr))", gap: "1rem" }}>
+      <section style={{ display: "grid", gridTemplateColumns: "minmax(0, 1.35fr) minmax(280px, 0.65fr)", gap: "1rem", alignItems: "start" }}>
         <div style={cardStyle}>
           <ConfidenceSvg windows={visibleWindows} status={status} />
         </div>
@@ -173,27 +173,27 @@ export function HomePurchaseConfidenceSynthesisLab() {
 
 function ConfidenceSvg({ windows, status }: { windows: typeof WINDOWS; status: { label: string; color: string } }) {
   return (
-    <svg viewBox="0 0 820 500" role="img" aria-label="Home purchase timing confidence tier diagram" style={{ width: "100%", minHeight: 390, display: "block" }}>
-      <rect x="12" y="12" width="796" height="476" rx="20" fill={SURFACE} stroke={HAIRLINE} />
-      <text x="410" y="48" textAnchor="middle" fill={GOLD} fontSize="13" fontWeight="600">FINAL HOME PURCHASE TIMING TIERS</text>
-      <text x="410" y="78" textAnchor="middle" fill={status.color} fontSize="18" fontWeight="600">{status.label}</text>
-      <line x1="90" y1="250" x2="730" y2="250" stroke={HAIRLINE} strokeWidth="2" />
+    <svg viewBox="0 0 820 560" role="img" aria-label="Home purchase timing confidence tier diagram" style={{ width: "100%", minHeight: 480, display: "block" }}>
+      <rect x="12" y="12" width="796" height="536" rx="20" fill={SURFACE} stroke={HAIRLINE} />
+      <text x="410" y="56" textAnchor="middle" fill={GOLD} fontSize="18" fontWeight="700">FINAL HOME PURCHASE TIMING TIERS</text>
+      <text x="410" y="92" textAnchor="middle" fill={status.color} fontSize="22" fontWeight="700">{status.label}</text>
+      <line x1="90" y1="280" x2="730" y2="280" stroke={HAIRLINE} strokeWidth="2" />
       {windows.map((window, index) => {
         const x = 110 + index * (600 / Math.max(windows.length - 1, 1));
-        const y = window.tier === "Moderate" ? 205 : 298;
+        const y = window.tier === "Moderate" ? 226 : 338;
         return (
           <g key={`${window.label}-${window.age}`}>
-            <line x1={x} y1="250" x2={x} y2={y} stroke={window.color} strokeWidth="3" strokeLinecap="round" />
-            <circle cx={x} cy={y} r={window.primary ? 30 : 24} fill={window.color} fillOpacity="0.16" stroke={window.color} strokeWidth="3" />
-            <text x={x} y={y + 4} textAnchor="middle" fill={window.color} fontSize="11" fontWeight="600">{window.tier}</text>
-            <text x={x} y={window.tier === "Moderate" ? y - 45 : y + 45} textAnchor="middle" fill={INK_PRIMARY} fontSize="11">{window.age}</text>
-            <text x={x} y={window.tier === "Moderate" ? y - 28 : y + 62} textAnchor="middle" fill={INK_SECONDARY} fontSize="10">{window.label}</text>
+            <line x1={x} y1="280" x2={x} y2={y} stroke={window.color} strokeWidth="4" strokeLinecap="round" />
+            <circle cx={x} cy={y} r={window.primary ? 36 : 30} fill={window.color} fillOpacity="0.16" stroke={window.color} strokeWidth="4" />
+            <text x={x} y={y + 6} textAnchor="middle" fill={window.color} fontSize="13" fontWeight="700">{window.tier}</text>
+            <text x={x} y={window.tier === "Moderate" ? y - 58 : y + 58} textAnchor="middle" fill={INK_PRIMARY} fontSize="13" fontWeight="700">{window.age}</text>
+            <text x={x} y={window.tier === "Moderate" ? y - 36 : y + 80} textAnchor="middle" fill={INK_SECONDARY} fontSize="12" fontWeight="600">{window.label}</text>
           </g>
         );
       })}
-      <rect x="206" y="384" width="408" height="48" rx="12" fill={status.color} fillOpacity="0.1" stroke={status.color} />
-      <text x="410" y="413" textAnchor="middle" fill={status.color} fontSize="12" fontWeight="600">no window reaches Strong; Saturn is primary within Moderate</text>
-      <text x="410" y="462" textAnchor="middle" fill={INK_SECONDARY} fontSize="12">Confidence is counted by matching timing indicators, not by general relevance.</text>
+      <rect x="178" y="428" width="464" height="58" rx="12" fill={status.color} fillOpacity="0.1" stroke={status.color} strokeWidth="1.5" />
+      <text x="410" y="463" textAnchor="middle" fill={status.color} fontSize="15" fontWeight="700">no window reaches Strong; Saturn is primary within Moderate</text>
+      <text x="410" y="526" textAnchor="middle" fill={INK_SECONDARY} fontSize="14" fontWeight="600">Confidence is counted by matching timing indicators, not by general relevance.</text>
     </svg>
   );
 }

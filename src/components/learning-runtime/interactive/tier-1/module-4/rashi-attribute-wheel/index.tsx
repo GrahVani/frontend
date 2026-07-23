@@ -43,15 +43,7 @@ const ELEMENT_SWATCHES: Record<string, string> = {
 };
 
 /* ─── Lesson context for lesson-aware defaults ─── */
-export const LessonContext = createContext<{ slug: string }>({ slug: "" });
-
-export function LessonProvider({ children, value }: { children: ReactNode; value: { slug: string } }) {
-  return <LessonContext.Provider value={value}>{children}</LessonContext.Provider>;
-}
-
-export function useLessonSlug() {
-  return useContext(LessonContext).slug;
-}
+export { LessonContext, LessonProvider, useLessonSlug } from "@/components/learning-runtime/interactive/lib/lesson-context";
 
 function getDefaultRashiFromSlug(slug: string): number {
   const map: Record<string, number> = {

@@ -7,13 +7,13 @@
  */
 
 import { MarkdownContent } from "../MarkdownContent";
-import { interactiveMap } from "../../interactive/interactive-map";
+import { loadInteractive } from "../../interactive/module-registry";
 
 import { SectionHeader } from "../SectionHeader";
 import { presentationFor } from "../../lib/section-meta";
 import { Sparkles } from "lucide-react";
 import type { LessonSection, LessonFrontMatter } from "@/lib/learning-runtime/types";
-import { LessonProvider } from "@/components/learning-runtime/interactive/tier-1/module-4/rashi-attribute-wheel";
+import { LessonProvider } from "@/components/learning-runtime/interactive/lib/lesson-context";
 
 interface PrimarySimulatorProps {
   section: LessonSection;
@@ -102,6 +102,9 @@ const SECTION_7_OVERRIDES: Readonly<Record<string, string>> = {
   "confidentiality-and-data-handling-applied": "reading-documentation-template",
   "worked-write-up-1-marriage-question": "reading-documentation-template",
   "worked-write-up-2-career-change-question": "reading-documentation-template",
+  // ─── Module 22: Case-Study Library (frontmatter declares only component_type) ───
+  "marriage-case-4-couple-with-existing-marriage-difficulty-question": "marriage-case-4-couple-with-existing-marriage-difficulty-question",
+  "marriage-case-5-second-marriage-question-with-ethical-framing": "marriage-case-5-second-marriage-question-with-ethical-framing",
   // ─── Module 05: Wealth & Finance ───
   "the-2nd-house-significations-revisited-for-wealth": "second-house-wealth-evaluator",
   "the-11th-house-significations-revisited-for-gains": "eleventh-house-gains-evaluator",
@@ -515,31 +518,55 @@ const WIDE_LAYOUT_SLUGS = new Set([
 ]);
 
 export async function PrimarySimulator({ section, frontMatter: fm }: PrimarySimulatorProps) {
+  const componentKey = fm.interactive?.component || fm.interactive?.componentType;
   const componentType = fm.interactive?.componentType || fm.interactive?.component;
   const specFile = fm.interactive?.specFile;
   const enabled = fm.interactive?.enabled ?? false;
 
   const overrideKey = SECTION_7_OVERRIDES[fm.slug];
-  const interactiveKey = overrideKey ?? componentType;
+  const interactiveKey = overrideKey ?? componentKey;
   const shouldRenderInteractive = Boolean(enabled || overrideKey);
-  const moduleKey = String(fm.module).padStart(2, "0");
+  const moduleKey = fm.tier === 2 ? String(fm.module).padStart(2, "0") : String(fm.module);
   
   let InteractiveComponent = null;
 
   if (fm.tier && fm.module && interactiveKey) {
-    const mapKey = `tier-${fm.tier}/module-${moduleKey}/${interactiveKey}`;
-    const loadFn =
-      interactiveMap[mapKey] ??
-      interactiveMap[SHARED_INTERACTIVE_KEYS[interactiveKey]] ??
-      EXTRA_INTERACTIVE_LOADERS[interactiveKey];
-    if (loadFn) {
-      try {
-        const mod = await loadFn();
-        const exportName = Object.keys(mod).find(key => key !== 'default') || 'default';
-        InteractiveComponent = mod[exportName];
-      } catch (err) {
-        console.error(`Failed to load component for ${mapKey}`, err);
+    // Build the tier-module key matching directory structure:
+    // tier-1 uses "module-1" (no padding), tier-2 uses "module-01" (padded)
+    const tierModule = `tier-${fm.tier}/module-${moduleKey}`;
+
+    // Try direct module path first
+    let mod = await loadInteractive(tierModule, interactiveKey);
+
+    // Fallback: if interactiveKey was component, try componentType if different
+    if (!mod && fm.interactive?.componentType && interactiveKey !== fm.interactive.componentType) {
+      mod = await loadInteractive(tierModule, fm.interactive.componentType);
+    }
+
+    // Try shared interactive keys (cross-module components)
+    if (!mod && SHARED_INTERACTIVE_KEYS[interactiveKey]) {
+      const sharedPath = SHARED_INTERACTIVE_KEYS[interactiveKey];
+      const lastSlash = sharedPath.lastIndexOf("/");
+      if (lastSlash > 0) {
+        mod = await loadInteractive(
+          sharedPath.substring(0, lastSlash),
+          sharedPath.substring(lastSlash + 1)
+        );
       }
+    }
+
+    // Fallback: extra interactive loaders (one-off overrides)
+    if (!mod && EXTRA_INTERACTIVE_LOADERS[interactiveKey]) {
+      try {
+        mod = await EXTRA_INTERACTIVE_LOADERS[interactiveKey]();
+      } catch (err) {
+        console.error(`Failed to load extra interactive for ${interactiveKey}`, err);
+      }
+    }
+
+    if (mod) {
+      const exportName = Object.keys(mod).find(key => key !== 'default') || 'default';
+      InteractiveComponent = mod[exportName];
     }
   }
 

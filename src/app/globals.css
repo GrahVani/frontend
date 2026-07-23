@@ -1727,20 +1727,20 @@ html {
 }
 @media (min-width: 1024px) {
   .gl-lesson-grid {
-    grid-template-columns: 218px minmax(0, 1fr);
-    gap: 32px;
+    grid-template-columns: 272px minmax(0, 1fr);
+    gap: 28px;
   }
 }
 @media (min-width: 1280px) {
   .gl-lesson-grid {
-    grid-template-columns: 218px minmax(0, 1fr) 244px;
-    gap: 36px;
+    grid-template-columns: 272px minmax(0, 1fr) 244px;
+    gap: 28px;
   }
 }
 @media (min-width: 1536px) {
   .gl-lesson-grid {
-    grid-template-columns: 224px minmax(0, 1fr) 252px;
-    gap: 40px;
+    grid-template-columns: 292px minmax(0, 1fr) 252px;
+    gap: 32px;
   }
 }
 

@@ -140,7 +140,7 @@ export function VastuPropertyScopeDistinctionLab() {
         </div>
       </section>
 
-      <section style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(330px, 100%), 1fr))", gap: "1rem" }}>
+      <section style={{ display: "grid", gridTemplateColumns: "minmax(0, 1.35fr) minmax(280px, 0.65fr)", gap: "1rem", alignItems: "start" }}>
         <div style={cardStyle}>
           <ScopeSvg scenario={scenario} status={status} merge={treatOverlapAsMerger} />
         </div>
@@ -192,34 +192,34 @@ export function VastuPropertyScopeDistinctionLab() {
 
 function ScopeSvg({ scenario, status, merge }: { scenario: (typeof SCENARIOS)[ScenarioKey]; status: { label: string; color: string }; merge: boolean }) {
   return (
-    <svg viewBox="0 0 820 500" role="img" aria-label="Vastu and property prediction scope distinction diagram" style={{ width: "100%", minHeight: 390, display: "block" }}>
-      <rect x="12" y="12" width="796" height="476" rx="20" fill={SURFACE} stroke={HAIRLINE} />
-      <text x="410" y="48" textAnchor="middle" fill={GOLD} fontSize="13" fontWeight="600">TWO QUESTIONS, TWO EVIDENCE BASES</text>
-      <text x="410" y="78" textAnchor="middle" fill={status.color} fontSize="18" fontWeight="600">{status.label}</text>
+    <svg viewBox="0 0 820 560" role="img" aria-label="Vastu and property prediction scope distinction diagram" style={{ width: "100%", minHeight: 480, display: "block" }}>
+      <rect x="12" y="12" width="796" height="536" rx="20" fill={SURFACE} stroke={HAIRLINE} />
+      <text x="410" y="56" textAnchor="middle" fill={GOLD} fontSize="18" fontWeight="700">TWO QUESTIONS, TWO EVIDENCE BASES</text>
+      <text x="410" y="92" textAnchor="middle" fill={status.color} fontSize="22" fontWeight="700">{status.label}</text>
 
-      <rect x="72" y="128" width="240" height="120" rx="18" fill={BLUE} fillOpacity="0.1" stroke={BLUE} />
-      <text x="192" y="160" textAnchor="middle" fill={BLUE} fontSize="14" fontWeight="600">Property prediction</text>
-      <text x="192" y="190" textAnchor="middle" fill={INK_PRIMARY} fontSize="12">will / when / character</text>
-      <text x="192" y="214" textAnchor="middle" fill={INK_SECONDARY} fontSize="11">natal chart, dasha, D4, KP</text>
+      <rect x="50" y="142" width="270" height="132" rx="18" fill={BLUE} fillOpacity="0.1" stroke={BLUE} strokeWidth="1.5" />
+      <text x="185" y="179" textAnchor="middle" fill={BLUE} fontSize="17" fontWeight="700">Property prediction</text>
+      <text x="185" y="214" textAnchor="middle" fill={INK_PRIMARY} fontSize="14" fontWeight="600">will / when / character</text>
+      <text x="185" y="242" textAnchor="middle" fill={INK_SECONDARY} fontSize="13" fontWeight="600">natal chart, dasha, D4, KP</text>
 
-      <rect x="508" y="128" width="240" height="120" rx="18" fill={GREEN} fillOpacity="0.1" stroke={GREEN} />
-      <text x="628" y="160" textAnchor="middle" fill={GREEN} fontSize="14" fontWeight="600">Vastu</text>
-      <text x="628" y="190" textAnchor="middle" fill={INK_PRIMARY} fontSize="12">specific property layout</text>
-      <text x="628" y="214" textAnchor="middle" fill={INK_SECONDARY} fontSize="11">plot, directions, rooms, zones</text>
+      <rect x="500" y="142" width="270" height="132" rx="18" fill={GREEN} fillOpacity="0.1" stroke={GREEN} strokeWidth="1.5" />
+      <text x="635" y="179" textAnchor="middle" fill={GREEN} fontSize="17" fontWeight="700">Vastu</text>
+      <text x="635" y="214" textAnchor="middle" fill={INK_PRIMARY} fontSize="14" fontWeight="600">specific property layout</text>
+      <text x="635" y="242" textAnchor="middle" fill={INK_SECONDARY} fontSize="13" fontWeight="600">plot, directions, rooms, zones</text>
 
-      <path d={merge ? "M312 188 C380 130 440 130 508 188" : "M312 188 C380 232 440 232 508 188"} fill="none" stroke={merge ? VERMILION : GOLD} strokeWidth="4" strokeLinecap="round" />
-      <rect x="260" y="286" width="300" height="104" rx="16" fill={scenario.color} fillOpacity="0.1" stroke={scenario.color} />
-      <text x="410" y="318" textAnchor="middle" fill={scenario.color} fontSize="14" fontWeight="600">{scenario.label} route</text>
-      <text x="410" y="347" textAnchor="middle" fill={INK_PRIMARY} fontSize="12">{merge ? "overlap is being merged" : "clarify, then route correctly"}</text>
-      <text x="410" y="371" textAnchor="middle" fill={INK_SECONDARY} fontSize="11">Mars, Moon, Saturn can overlap without merging scope</text>
+      <path d={merge ? "M320 208 C382 144 438 144 500 208" : "M320 208 C382 262 438 262 500 208"} fill="none" stroke={merge ? VERMILION : GOLD} strokeWidth="6" strokeLinecap="round" />
+      <rect x="238" y="322" width="344" height="116" rx="16" fill={scenario.color} fillOpacity="0.1" stroke={scenario.color} strokeWidth="1.5" />
+      <text x="410" y="358" textAnchor="middle" fill={scenario.color} fontSize="17" fontWeight="700">{scenario.label} route</text>
+      <text x="410" y="392" textAnchor="middle" fill={INK_PRIMARY} fontSize="14" fontWeight="600">{merge ? "overlap is being merged" : "clarify, then route correctly"}</text>
+      <text x="410" y="421" textAnchor="middle" fill={INK_SECONDARY} fontSize="13" fontWeight="600">Mars, Moon, Saturn can overlap without merging scope</text>
 
       {KARAKAS.map((karaka, index) => (
         <g key={karaka.planet}>
-          <circle cx={276 + index * 134} cy="428" r="18" fill={karaka.color} fillOpacity="0.16" stroke={karaka.color} />
-          <text x={276 + index * 134} y="432" textAnchor="middle" fill={karaka.color} fontSize="11" fontWeight="600">{karaka.planet}</text>
+          <circle cx={276 + index * 134} cy="478" r="24" fill={karaka.color} fillOpacity="0.16" stroke={karaka.color} strokeWidth="3" />
+          <text x={276 + index * 134} y="483" textAnchor="middle" fill={karaka.color} fontSize="13" fontWeight="700">{karaka.planet}</text>
         </g>
       ))}
-      <text x="410" y="466" textAnchor="middle" fill={INK_SECONDARY} fontSize="12">Chart evidence answers chart scope; building evidence answers building scope.</text>
+      <text x="410" y="528" textAnchor="middle" fill={INK_SECONDARY} fontSize="14" fontWeight="600">Chart evidence answers chart scope; building evidence answers building scope.</text>
     </svg>
   );
 }

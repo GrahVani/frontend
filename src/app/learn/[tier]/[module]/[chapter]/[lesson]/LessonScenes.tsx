@@ -9,19 +9,45 @@
 
 "use client";
 
-import { VedangaBodyMap } from "@/components/learning-runtime/interactive/tier-1/module-1/vedanga-body-map";
-import { VedangaVsVedantaComparator } from "@/components/learning-runtime/interactive/vedanga-vs-vedanta-comparator";
-import { VedangaRelationshipDiagram } from "@/components/learning-runtime/interactive/tier-1/module-1/vedanga-relationship-diagram";
-import { JyotishaVsWesternVsPopComparator } from "@/components/learning-runtime/interactive/tier-1/module-1/jyotisha-vs-western-vs-pop-comparator";
-import { KarmaTypologyExplorer } from "@/components/learning-runtime/interactive/tier-1/module-1/karma-typology-explorer";
-import { HistoricalTimeline } from "@/components/learning-runtime/interactive/tier-1/module-1/historical-timeline";
-import { BphsRecensionComparator } from "@/components/learning-runtime/interactive/tier-1/module-1/bphs-recension-comparator";
-import { VarahamihiraSkandhaCoverageExplorer } from "@/components/learning-runtime/interactive/tier-1/module-1/varahamihira-skandha-coverage-explorer";
-import { MedievalCodifierRelativeDatingExplorer } from "@/components/learning-runtime/interactive/tier-1/module-1/medieval-codifier-relative-dating-explorer";
-import { ParashariJaiminiParallelTraditionExplorer } from "@/components/learning-runtime/interactive/tier-1/module-1/parashari-jaimini-parallel-tradition-explorer";
-import { FourStreamLandscapeExplorer } from "@/components/learning-runtime/interactive/tier-1/module-1/four-stream-landscape-explorer";
-import { ShuklaTithiStrip } from "@/components/learning-runtime/interactive/shukla-tithi-strip";
+import dynamic from "next/dynamic";
 import type { ReactNode } from "react";
+
+const VedangaBodyMap = dynamic(() =>
+  import("@/components/learning-runtime/interactive/tier-1/module-1/vedanga-body-map").then((m) => m.VedangaBodyMap)
+);
+const VedangaVsVedantaComparator = dynamic(() =>
+  import("@/components/learning-runtime/interactive/vedanga-vs-vedanta-comparator").then((m) => m.VedangaVsVedantaComparator)
+);
+const VedangaRelationshipDiagram = dynamic(() =>
+  import("@/components/learning-runtime/interactive/tier-1/module-1/vedanga-relationship-diagram").then((m) => m.VedangaRelationshipDiagram)
+);
+const JyotishaVsWesternVsPopComparator = dynamic(() =>
+  import("@/components/learning-runtime/interactive/tier-1/module-1/jyotisha-vs-western-vs-pop-comparator").then((m) => m.JyotishaVsWesternVsPopComparator)
+);
+const KarmaTypologyExplorer = dynamic(() =>
+  import("@/components/learning-runtime/interactive/tier-1/module-1/karma-typology-explorer").then((m) => m.KarmaTypologyExplorer)
+);
+const HistoricalTimeline = dynamic(() =>
+  import("@/components/learning-runtime/interactive/tier-1/module-1/historical-timeline").then((m) => m.HistoricalTimeline)
+);
+const BphsRecensionComparator = dynamic(() =>
+  import("@/components/learning-runtime/interactive/tier-1/module-1/bphs-recension-comparator").then((m) => m.BphsRecensionComparator)
+);
+const VarahamihiraSkandhaCoverageExplorer = dynamic(() =>
+  import("@/components/learning-runtime/interactive/tier-1/module-1/varahamihira-skandha-coverage-explorer").then((m) => m.VarahamihiraSkandhaCoverageExplorer)
+);
+const MedievalCodifierRelativeDatingExplorer = dynamic(() =>
+  import("@/components/learning-runtime/interactive/tier-1/module-1/medieval-codifier-relative-dating-explorer").then((m) => m.MedievalCodifierRelativeDatingExplorer)
+);
+const ParashariJaiminiParallelTraditionExplorer = dynamic(() =>
+  import("@/components/learning-runtime/interactive/tier-1/module-1/parashari-jaimini-parallel-tradition-explorer").then((m) => m.ParashariJaiminiParallelTraditionExplorer)
+);
+const FourStreamLandscapeExplorer = dynamic(() =>
+  import("@/components/learning-runtime/interactive/tier-1/module-1/four-stream-landscape-explorer").then((m) => m.FourStreamLandscapeExplorer)
+);
+const ShuklaTithiStrip = dynamic(() =>
+  import("@/components/learning-runtime/interactive/shukla-tithi-strip").then((m) => m.ShuklaTithiStrip)
+);
 
 interface LessonScenesProps {
   slug: string;

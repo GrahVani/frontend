@@ -105,21 +105,6 @@ const DISCIPLINE_STATEMENTS = [
   },
 ] as const;
 
-const CENTER = { x: 260, y: 230 };
-const OUTER_R = 170;
-const PLANET_R = 110;
-
-function houseAngle(house: number) {
-  return Math.PI + (house - 1) * (Math.PI / 6);
-}
-
-function polar(r: number, angle: number) {
-  return {
-    x: CENTER.x + r * Math.cos(angle),
-    y: CENTER.y + r * Math.sin(angle),
-  };
-}
-
 export function TwelveNineThreeAspectExplorer() {
   const [selectedGraha, setSelectedGraha] = useState<string | null>(null);
   const [onlyArc, setOnlyArc] = useState(false);
@@ -222,7 +207,7 @@ export function TwelveNineThreeAspectExplorer() {
             }}
           >
             <div>
-              <p style={eyebrowStyle}>Aspect wheel</p>
+              <p style={eyebrowStyle}>Aspect map</p>
               <h3
                 style={{
                   margin: "0.15rem 0 0",
@@ -547,193 +532,163 @@ function AspectWheel({
   showConvergence: boolean;
   onSelect: (key: string | null) => void;
 }) {
+  const sourceGrahas = GRAHAS.filter((g) => selectedGraha === null || selectedGraha === g.key);
+  const arcRows = sourceGrahas.flatMap((g) =>
+    g.aspects
+      .filter((target) => ARC_HOUSES.includes(target))
+      .map((target) => ({ graha: g, target }))
+  );
+  const nonArcRows = onlyArc
+    ? []
+    : sourceGrahas.flatMap((g) =>
+        g.aspects
+          .filter((target) => !ARC_HOUSES.includes(target))
+          .map((target) => ({ graha: g, target }))
+      );
+  const visibleRows = [...arcRows, ...nonArcRows];
+  const selectedHasArcHit = selectedGraha === null || arcRows.length > 0;
+
+  function sourceY(key: string) {
+    const graha = GRAHAS.find((g) => g.key === key);
+    if (!graha) return 260;
+    return 132 + GRAHAS.findIndex((g) => g.key === key) * 58;
+  }
+
+  function targetY(house: number) {
+    if (house === 12) return 158;
+    if (house === 9) return 308;
+    if (house === 3) return 458;
+    return 308;
+  }
+
   return (
     <svg
-      viewBox="0 0 520 460"
+      viewBox="0 0 820 640"
       role="img"
-      aria-label="Chart T1 aspect wheel focused on the 12-9-3 arc"
+      aria-label="Chart T1 aspect map focused on source planets and the 12-9-3 travel arc"
       style={{
         width: "100%",
-        maxHeight: 420,
+        minHeight: 620,
         margin: "0.65rem auto 0.55rem",
         display: "block",
       }}
     >
-      {/* Outer wheel */}
-      <circle cx={CENTER.x} cy={CENTER.y} r={OUTER_R} fill="none" stroke={HAIRLINE} />
-      <circle cx={CENTER.x} cy={CENTER.y} r={PLANET_R} fill="none" stroke={HAIRLINE} strokeDasharray="4 2" />
+      <rect x="12" y="12" width="796" height="616" rx="18" fill={SURFACE} stroke={HAIRLINE} />
+      <text x="410" y="56" textAnchor="middle" fill={GOLD} fontSize="22" fontWeight="800">
+        12-9-3 Travel Arc Aspect Map
+      </text>
+      <text x="410" y="90" textAnchor="middle" fill={INK_SECONDARY} fontSize="16" fontWeight="700">
+        Read left to right: source planet, classical aspect, target house
+      </text>
 
-      {/* House markers and numbers */}
-      {Array.from({ length: 12 }, (_, i) => i + 1).map((h) => {
-        const angle = houseAngle(h);
-        const outer = polar(OUTER_R + 16, angle);
-        const isArc = ARC_HOUSES.includes(h);
+      <text x="86" y="116" fill={INK_MUTED} fontSize="15" fontWeight="800">Source planets</text>
+      <text x="622" y="116" fill={INK_MUTED} fontSize="15" fontWeight="800">Travel-arc targets</text>
+
+      {GRAHAS.map((g) => {
+        const active = selectedGraha === null || selectedGraha === g.key;
+        const reachesArc = g.aspects.some((h) => ARC_HOUSES.includes(h));
+        const y = sourceY(g.key);
         return (
-          <g key={h}>
-            <line
-              x1={CENTER.x}
-              y1={CENTER.y}
-              x2={polar(OUTER_R, angle).x}
-              y2={polar(OUTER_R, angle).y}
-              stroke={HAIRLINE}
-              strokeWidth={1}
+          <g key={g.key} opacity={active ? 1 : 0.28}>
+            <rect
+              x="42"
+              y={y - 25}
+              width="236"
+              height="50"
+              rx="10"
+              fill={active ? `${g.color}12` : SURFACE}
+              stroke={active ? g.color : HAIRLINE}
+              strokeWidth={active ? 1.5 : 1}
+              style={{ cursor: "pointer" }}
+              onClick={() => onSelect(selectedGraha === g.key ? null : g.key)}
             />
-            <text
-              x={outer.x}
-              y={outer.y + 4}
-              textAnchor="middle"
-              fill={isArc ? ARC_COLORS[h] : INK_MUTED}
-              fontSize={isArc ? 13 : 11}
-              fontWeight={600}
-            >
-              {h}
+            <circle cx="68" cy={y} r="14" fill={g.color} />
+            <text x="68" y={y + 5} textAnchor="middle" fill="#fff" fontSize="11" fontWeight="800">{g.short}</text>
+            <text x="92" y={y - 4} fill={active ? g.color : INK_SECONDARY} fontSize="17" fontWeight="800">
+              {g.name} · house {g.house}
+            </text>
+            <text x="92" y={y + 18} fill={reachesArc ? GREEN : INK_MUTED} fontSize="13" fontWeight="700">
+              {reachesArc ? "reaches travel arc" : "no 12-9-3 hit"}
             </text>
           </g>
         );
       })}
 
-      {/* Arc house sectors */}
-      {ARC_HOUSES.map((h) => {
-        const start = houseAngle(h) - Math.PI / 12;
-        const end = houseAngle(h) + Math.PI / 12;
-        const p1 = polar(OUTER_R, start);
-        const p2 = polar(OUTER_R, end);
-        return (
-          <path
-            key={h}
-            d={`M ${CENTER.x} ${CENTER.y} L ${p1.x} ${p1.y} A ${OUTER_R} ${OUTER_R} 0 0 1 ${p2.x} ${p2.y} Z`}
-            fill={`${ARC_COLORS[h]}${"14"}`}
-            stroke={ARC_COLORS[h]}
-            strokeWidth={2}
+      {ARC_HOUSES.map((house) => (
+        <g key={house}>
+          <rect
+            x="620"
+            y={targetY(house) - 52}
+            width="164"
+            height="104"
+            rx="14"
+            fill={`${ARC_COLORS[house]}14`}
+            stroke={ARC_COLORS[house]}
+            strokeWidth="2"
           />
-        );
-      })}
+          <text x="702" y={targetY(house) - 16} textAnchor="middle" fill={ARC_COLORS[house]} fontSize="24" fontWeight="900">
+            House {house}
+          </text>
+          <text x="702" y={targetY(house) + 22} textAnchor="middle" fill={INK_PRIMARY} fontSize="15" fontWeight="700">
+            {house === 12 ? "foreign stay" : house === 9 ? "long travel" : "movement effort"}
+          </text>
+        </g>
+      ))}
 
-      {/* Convergence overlay: Mercury + Jupiter in 9th */}
-      {showConvergence ? (
-        <>
-          <ConvergenceBand fromHouse={9} toHouse={3} color={GREEN} />
-          <ConvergenceBand fromHouse={9} toHouse={12} color={PURPLE} />
-          <ConvergenceBand fromHouse={9} toHouse={9} color={BLUE} />
-        </>
-      ) : null}
-
-      {/* Aspect lines */}
-      {GRAHAS.map((g) => {
-        const isSelected = selectedGraha === null || selectedGraha === g.key;
-        if (!isSelected) return null;
-        const from = planetPosition(g);
-        return g.aspects.map((target) => {
-          const arcTarget = ARC_HOUSES.includes(target);
-          if (onlyArc && !arcTarget) return null;
-          const to = polar(OUTER_R - 10, houseAngle(target));
-          const opacity = selectedGraha ? 1 : arcTarget ? 0.85 : 0.35;
-          const width = selectedGraha ? 3 : arcTarget ? 2.5 : 1.5;
-          return (
-            <line
-              key={`${g.key}-${target}`}
-              x1={from.x}
-              y1={from.y}
-              x2={to.x}
-              y2={to.y}
-              stroke={arcTarget ? ARC_COLORS[target] : g.color}
+      {visibleRows.map(({ graha, target }, index) => {
+        const arcTarget = ARC_HOUSES.includes(target);
+        const fromY = sourceY(graha.key);
+        const toY = arcTarget ? targetY(target) : 558;
+        const targetX = arcTarget ? 620 : 510 + index * 2;
+        const color = arcTarget ? ARC_COLORS[target] : HAIRLINE;
+        const opacity = arcTarget ? 0.9 : 0.18;
+        const width = arcTarget ? 5 : 1.5;
+        return (
+          <g key={`${graha.key}-${target}`}>
+            <path
+              d={`M 278 ${fromY} C 390 ${fromY}, 500 ${toY}, ${targetX} ${toY}`}
+              fill="none"
+              stroke={color}
               strokeWidth={width}
               strokeOpacity={opacity}
               strokeLinecap="round"
             />
-          );
-        });
-      })}
-
-      {/* Planet nodes */}
-      {GRAHAS.map((g) => {
-        const pos = planetPosition(g);
-        const isSelected = selectedGraha === g.key;
-        const reachesArc = g.aspects.some((h) => ARC_HOUSES.includes(h));
-        return (
-          <g key={g.key}>
-            <circle
-              cx={pos.x}
-              cy={pos.y}
-              r={isSelected ? 18 : 14}
-              fill={g.color}
-              stroke="#fff"
-              strokeWidth={isSelected ? 3 : 2}
-              style={{ cursor: "pointer" }}
-              onClick={() => onSelect(isSelected ? null : g.key)}
-            />
-            <text
-              x={pos.x}
-              y={pos.y + 4}
-              textAnchor="middle"
-              fill="#fff"
-              fontSize={isSelected ? 12 : 10}
-              fontWeight={600}
-              style={{ pointerEvents: "none" }}
-            >
-              {g.short}
-            </text>
-            {reachesArc && !isSelected ? (
-              <circle
-                cx={pos.x + 10}
-                cy={pos.y - 10}
-                r={5}
-                fill={GREEN}
-              />
+            {arcTarget ? (
+              <text x="456" y={(fromY + toY) / 2 - 10} textAnchor="middle" fill={color} fontSize="15" fontWeight="800">
+                {graha.name} aspects {target}
+              </text>
             ) : null}
           </g>
         );
       })}
 
-      {/* Center label */}
-      <text
-        x={CENTER.x}
-        y={CENTER.y + 4}
-        textAnchor="middle"
-        fill={INK_MUTED}
-        fontSize={12}
-        fontWeight={600}
-      >
-        Cancer Lagna
-      </text>
+      {showConvergence ? (
+        <g>
+          <rect x="306" y="514" width="270" height="86" rx="14" fill={`${GOLD}12`} stroke={GOLD} strokeWidth="1.5" />
+          <text x="441" y="543" textAnchor="middle" fill={GOLD} fontSize="17" fontWeight="900">
+            Lordship convergence
+          </text>
+          <text x="441" y="568" textAnchor="middle" fill={INK_PRIMARY} fontSize="14" fontWeight="700">
+            Mercury + Jupiter sit in House 9
+          </text>
+          <text x="441" y="590" textAnchor="middle" fill={INK_MUTED} fontSize="13" fontWeight="700">
+            3rd, 9th, and 12th lordship concentrates there
+          </text>
+        </g>
+      ) : null}
+
+      {!selectedHasArcHit ? (
+        <g>
+          <rect x="306" y="276" width="270" height="76" rx="14" fill={`${VERMILION}10`} stroke={VERMILION} />
+          <text x="441" y="307" textAnchor="middle" fill={VERMILION} fontSize="17" fontWeight="900">
+            No direct 12-9-3 aspect
+          </text>
+          <text x="441" y="332" textAnchor="middle" fill={INK_SECONDARY} fontSize="14" fontWeight="700">
+            Select another graha or turn off Arc only.
+          </text>
+        </g>
+      ) : null}
     </svg>
-  );
-}
-
-function planetPosition(g: (typeof GRAHAS)[number]) {
-  const baseAngle = houseAngle(g.house);
-  const index = GRAHAS.filter((x) => x.house === g.house).findIndex(
-    (x) => x.key === g.key
-  );
-  const count = GRAHAS.filter((x) => x.house === g.house).length;
-  const offset = count === 1 ? 0 : (index - (count - 1) / 2) * 0.18;
-  return polar(PLANET_R, baseAngle + offset);
-}
-
-function ConvergenceBand({
-  fromHouse,
-  toHouse,
-  color,
-}: {
-  fromHouse: number;
-  toHouse: number;
-  color: string;
-}) {
-  const from = polar(PLANET_R - 6, houseAngle(fromHouse));
-  const to = polar(OUTER_R - 18, houseAngle(toHouse));
-  const midX = (from.x + to.x) / 2;
-  const midY = (from.y + to.y) / 2 - 12;
-  return (
-    <g>
-      <path
-        d={`M ${from.x} ${from.y} Q ${midX} ${midY} ${to.x} ${to.y}`}
-        fill="none"
-        stroke={color}
-        strokeWidth={2}
-        strokeDasharray="4 3"
-        strokeOpacity={0.65}
-      />
-    </g>
   );
 }
 
@@ -870,7 +825,7 @@ const cardStyle: CSSProperties = {
 
 const responsiveTwoColumnStyle: CSSProperties = {
   display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 330px), 1fr))",
+  gridTemplateColumns: "minmax(0, 1.75fr) minmax(260px, 0.55fr)",
   gap: "1rem",
   alignItems: "start",
 };

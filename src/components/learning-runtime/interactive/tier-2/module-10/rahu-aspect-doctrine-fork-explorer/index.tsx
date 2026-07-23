@@ -20,6 +20,7 @@ const HAIRLINE = "var(--gl-gold-hairline)";
 const SURFACE = "var(--gl-card-surface-solid)";
 const GREEN = "#2F7D55";
 const GOLD = "#B88421";
+const GOLD_SOFT = "#FFF6DF";
 const VERMILION = "#A23A1E";
 const BLUE = "#356CAB";
 const PURPLE = "#6B5AA8";
@@ -200,7 +201,7 @@ export function RahuAspectDoctrineForkExplorer() {
             type="button"
             onClick={() => setShowHouse9((v) => !v)}
             style={{
-              ...buttonStyle(showHouse9, INK_MUTED),
+              ...buttonStyle(showHouse9, GREEN),
               marginTop: "0.55rem",
             }}
           >
@@ -481,14 +482,14 @@ function AspectSvg({
               cx="0"
               cy="0"
               r="28"
-              fill={reached ? `${PURPLE}22` : `${INK_MUTED}12`}
-              stroke={reached ? PURPLE : INK_MUTED}
+              fill={reached ? `${PURPLE}22` : GOLD_SOFT}
+              stroke={reached ? PURPLE : GOLD}
               strokeWidth={2}
             />
-            <text x="0" y="-5" textAnchor="middle" fill={reached ? PURPLE : INK_MUTED} fontSize="11" fontWeight="600">
+            <text x="0" y="-5" textAnchor="middle" fill={reached ? PURPLE : GOLD} fontSize="11" fontWeight="600">
               {h}th
             </text>
-            <text x="0" y="8" textAnchor="middle" fill={INK_PRIMARY} fontSize="9" fontWeight="600">
+            <text x="0" y="8" textAnchor="middle" fill={INK_SECONDARY} fontSize="9" fontWeight="600">
               {data.sign}
             </text>
             {reached && data.occupant ? (
@@ -553,8 +554,8 @@ function buttonStyle(active: boolean, color: string): CSSProperties {
     gap: "0.45rem",
     border: `1px solid ${active ? color : HAIRLINE}`,
     borderRadius: 8,
-    background: active ? color : "transparent",
-    color: active ? "#fff" : INK_SECONDARY,
+    background: active ? `${color}${"14"}` : "transparent",
+    color: active ? color : INK_SECONDARY,
     padding: "0.55rem 0.75rem",
     fontWeight: 600,
     cursor: "pointer",

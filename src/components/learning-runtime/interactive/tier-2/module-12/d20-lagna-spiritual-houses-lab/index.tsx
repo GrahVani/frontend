@@ -168,31 +168,31 @@ export function D20LagnaSpiritualHousesLab() {
 
 function HouseMapSvg({ house, status, useD20Lagna }: { house: (typeof HOUSE_DATA)[HouseKey]; status: { label: string; color: string }; useD20Lagna: boolean }) {
   return (
-    <svg viewBox="0 0 820 500" role="img" aria-label="D20 house map from Gemini Lagna" style={{ width: "100%", minHeight: 390, display: "block" }}>
-      <rect x="12" y="12" width="796" height="476" rx="20" fill={SURFACE} stroke={HAIRLINE} />
-      <text x="410" y="48" textAnchor="middle" fill={GOLD} fontSize="13" fontWeight="600">CHART S1 D20 HOUSE MAP</text>
-      <text x="410" y="78" textAnchor="middle" fill={status.color} fontSize="18" fontWeight="600">{status.label}</text>
-      <text x="410" y="106" textAnchor="middle" fill={INK_MUTED} fontSize="11">{useD20Lagna ? "Anchor: Gemini D20 Lagna" : "Wrong anchor: Taurus D1 Lagna"}</text>
+    <svg viewBox="0 0 760 560" role="img" aria-label="D20 house map from Gemini Lagna" style={{ width: "100%", minHeight: 560, display: "block" }}>
+      <rect x="12" y="12" width="736" height="536" rx="18" fill={SURFACE} stroke={HAIRLINE} />
+      <text x="380" y="48" textAnchor="middle" fill={GOLD} fontSize="15" fontWeight="700">CHART S1 D20 HOUSE MAP</text>
+      <text x="380" y="78" textAnchor="middle" fill={status.color} fontSize="21" fontWeight="700">{status.label}</text>
+      <text x="380" y="106" textAnchor="middle" fill={INK_SECONDARY} fontSize="14" fontWeight="600">{useD20Lagna ? "Anchor: Gemini D20 Lagna" : "Wrong anchor: Taurus D1 Lagna"}</text>
 
       {ORDER.map((sign, index) => {
         const angle = (index / 12) * Math.PI * 2 - Math.PI / 2;
-        const x = 410 + Math.cos(angle) * 160;
-        const y = 262 + Math.sin(angle) * 132;
+        const x = 380 + Math.cos(angle) * 170;
+        const y = 292 + Math.sin(angle) * 164;
         const active = sign === house.sign;
         return (
           <g key={sign}>
-            <circle cx={x} cy={y} r={active ? 30 : 22} fill={active ? house.color : SURFACE} fillOpacity={active ? 0.18 : 1} stroke={active ? house.color : HAIRLINE} strokeWidth={active ? 3 : 1} />
-            <text x={x} y={y - 3} textAnchor="middle" fill={active ? house.color : INK_SECONDARY} fontSize="10" fontWeight={active ? "600" : "400"}>{index + 1}</text>
-            <text x={x} y={y + 12} textAnchor="middle" fill={active ? house.color : INK_MUTED} fontSize="9">{sign.slice(0, 3)}</text>
+            <circle cx={x} cy={y} r={active ? 35 : 27} fill={active ? house.color : SURFACE} fillOpacity={active ? 0.18 : 1} stroke={active ? house.color : HAIRLINE} strokeWidth={active ? 3 : 1.5} />
+            <text x={x} y={y - 4} textAnchor="middle" fill={active ? house.color : INK_PRIMARY} fontSize="13" fontWeight={active ? "700" : "600"}>{index + 1}</text>
+            <text x={x} y={y + 15} textAnchor="middle" fill={active ? house.color : INK_SECONDARY} fontSize="11" fontWeight="600">{sign.slice(0, 3)}</text>
           </g>
         );
       })}
 
-      <circle cx="410" cy="262" r="58" fill={house.color} fillOpacity="0.12" stroke={house.color} />
-      <text x="410" y="246" textAnchor="middle" fill={house.color} fontSize="13" fontWeight="600">{house.label}</text>
-      <text x="410" y="268" textAnchor="middle" fill={INK_PRIMARY} fontSize="12">{house.house} / {house.sign}</text>
-      <text x="410" y="289" textAnchor="middle" fill={INK_SECONDARY} fontSize="11">{house.occupants}</text>
-      <text x="410" y="452" textAnchor="middle" fill={INK_SECONDARY} fontSize="12">Read the D20 as its own chart: house labels begin from the computed D20 Lagna.</text>
+      <circle cx="380" cy="292" r="72" fill={house.color} fillOpacity="0.12" stroke={house.color} strokeWidth="1.5" />
+      <text x="380" y="270" textAnchor="middle" fill={house.color} fontSize="15" fontWeight="700">{house.label}</text>
+      <text x="380" y="298" textAnchor="middle" fill={INK_PRIMARY} fontSize="15" fontWeight="600">{house.house} / {house.sign}</text>
+      <text x="380" y="326" textAnchor="middle" fill={INK_SECONDARY} fontSize="13" fontWeight="600">{house.occupants}</text>
+      <text x="380" y="514" textAnchor="middle" fill={INK_SECONDARY} fontSize="13" fontWeight="600">Read the D20 as its own chart: house labels begin from the computed D20 Lagna.</text>
     </svg>
   );
 }

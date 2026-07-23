@@ -20,6 +20,8 @@ const HAIRLINE = "var(--gl-gold-hairline)";
 const SURFACE = "var(--gl-card-surface-solid)";
 const GREEN = "#2F7D55";
 const GOLD = "#B88421";
+const NEUTRAL = "#6B5330";
+const NEUTRAL_SOFT = "#FFF7E8";
 const VERMILION = "#A23A1E";
 const BLUE = "#356CAB";
 const PURPLE = "#6B5AA8";
@@ -44,8 +46,12 @@ const TIER_META: Record<
   multi: { label: "Multi-yes — strongest", color: GREEN, short: "multi-yes" },
   two: { label: "Two-yes", color: BLUE, short: "two-yes" },
   single: { label: "Single-indicator", color: GOLD, short: "single" },
-  none: { label: "No connection", color: INK_MUTED, short: "none" },
+  none: { label: "No connection", color: NEUTRAL, short: "none" },
 };
+
+function tierFill(tier: Tier) {
+  return tier === "none" ? NEUTRAL_SOFT : `${TIER_META[tier].color}${"20"}`;
+}
 
 const MIN_AGE = 22;
 const MAX_AGE = 42;
@@ -446,7 +452,7 @@ export function DashaTimingForeignSettlementSweep() {
             <CountPill label="Multi-yes" value={counts.multi} color={GREEN} />
             <CountPill label="Two-yes" value={counts.two} color={BLUE} />
             <CountPill label="Single" value={counts.single} color={GOLD} />
-            <CountPill label="None" value={counts.none} color={INK_MUTED} />
+            <CountPill label="None" value={counts.none} color={NEUTRAL} />
           </div>
         </section>
 
@@ -617,7 +623,7 @@ export function DashaTimingForeignSettlementSweep() {
                           width={w}
                           height={28}
                           rx={4}
-                          fill={`${meta.color}${"20"}`}
+                          fill={tierFill(s.tier)}
                           stroke={meta.color}
                           strokeWidth={selectedId === s.id ? 2.5 : 1.5}
                           style={{ cursor: "pointer" }}
@@ -656,7 +662,7 @@ export function DashaTimingForeignSettlementSweep() {
                         width={w}
                         height={10}
                         rx={3}
-                        fill={`${meta.color}${"20"}`}
+                         fill={tierFill(s.tier)}
                         stroke={meta.color}
                         strokeDasharray="3 2"
                         strokeWidth={1.5}
@@ -902,6 +908,7 @@ function CountPill({
   value: number;
   color: string;
 }) {
+  const isNeutral = color === NEUTRAL;
   return (
     <div
       style={{
@@ -912,7 +919,7 @@ function CountPill({
         padding: "0.55rem 0.75rem",
         borderRadius: 8,
         border: `1px solid ${color}`,
-        background: `${color}${"0A"}`,
+        background: isNeutral ? NEUTRAL_SOFT : `${color}${"0A"}`,
         color,
         fontSize: "0.85rem",
         fontWeight: 600,
@@ -924,8 +931,9 @@ function CountPill({
           minWidth: 22,
           height: 22,
           borderRadius: "50%",
-          background: color,
-          color: "#fff",
+          background: isNeutral ? SURFACE : color,
+          color: isNeutral ? color : "#fff",
+          border: isNeutral ? `1px solid ${color}` : "none",
           display: "inline-flex",
           alignItems: "center",
           justifyContent: "center",

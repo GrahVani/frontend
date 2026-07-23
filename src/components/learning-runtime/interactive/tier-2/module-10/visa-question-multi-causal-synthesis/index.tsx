@@ -251,22 +251,70 @@ export function VisaQuestionMultiCausalSynthesis() {
           <Scale size={18} style={{ color: GOLD }} aria-hidden="true" />
           <p style={eyebrowStyle}>The three-pillar frame</p>
         </div>
-        <svg viewBox="0 0 640 120" style={{ width: "100%", height: "auto", marginTop: "0.75rem" }} aria-label="Three pillars holding a balanced answer: structural synthesis, multi-causal disclosure, and competence boundary">
-          <rect x="60" y="30" width="24" height="80" rx="3" fill={`${BLUE}${"18"}`} stroke={BLUE} strokeWidth="1.5" />
-          <rect x="260" y="30" width="24" height="80" rx="3" fill={`${GOLD}${"18"}`} stroke={GOLD} strokeWidth="1.5" />
-          <rect x="460" y="30" width="24" height="80" rx="3" fill={`${PURPLE}${"18"}`} stroke={PURPLE} strokeWidth="1.5" />
-          <rect x="20" y="20" width="600" height="18" rx="3" fill={SURFACE} stroke={HAIRLINE} strokeWidth="1.5" />
-          <text x="320" y="32" textAnchor="middle" fontSize="10" fill={INK_SECONDARY} fontWeight={600}>
+        <svg viewBox="0 0 780 230" style={{ width: "100%", minHeight: 260, marginTop: "0.75rem", display: "block" }} aria-label="Three pillars holding a balanced answer: structural synthesis, multi-causal disclosure, and competence boundary">
+          <rect x="28" y="24" width="724" height="42" rx="8" fill={`${GOLD}${"0F"}`} stroke={HAIRLINE} strokeWidth="2" />
+          <text x="390" y="50" textAnchor="middle" fontSize="18" fill={INK_PRIMARY} fontWeight={700}>
             Balanced honest answer
           </text>
-          <text x="72" y="105" textAnchor="middle" fontSize="9" fill={INK_SECONDARY}>
-            Structural synthesis
-          </text>
-          <text x="272" y="105" textAnchor="middle" fontSize="9" fill={INK_SECONDARY}>
-            Multi-causal disclosure
-          </text>
-          <text x="472" y="105" textAnchor="middle" fontSize="9" fill={INK_SECONDARY}>
-            Competence boundary
+
+          {[
+            {
+              x: 84,
+              color: BLUE,
+              title: "Pillar 1",
+              label: "Structural",
+              detail: "chart synthesis",
+            },
+            {
+              x: 300,
+              color: GOLD,
+              title: "Pillar 2",
+              label: "Multi-causal",
+              detail: "disclosure",
+            },
+            {
+              x: 516,
+              color: PURPLE,
+              title: "Pillar 3",
+              label: "Competence",
+              detail: "boundary",
+            },
+          ].map((pillar) => (
+            <g key={pillar.title}>
+              <line
+                x1={pillar.x + 90}
+                y1="66"
+                x2={pillar.x + 90}
+                y2="86"
+                stroke={pillar.color}
+                strokeWidth="3"
+                strokeLinecap="round"
+              />
+              <rect
+                x={pillar.x}
+                y="86"
+                width="180"
+                height="104"
+                rx="10"
+                fill={`${pillar.color}${"12"}`}
+                stroke={pillar.color}
+                strokeWidth="2"
+              />
+              <text x={pillar.x + 90} y="118" textAnchor="middle" fontSize="15" fill={pillar.color} fontWeight={700}>
+                {pillar.title}
+              </text>
+              <text x={pillar.x + 90} y="146" textAnchor="middle" fontSize="18" fill={INK_PRIMARY} fontWeight={700}>
+                {pillar.label}
+              </text>
+              <text x={pillar.x + 90} y="170" textAnchor="middle" fontSize="15" fill={INK_SECONDARY} fontWeight={600}>
+                {pillar.detail}
+              </text>
+            </g>
+          ))}
+
+          <line x1="84" y1="202" x2="696" y2="202" stroke={HAIRLINE} strokeWidth="2" strokeLinecap="round" />
+          <text x="390" y="222" textAnchor="middle" fontSize="13" fill={INK_MUTED} fontWeight={600}>
+            All three are required; removing one weakens the answer.
           </text>
         </svg>
       </section>

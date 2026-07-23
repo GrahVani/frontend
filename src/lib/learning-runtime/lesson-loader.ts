@@ -142,6 +142,10 @@ function normalizeFrontMatter(raw: Record<string, unknown>): LessonFrontMatter {
   const interactive = rawInteractive
     ? {
         enabled: Boolean(rawInteractive.enabled),
+        component:
+          typeof rawInteractive.component === "string"
+            ? rawInteractive.component
+            : undefined,
         componentType:
           typeof rawInteractive.component_type === "string"
             ? rawInteractive.component_type
