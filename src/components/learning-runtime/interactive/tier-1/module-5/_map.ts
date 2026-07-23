@@ -8,6 +8,7 @@ export const map: Record<string, () => Promise<any>> = {
   "dignity-wheel": () => import("./dignity-wheel/index"),
   "friendship-dignity-grid": () => import("./friendship-dignity-grid/index"),
   "friendship-matrix": () => import("./friendship-matrix/index"),
+  "graha-anatomy-explorer": () => import("./graha-anatomy-explorer/index"),
   "gulika-calculator": () => import("./gulika-calculator/index"),
   "guru-dignity-wheel": () => import("./guru-dignity-wheel/index"),
   "jupiter-evaluator": () => import("./jupiter-evaluator/index"),
