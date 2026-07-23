@@ -59,18 +59,20 @@ const TEACH_BACK_STEPS: Record<StepKey, { label: string; detail: string; icon: R
   },
 };
 
-const RIGOR: Record<RigorKey, { label: string; detail: string; bar: string; example: string }> = {
+const RIGOR: Record<RigorKey, { label: string; detail: string; bar: string; example: string; color: string }> = {
   vaidika: {
     label: "Vaidika",
     detail: "Strict svara (Vedic pitch-accent) is part of the sound itself.",
     bar: "Exact pitch-accent, consonants, syllable-count, and pace.",
     example: "Gāyatrī — requires precise svara.",
+    color: VERMILION,
   },
   namaskara: {
     label: "Devotional / namaskāra",
     detail: "More forgiving of pitch, exacting on consonants and syllable-count.",
     bar: "Correct syllables and consonants, steady unhurried pace.",
     example: "Oṁ Bṛhaspataye Namaḥ — no Vedic svara required.",
+    color: BLUE,
   },
 };
 

@@ -619,7 +619,6 @@ function LordWheel({
 
       <foreignObject x="60" y="260" width="640" height="58">
         <div
-          xmlns="http://www.w3.org/1999/xhtml"
           style={{
             display: "flex",
             gap: "6px",

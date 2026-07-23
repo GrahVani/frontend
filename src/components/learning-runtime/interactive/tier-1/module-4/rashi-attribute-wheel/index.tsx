@@ -42,9 +42,8 @@ const ELEMENT_SWATCHES: Record<string, string> = {
   Water: "#5C8FA1",
 };
 
-/* ─── Lesson context for lesson-aware defaults ─── */
-export { LessonContext, LessonProvider, useLessonSlug } from "@/components/learning-runtime/interactive/lib/lesson-context";
-
+import { LessonContext, LessonProvider, useLessonSlug } from "@/components/learning-runtime/interactive/lib/lesson-context";
+export { LessonContext, LessonProvider, useLessonSlug };
 function getDefaultRashiFromSlug(slug?: string): number {
   const map: Record<string, number> = {
     "mesha-aries-the-fiery-cardinal": 1,
