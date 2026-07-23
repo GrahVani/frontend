@@ -53,7 +53,7 @@ export function useLessonSlug() {
   return useContext(LessonContext).slug;
 }
 
-function getDefaultRashiFromSlug(slug: string): number {
+function getDefaultRashiFromSlug(slug?: string): number {
   const map: Record<string, number> = {
     "mesha-aries-the-fiery-cardinal": 1,
     "vrishabha-taurus-the-earthen-fixed": 2,
@@ -68,7 +68,7 @@ function getDefaultRashiFromSlug(slug: string): number {
     "kumbha-aquarius-the-airy-fixed": 11,
     "meena-pisces-the-watery-mutable": 12,
   };
-  return map[slug] ?? 1;
+  return (slug && map[slug]) ?? 1;
 }
 
 /* ─── SVG Wheel sub-component ─── */
