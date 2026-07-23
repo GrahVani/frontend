@@ -28,9 +28,13 @@ const HAIRLINE = "var(--gl-gold-hairline)";
 const SURFACE = "var(--gl-card-surface-solid)";
 const ACCENT = "var(--gl-gold-accent)";
 const VERMILION = "var(--gl-vermilion-accent)";
+const VERMILION_TINT = "#FDEBE6";
 const GREEN = "#2F7D55";
+const GREEN_TINT = "#EAF4EE";
 const BLUE = "#356CAB";
+const BLUE_TINT = "#EAF0F8";
 const GOLD = "#B88421";
+const GOLD_TINT = "#FFF8E8";
 const PURPLE = "#6B5AA8";
 
 const CLAIMS: { id: string; text: string; category: ClaimCategory; explanation: string }[] = [
@@ -158,7 +162,7 @@ export function IncorporationChartOrientationWorkbench() {
                     padding: "0.75rem",
                     borderRadius: 8,
                     border: `1px solid ${selected ? categoryColor(selected) : HAIRLINE}`,
-                    background: selected ? `${categoryColor(selected)}06` : SURFACE,
+                    background: selected ? tintForColor(categoryColor(selected)) : SURFACE,
                   }}
                 >
                   <p style={{ margin: 0, color: INK_PRIMARY, fontSize: "0.9rem", lineHeight: 1.55 }}>{claim.text}</p>
@@ -181,7 +185,7 @@ export function IncorporationChartOrientationWorkbench() {
                         marginTop: "0.55rem",
                         padding: "0.55rem",
                         borderRadius: 6,
-                        background: selected === "fabrication" ? `${VERMILION}10` : `${GREEN}10`,
+                        background: selected === "fabrication" ? VERMILION_TINT : GREEN_TINT,
                         border: `1px solid ${selected === "fabrication" ? VERMILION : GREEN}`,
                         color: selected === "fabrication" ? VERMILION : GREEN,
                         fontSize: "0.85rem",
@@ -204,7 +208,7 @@ export function IncorporationChartOrientationWorkbench() {
           </div>
 
           {allClassified && CLAIMS.every((c) => classifications[c.id] === c.category) && (
-            <div style={{ marginTop: "0.75rem", padding: "0.75rem", borderRadius: 8, background: `${GREEN}10`, border: `1px solid ${GREEN}`, color: GREEN, fontSize: "0.9rem" }}>
+            <div style={{ marginTop: "0.75rem", padding: "0.75rem", borderRadius: 8, background: GREEN_TINT, border: `1px solid ${GREEN}`, color: GREEN, fontSize: "0.9rem" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                 <BadgeCheck size={18} aria-hidden="true" />
                 <span style={{ fontWeight: 600 }}>All claims sorted correctly.</span>
@@ -247,7 +251,7 @@ export function IncorporationChartOrientationWorkbench() {
                     padding: "0.65rem",
                     borderRadius: 8,
                     border: `1px solid ${answer !== null ? (correct ? GREEN : VERMILION) : HAIRLINE}`,
-                    background: answer !== null ? (correct ? `${GREEN}06` : `${VERMILION}06`) : SURFACE,
+                    background: answer !== null ? (correct ? GREEN_TINT : VERMILION_TINT) : SURFACE,
                   }}
                 >
                   <div style={{ color: INK_PRIMARY, fontWeight: 600, fontSize: "0.9rem" }}>{item.label}</div>
@@ -275,7 +279,7 @@ export function IncorporationChartOrientationWorkbench() {
                         marginTop: "0.5rem",
                         padding: "0.45rem",
                         borderRadius: 6,
-                        background: correct ? `${GREEN}10` : `${VERMILION}10`,
+                        background: correct ? GREEN_TINT : VERMILION_TINT,
                         color: correct ? GREEN : VERMILION,
                         fontSize: "0.8rem",
                       }}
@@ -289,7 +293,7 @@ export function IncorporationChartOrientationWorkbench() {
           </div>
 
           {allCarryOverAnswered && allCarryOverCorrect && (
-            <div style={{ marginTop: "0.75rem", padding: "0.75rem", borderRadius: 8, background: `${GREEN}10`, border: `1px solid ${GREEN}`, color: GREEN, fontSize: "0.9rem" }}>
+            <div style={{ marginTop: "0.75rem", padding: "0.75rem", borderRadius: 8, background: GREEN_TINT, border: `1px solid ${GREEN}`, color: GREEN, fontSize: "0.9rem" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                 <BadgeCheck size={18} aria-hidden="true" />
                 <span style={{ fontWeight: 600 }}>All carry-over decisions are correct.</span>
@@ -336,7 +340,7 @@ export function IncorporationChartOrientationWorkbench() {
           </div>
 
           {scenarioChoice === "acceptable" && (
-            <div style={{ marginTop: "0.75rem", padding: "0.75rem", borderRadius: 8, background: `${VERMILION}10`, border: `1px solid ${VERMILION}`, color: VERMILION, fontSize: "0.9rem" }}>
+            <div style={{ marginTop: "0.75rem", padding: "0.75rem", borderRadius: 8, background: VERMILION_TINT, border: `1px solid ${VERMILION}`, color: VERMILION, fontSize: "0.9rem" }}>
               <div style={{ display: "flex", alignItems: "start", gap: "0.5rem" }}>
                 <AlertTriangle size={18} aria-hidden="true" style={{ flexShrink: 0 }} />
                 <span>
@@ -346,7 +350,7 @@ export function IncorporationChartOrientationWorkbench() {
             </div>
           )}
           {scenarioChoice === "fabrication" && (
-            <div style={{ marginTop: "0.75rem", padding: "0.75rem", borderRadius: 8, background: `${GREEN}10`, border: `1px solid ${GREEN}`, color: GREEN, fontSize: "0.9rem" }}>
+            <div style={{ marginTop: "0.75rem", padding: "0.75rem", borderRadius: 8, background: GREEN_TINT, border: `1px solid ${GREEN}`, color: GREEN, fontSize: "0.9rem" }}>
               <div style={{ display: "flex", alignItems: "start", gap: "0.5rem" }}>
                 <BadgeCheck size={18} aria-hidden="true" style={{ flexShrink: 0 }} />
                 <span>
@@ -382,7 +386,7 @@ export function IncorporationChartOrientationWorkbench() {
           />
         </div>
         {allCommitted && (
-          <div style={{ marginTop: "0.75rem", padding: "0.75rem", borderRadius: 8, background: `${GREEN}10`, border: `1px solid ${GREEN}`, color: GREEN, fontSize: "0.9rem" }}>
+          <div style={{ marginTop: "0.75rem", padding: "0.75rem", borderRadius: 8, background: GREEN_TINT, border: `1px solid ${GREEN}`, color: GREEN, fontSize: "0.9rem" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
               <BadgeCheck size={18} aria-hidden="true" />
               <span style={{ fontWeight: 600 }}>Orientation complete. You are ready for the founder-incorporation overlay.</span>
@@ -401,28 +405,28 @@ function categoryColor(category: ClaimCategory): string {
 function Mc6Wheel() {
   const [hovered, setHovered] = useState<number | null>(null);
   const positions: Record<number, { x: number; y: number }> = {
-    1: { x: 100, y: 100 }, 2: { x: 55, y: 80 }, 3: { x: 35, y: 45 },
-    4: { x: 60, y: 20 }, 5: { x: 100, y: 10 }, 6: { x: 140, y: 20 },
-    7: { x: 165, y: 45 }, 8: { x: 145, y: 80 }, 9: { x: 125, y: 115 },
-    10: { x: 100, y: 145 }, 11: { x: 75, y: 115 }, 12: { x: 35, y: 115 },
+    1: { x: 100, y: 110 }, 2: { x: 55, y: 90 }, 3: { x: 35, y: 55 },
+    4: { x: 60, y: 30 }, 5: { x: 100, y: 20 }, 6: { x: 140, y: 30 },
+    7: { x: 165, y: 55 }, 8: { x: 145, y: 90 }, 9: { x: 125, y: 125 },
+    10: { x: 100, y: 155 }, 11: { x: 75, y: 125 }, 12: { x: 35, y: 125 },
   };
 
   return (
     <div style={{ textAlign: "center" }}>
-      <svg viewBox="0 0 200 170" style={{ width: "100%", maxWidth: 240, height: "auto" }}>
-        <circle cx="100" cy="85" r="70" fill="none" stroke={HAIRLINE} strokeWidth={1.5} />
+      <svg viewBox="0 0 200 185" style={{ width: "100%", maxWidth: 240, height: "auto", overflow: "visible" }}>
+        <circle cx="100" cy="95" r="70" fill="none" stroke={HAIRLINE} strokeWidth={1.5} />
         {Array.from({ length: 12 }).map((_, i) => {
           const h = i + 1;
           const pos = positions[h];
           const placement = MC6_PLACEMENTS.find((p) => p.house === h);
           return (
             <g key={h}>
-              <line x1={100} y1={85} x2={pos.x} y2={pos.y} stroke={HAIRLINE} strokeWidth={1} opacity={0.5} />
+              <line x1={100} y1={95} x2={pos.x} y2={pos.y} stroke={HAIRLINE} strokeWidth={1} opacity={0.5} />
               <circle
                 cx={pos.x}
                 cy={pos.y}
                 r={placement ? 16 : 10}
-                fill={placement ? `${placement.color}20` : SURFACE}
+                fill={placement ? tintForColor(placement.color) : SURFACE}
                 stroke={placement ? placement.color : HAIRLINE}
                 strokeWidth={placement ? 2 : 1}
                 style={{ cursor: placement ? "pointer" : "default" }}
@@ -474,7 +478,7 @@ function CommitmentRow({ checked, onClick, label }: { checked: boolean; onClick:
         padding: "0.65rem",
         borderRadius: 6,
         border: `1px solid ${checked ? GREEN : HAIRLINE}`,
-        background: checked ? `${GREEN}08` : SURFACE,
+        background: checked ? GREEN_TINT : SURFACE,
         color: INK_PRIMARY,
         textAlign: "left",
         cursor: "pointer",
@@ -553,6 +557,14 @@ function buttonStyle(primary: boolean, color: string): CSSProperties {
   };
 }
 
+function tintForColor(color: string): string {
+  if (color === VERMILION) return VERMILION_TINT;
+  if (color === GREEN) return GREEN_TINT;
+  if (color === BLUE) return BLUE_TINT;
+  if (color === GOLD || color === ACCENT) return GOLD_TINT;
+  return `${color}12`;
+}
+
 function smallChipStyle(active: boolean, color: string): CSSProperties {
   return {
     display: "inline-flex",
@@ -561,7 +573,7 @@ function smallChipStyle(active: boolean, color: string): CSSProperties {
     padding: "0.35rem 0.6rem",
     borderRadius: 999,
     border: `1px solid ${active ? color : HAIRLINE}`,
-    background: active ? `${color}12` : SURFACE,
+    background: active ? tintForColor(color) : SURFACE,
     color: active ? color : INK_PRIMARY,
     fontSize: "0.8rem",
     fontWeight: 600,

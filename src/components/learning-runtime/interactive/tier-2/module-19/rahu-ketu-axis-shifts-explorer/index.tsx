@@ -463,7 +463,7 @@ function NodalWheelSvg({
   };
 
   return (
-    <svg viewBox="0 0 360 360" role="img" aria-label="Whole-sign nodal axis wheel" style={{ width: "100%", maxHeight: 360, margin: "0.55rem auto 0.25rem", display: "block" }}>
+    <svg viewBox="0 0 360 390" role="img" aria-label="Whole-sign nodal axis wheel" style={{ width: "100%", maxHeight: 390, margin: "0.55rem auto 0.25rem", display: "block" }}>
       <circle cx={cx} cy={cy} r={outerR + 6} fill="transparent" stroke={HAIRLINE} strokeWidth="1.5" />
       {Array.from({ length: 12 }, (_, i) => (
         <line
@@ -519,7 +519,7 @@ function NodalWheelSvg({
         strokeWidth="2"
       />
       {/* Center Lagna glyph */}
-      <circle cx={cx} cy={cy} r={22} fill={`${LAGNA}18`} stroke={LAGNA} strokeWidth="2" />
+      <circle cx={cx} cy={cy} r={22} fill="#FBF5E8" stroke={LAGNA} strokeWidth="2" />
       <text x={cx} y={cy + 4} textAnchor="middle" fill={LAGNA} fontSize="10" fontWeight={600}>Lagna</text>
       {/* Markers */}
       {Object.entries(signMarkers).map(([signStr, markers]) => {
@@ -530,7 +530,7 @@ function NodalWheelSvg({
           const pos = pointOnCircle(sign + offset / 30, innerR - 26, cx, cy);
           return (
             <g key={m.key}>
-              <circle cx={pos.x} cy={pos.y} r={m.ring ? 15 : 12} fill={`${m.color}22`} stroke={m.color} strokeWidth={m.ring ? 3 : 2} />
+              <circle cx={pos.x} cy={pos.y} r={m.ring ? 15 : 12} fill="#FBF5E8" stroke={m.color} strokeWidth={m.ring ? 3 : 2} />
               <text x={pos.x} y={pos.y + 3} textAnchor="middle" fill={m.color} fontSize="8" fontWeight={600}>
                 {m.label}
               </text>
@@ -539,14 +539,14 @@ function NodalWheelSvg({
         });
       })}
       {/* Legend */}
-      <g transform="translate(10, 330)">
+      <g transform="translate(10, 350)">
         <LegendItem color={RAHU} label="natal Rāhu" x={0} />
         <LegendItem color={KETU} label="natal Ketu" x={70} />
         <LegendItem color={RAHU} ring label="transit Rāhu" x={135} />
         <LegendItem color={KETU} ring label="transit Ketu" x={215} />
         <LegendItem color={MOON} label="Moon" x={290} />
       </g>
-      <g transform="translate(10, 348)">
+      <g transform="translate(10, 368)">
         <LegendItem color={SUN} label="Sun" x={0} />
         <LegendItem color={LAGNA} label="Lagna" x={55} />
         <LegendItem color={DASHA} label="daśā lord" x={110} />
@@ -558,7 +558,7 @@ function NodalWheelSvg({
 function LegendItem({ color, label, x, ring }: { color: string; label: string; x: number; ring?: boolean }) {
   return (
     <g transform={`translate(${x} 0)`}>
-      <circle cx="6" cy="-4" r={ring ? 6 : 5} fill={`${color}22`} stroke={color} strokeWidth={ring ? 2 : 1.5} />
+      <circle cx="6" cy="-4" r={ring ? 6 : 5} fill="#FBF5E8" stroke={color} strokeWidth={ring ? 2 : 1.5} />
       <text x="16" y="-1" fill={INK_SECONDARY} fontSize="9" fontWeight={600}>{label}</text>
     </g>
   );

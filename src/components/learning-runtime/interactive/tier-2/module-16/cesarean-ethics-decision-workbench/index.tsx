@@ -28,6 +28,10 @@ const BLUE = "#356CAB";
 const GREEN = "#2F7D55";
 const GOLD = "#B88421";
 const VERMILION = "#A23A1E";
+const VERMILION_TINT = "#FDEBE6";
+const GREEN_TINT = "#EAF4EE";
+const BLUE_TINT = "#EAF0F8";
+const GOLD_TINT = "#FFF8E8";
 
 type RequestKey = "A" | "B" | "C";
 type PanelKey = "response" | "combined" | "pcpndt";
@@ -82,6 +86,14 @@ const REQUESTS: RequestType[] = [
 
 const COMBINED_SCRIPT = `I understand the hope behind this question, and I'm not going to make you feel bad for asking. But I have to be honest about two separate things. First: if any part of what you're asking involves finding out or influencing your baby's sex, I can't help with that in any way -- under the PCPNDT Act, even hinting at it is a serious criminal offence, and beyond the law, I don't think astrology can reliably tell you this anyway, so it would be a doubled harm, not a considered answer. Second, and separately: I won't help pick a birth-time by scheduling a cesarean for an astrological outcome, even a wonderful one like a great career. That's a medical decision, and it has to be made by your doctor on safety grounds alone -- not around a chart. What I can genuinely offer: if your doctor has independently decided a cesarean is medically needed and has given you a window of safe times, I'm glad to look at that window with you. And once your baby is born, I'd love to look at their actual chart and talk about how to support them as they grow.`;
 
+function tintForColor(color: string): string {
+  if (color === VERMILION) return VERMILION_TINT;
+  if (color === GREEN) return GREEN_TINT;
+  if (color === BLUE) return BLUE_TINT;
+  if (color === GOLD || color === ACCENT) return GOLD_TINT;
+  return SURFACE;
+}
+
 export function CesareanEthicsDecisionWorkbench() {
   const [request, setRequest] = useState<RequestKey>("A");
   const [showMistake, setShowMistake] = useState(false);
@@ -121,7 +133,7 @@ export function CesareanEthicsDecisionWorkbench() {
             gap: "0.375rem",
             padding: "0.25rem 0.5rem",
             borderRadius: 4,
-            background: `${BLUE}10`,
+            background: BLUE_TINT,
             color: BLUE,
             fontSize: "0.72rem",
             fontWeight: 500,
@@ -135,8 +147,8 @@ export function CesareanEthicsDecisionWorkbench() {
       <section
         style={{
           ...cardStyle,
-          borderColor: `${VERMILION}66`,
-          background: `${VERMILION}0A`,
+          borderColor: VERMILION,
+          background: VERMILION_TINT,
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
@@ -171,7 +183,7 @@ export function CesareanEthicsDecisionWorkbench() {
                     padding: "0.75rem",
                     borderRadius: 8,
                     border: `1px solid ${selected ? r.color : HAIRLINE}`,
-                    background: selected ? `${r.color}10` : SURFACE,
+                    background: selected ? tintForColor(r.color) : SURFACE,
                     cursor: "pointer",
                   }}
                 >
@@ -194,7 +206,7 @@ export function CesareanEthicsDecisionWorkbench() {
               padding: "0.65rem",
               borderRadius: 6,
               border: `1px solid ${active.color}`,
-              background: `${active.color}10`,
+              background: tintForColor(active.color),
             }}
           >
             <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", fontSize: "0.78rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.04em", color: active.color, marginBottom: "0.25rem" }}>
@@ -231,7 +243,7 @@ export function CesareanEthicsDecisionWorkbench() {
                 padding: "0.85rem",
                 borderRadius: 8,
                 border: `1px solid ${showMistake ? VERMILION : active.color}`,
-                background: showMistake ? `${VERMILION}10` : `${active.color}10`,
+                background: showMistake ? VERMILION_TINT : tintForColor(active.color),
               }}
             >
               <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", fontSize: "0.78rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.04em", color: showMistake ? VERMILION : active.color, marginBottom: "0.35rem" }}>
@@ -250,7 +262,7 @@ export function CesareanEthicsDecisionWorkbench() {
                 padding: "0.85rem",
                 borderRadius: 8,
                 border: `1px solid ${BLUE}`,
-                background: `${BLUE}08`,
+                background: BLUE_TINT,
               }}
             >
               <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", fontSize: "0.78rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.04em", color: BLUE, marginBottom: "0.35rem" }}>
@@ -267,7 +279,7 @@ export function CesareanEthicsDecisionWorkbench() {
                 padding: "0.85rem",
                 borderRadius: 8,
                 border: `1px solid ${VERMILION}`,
-                background: `${VERMILION}08`,
+                background: VERMILION_TINT,
               }}
             >
               <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", fontSize: "0.78rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.04em", color: VERMILION, marginBottom: "0.35rem" }}>
@@ -302,7 +314,7 @@ export function CesareanEthicsDecisionWorkbench() {
 function DecisionSvg({ active }: { active: RequestKey }) {
   return (
     <svg viewBox="0 0 480 180" role="img" aria-label="Decision classifier for cesarean-timing requests: A is legitimate window-screening, B is declined elective instrumentalization, C is categorically refused sex-determination" style={{ width: "100%", maxHeight: 180, display: "block" }}>
-      <rect x={170} y={8} width={140} height={34} rx={6} fill={`${ACCENT}10`} stroke={ACCENT} strokeWidth={1.5} />
+      <rect x={170} y={8} width={140} height={34} rx={6} fill={GOLD_TINT} stroke={ACCENT} strokeWidth={1.5} />
       <text x={240} y={30} textAnchor="middle" fontSize={10} fill={ACCENT} fontWeight={600}>
         Cesarean-timing request
       </text>
@@ -319,7 +331,7 @@ function DecisionSvg({ active }: { active: RequestKey }) {
       <line x1={240} y1={86} x2={240} y2={124} stroke={active === "B" ? GOLD : HAIRLINE} strokeWidth={active === "B" ? 2.5 : 1.5} />
       <line x1={280} y1={86} x2={390} y2={124} stroke={active === "C" ? VERMILION : HAIRLINE} strokeWidth={active === "C" ? 2.5 : 1.5} />
 
-      <rect x={20} y={124} width={140} height={44} rx={6} fill={active === "A" ? `${GREEN}10` : SURFACE} stroke={active === "A" ? GREEN : HAIRLINE} strokeWidth={active === "A" ? 2 : 1} />
+      <rect x={20} y={124} width={140} height={44} rx={6} fill={active === "A" ? GREEN_TINT : SURFACE} stroke={active === "A" ? GREEN : HAIRLINE} strokeWidth={active === "A" ? 2 : 1} />
       <text x={90} y={146} textAnchor="middle" fontSize={10} fill={active === "A" ? GREEN : INK_SECONDARY} fontWeight={600}>
         A — Physician window
       </text>
@@ -327,7 +339,7 @@ function DecisionSvg({ active }: { active: RequestKey }) {
         Legitimate
       </text>
 
-      <rect x={170} y={124} width={140} height={44} rx={6} fill={active === "B" ? `${GOLD}10` : SURFACE} stroke={active === "B" ? GOLD : HAIRLINE} strokeWidth={active === "B" ? 2 : 1} />
+      <rect x={170} y={124} width={140} height={44} rx={6} fill={active === "B" ? GOLD_TINT : SURFACE} stroke={active === "B" ? GOLD : HAIRLINE} strokeWidth={active === "B" ? 2 : 1} />
       <text x={240} y={146} textAnchor="middle" fontSize={10} fill={active === "B" ? GOLD : INK_SECONDARY} fontWeight={600}>
         B — Elective instrumentalization
       </text>
@@ -335,7 +347,7 @@ function DecisionSvg({ active }: { active: RequestKey }) {
         Declined
       </text>
 
-      <rect x={320} y={124} width={140} height={44} rx={6} fill={active === "C" ? `${VERMILION}10` : SURFACE} stroke={active === "C" ? VERMILION : HAIRLINE} strokeWidth={active === "C" ? 2 : 1} />
+      <rect x={320} y={124} width={140} height={44} rx={6} fill={active === "C" ? VERMILION_TINT : SURFACE} stroke={active === "C" ? VERMILION : HAIRLINE} strokeWidth={active === "C" ? 2 : 1} />
       <text x={390} y={146} textAnchor="middle" fontSize={10} fill={active === "C" ? VERMILION : INK_SECONDARY} fontWeight={600}>
         C — Sex-determination
       </text>
@@ -368,7 +380,7 @@ function PanelButton({
         padding: "0.5rem 0.75rem",
         borderRadius: 6,
         border: `1px solid ${active ? ACCENT : HAIRLINE}`,
-        background: active ? `${ACCENT}15` : SURFACE,
+        background: active ? GOLD_TINT : SURFACE,
         color: active ? ACCENT : INK_SECONDARY,
         fontWeight: 600,
         fontSize: "0.82rem",
@@ -427,7 +439,7 @@ function buttonStyle(active: boolean, color: string): CSSProperties {
     padding: "0.45rem 0.75rem",
     borderRadius: 6,
     border: `1px solid ${active ? color : HAIRLINE}`,
-    background: active ? `${color}15` : SURFACE,
+    background: active ? tintForColor(color) : SURFACE,
     color: active ? color : INK_SECONDARY,
     fontWeight: 600,
     fontSize: "0.82rem",

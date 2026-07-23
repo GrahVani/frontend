@@ -25,6 +25,11 @@ const GREEN = "#2F7D55";
 const GOLD = "#B88421";
 const VERMILION = "#A23A1E";
 const AMBER = "#C78D26";
+const VERMILION_TINT = "#FDEBE6";
+const GREEN_TINT = "#EAF4EE";
+const BLUE_TINT = "#EAF0F8";
+const GOLD_TINT = "#FFF8E8";
+const AMBER_TINT = "#FFF4DE";
 
 type Direction = "East" | "South" | "West" | "North";
 
@@ -79,6 +84,15 @@ function verdictLabel(verdict: string): string {
   return "acceptable";
 }
 
+function tintForColor(color: string): string {
+  if (color === VERMILION) return VERMILION_TINT;
+  if (color === GREEN) return GREEN_TINT;
+  if (color === BLUE) return BLUE_TINT;
+  if (color === GOLD || color === ACCENT) return GOLD_TINT;
+  if (color === AMBER) return AMBER_TINT;
+  return SURFACE;
+}
+
 export function JourneyDishaSulaWorkbench() {
   const [direction, setDirection] = useState<Direction>("West");
   const [ignoreDishaSula, setIgnoreDishaSula] = useState(false);
@@ -121,7 +135,7 @@ export function JourneyDishaSulaWorkbench() {
             gap: "0.375rem",
             padding: "0.25rem 0.5rem",
             borderRadius: 4,
-            background: `${BLUE}10`,
+            background: BLUE_TINT,
             color: BLUE,
             fontSize: "0.72rem",
             fontWeight: 500,
@@ -142,7 +156,7 @@ export function JourneyDishaSulaWorkbench() {
               padding: "0.65rem",
               borderRadius: 6,
               border: `1px solid ${BLUE}`,
-              background: `${BLUE}08`,
+              background: BLUE_TINT,
               fontSize: "0.8rem",
               color: INK_SECONDARY,
               lineHeight: 1.55,
@@ -174,7 +188,7 @@ export function JourneyDishaSulaWorkbench() {
                 {evaluated.map((e) => {
                   const color = verdictColor(e.verdict);
                   return (
-                    <tr key={e.day.day} style={{ background: e.verdict === "conflict" ? `${AMBER}08` : undefined }}>
+                    <tr key={e.day.day} style={{ background: e.verdict === "conflict" ? AMBER_TINT : undefined }}>
                       <td style={tdStyle}>
                         <span style={{ fontWeight: 600, color: INK_PRIMARY }}>{e.day.day}</span>
                         <span style={{ fontSize: "0.75rem", color: INK_MUTED, marginLeft: "0.35rem" }}>({e.day.lord})</span>
@@ -220,7 +234,7 @@ export function JourneyDishaSulaWorkbench() {
                 padding: "0.65rem 0.85rem",
                 borderRadius: 6,
                 border: `1px solid ${AMBER}`,
-                background: `${AMBER}10`,
+                background: AMBER_TINT,
                 fontSize: "0.85rem",
                 color: INK_PRIMARY,
                 lineHeight: 1.55,
@@ -240,7 +254,7 @@ export function JourneyDishaSulaWorkbench() {
                 padding: "0.85rem",
                 borderRadius: 8,
                 border: `1px solid ${GREEN}`,
-                background: `${GREEN}10`,
+                background: GREEN_TINT,
               }}
             >
               <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", fontSize: "0.78rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.04em", color: GREEN, marginBottom: "0.35rem" }}>
@@ -259,7 +273,7 @@ export function JourneyDishaSulaWorkbench() {
                 padding: "0.85rem",
                 borderRadius: 8,
                 border: `1px solid ${VERMILION}`,
-                background: `${VERMILION}10`,
+                background: VERMILION_TINT,
               }}
             >
               <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", fontSize: "0.78rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.04em", color: VERMILION, marginBottom: "0.35rem" }}>
@@ -285,13 +299,13 @@ export function JourneyDishaSulaWorkbench() {
               {`A ṣaḍbala component measuring a planet's directional strength by house-placement. Nothing to do with which way a traveller goes.`}
             </div>
           </div>
-          <div style={{ padding: "0.75rem", borderRadius: 8, border: `1px solid ${BLUE}`, background: `${BLUE}08` }}>
+          <div style={{ padding: "0.75rem", borderRadius: 8, border: `1px solid ${BLUE}`, background: BLUE_TINT }}>
             <div style={{ fontSize: "0.75rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em", color: BLUE, marginBottom: "0.35rem" }}>Diśā-Śūla (T1-23, this lesson)</div>
             <div style={{ fontSize: "0.85rem", color: INK_PRIMARY, lineHeight: 1.55 }}>
               {`A journey doctrine that blocks specific compass directions on specific weekdays of departure.`}
             </div>
           </div>
-          <div style={{ padding: "0.75rem", borderRadius: 8, border: `1px solid ${GREEN}`, background: `${GREEN}08` }}>
+          <div style={{ padding: "0.75rem", borderRadius: 8, border: `1px solid ${GREEN}`, background: GREEN_TINT }}>
             <div style={{ fontSize: "0.75rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em", color: GREEN, marginBottom: "0.35rem" }}>Safety-context priority</div>
             <div style={{ fontSize: "0.85rem", color: INK_PRIMARY, lineHeight: 1.55 }}>
               {`Flight schedules, driving safety, medical-emergency travel, and natural hazards all override muhūrta-optimisation.`}
@@ -305,22 +319,22 @@ export function JourneyDishaSulaWorkbench() {
 
 function CompassSvg({ selected, onSelect }: { selected: Direction; onSelect: (d: Direction) => void }) {
   const directions: { key: Direction; x: number; y: number; label: string }[] = [
-    { key: "North", x: 80, y: 30, label: "N" },
-    { key: "East", x: 150, y: 100, label: "E" },
-    { key: "South", x: 80, y: 170, label: "S" },
-    { key: "West", x: 10, y: 100, label: "W" },
+    { key: "North", x: 110, y: 35, label: "N" },
+    { key: "East", x: 185, y: 110, label: "E" },
+    { key: "South", x: 110, y: 185, label: "S" },
+    { key: "West", x: 35, y: 110, label: "W" },
   ];
 
   return (
-    <svg viewBox="0 0 160 200" role="img" aria-label="Compass rose for selecting travel direction" style={{ width: "100%", maxWidth: 180, margin: "0 auto", display: "block" }}>
-      <circle cx={80} cy={100} r={70} fill="none" stroke={HAIRLINE} strokeWidth={1} />
-      <line x1={80} y1={30} x2={80} y2={170} stroke={HAIRLINE} strokeWidth={1} />
-      <line x1={10} y1={100} x2={150} y2={100} stroke={HAIRLINE} strokeWidth={1} />
+    <svg viewBox="0 0 220 220" role="img" aria-label="Compass rose for selecting travel direction" style={{ width: "100%", maxWidth: 220, margin: "0 auto", display: "block" }}>
+      <circle cx={110} cy={110} r={75} fill="none" stroke={HAIRLINE} strokeWidth={1} />
+      <line x1={110} y1={35} x2={110} y2={185} stroke={HAIRLINE} strokeWidth={1} />
+      <line x1={35} y1={110} x2={185} y2={110} stroke={HAIRLINE} strokeWidth={1} />
       {directions.map((d) => {
         const isSelected = d.key === selected;
         return (
           <g key={d.key}>
-            <circle cx={d.x} cy={d.y} r={22} fill={isSelected ? `${ACCENT}20` : SURFACE} stroke={isSelected ? ACCENT : HAIRLINE} strokeWidth={isSelected ? 2.5 : 1} />
+            <circle cx={d.x} cy={d.y} r={22} fill={isSelected ? GOLD_TINT : SURFACE} stroke={isSelected ? ACCENT : HAIRLINE} strokeWidth={isSelected ? 2.5 : 1} />
             <text x={d.x} y={d.y + 5} textAnchor="middle" fontSize={14} fill={isSelected ? ACCENT : INK_PRIMARY} fontWeight={600}>
               {d.label}
             </text>
@@ -335,7 +349,7 @@ function CompassSvg({ selected, onSelect }: { selected: Direction; onSelect: (d:
           </g>
         );
       })}
-      <Compass size={20} color={ACCENT} style={{ x: 70, y: 90 }} />
+      <Compass size={20} color={ACCENT} style={{ x: 100, y: 100 }} />
     </svg>
   );
 }
@@ -385,7 +399,7 @@ function buttonStyle(active: boolean, color: string): CSSProperties {
     padding: "0.45rem 0.75rem",
     borderRadius: 6,
     border: `1px solid ${active ? color : HAIRLINE}`,
-    background: active ? `${color}15` : SURFACE,
+    background: active ? tintForColor(color) : SURFACE,
     color: active ? color : INK_SECONDARY,
     fontWeight: 600,
     fontSize: "0.82rem",

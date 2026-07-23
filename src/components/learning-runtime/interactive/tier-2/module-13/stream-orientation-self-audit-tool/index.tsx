@@ -265,16 +265,16 @@ function AuditDiagram({ lens, canRun, biased, proceduralDistinction }: { lens: L
         const y = index % 2 === 0 ? 190 : 246;
         return (
           <g key={key}>
-            <path d={`M ${x} ${y + 44} C 320 330, 460 330, 558 284`} fill="none" stroke={active ? LENSES[key].color : HAIRLINE} strokeWidth={active ? 2.5 : 1.2} strokeDasharray={active ? undefined : "6 7"} />
+            <path d={`M ${x} ${y + 44} C 360 330, 580 330, 655 284`} fill="none" stroke={active ? LENSES[key].color : HAIRLINE} strokeWidth={active ? 2.5 : 1.2} strokeDasharray={active ? undefined : "6 7"} />
             <rect x={x - 62} y={y - 34} width="124" height="68" rx="8" fill={active ? softFill(LENSES[key].color) : SURFACE} stroke={active ? LENSES[key].color : HAIRLINE} strokeWidth={active ? 2 : 1} />
             <text x={x} y={y - 5} textAnchor="middle" fill={active ? LENSES[key].color : INK_MUTED} fontSize="12" fontWeight="500">{LENSES[key].label}</text>
             <text x={x} y={y + 15} textAnchor="middle" fill={INK_MUTED} fontSize="10">{key === "tie" ? "0 wins" : key === "order" ? "procedural?" : "rank-based"}</text>
           </g>
         );
       })}
-      <circle cx="610" cy="276" r="58" fill={softFill(centerColor)} stroke={centerColor} strokeWidth="3" />
-      <text x="610" y="270" textAnchor="middle" fill={centerColor} fontSize="15" fontWeight="500">{biased ? "Pattern" : canRun ? "Result" : "Paused"}</text>
-      <text x="610" y="292" textAnchor="middle" fill={INK_SECONDARY} fontSize="11">{biased ? "recalibrate" : canRun ? "snapshot" : "need batch"}</text>
+      <circle cx="700" cy="276" r="45" fill={softFill(centerColor)} stroke={centerColor} strokeWidth="3" />
+      <text x="700" y="270" textAnchor="middle" fill={centerColor} fontSize="15" fontWeight="500">{biased ? "Pattern" : canRun ? "Result" : "Paused"}</text>
+      <text x="700" y="292" textAnchor="middle" fill={INK_SECONDARY} fontSize="11">{biased ? "recalibrate" : canRun ? "snapshot" : "need batch"}</text>
     </svg>
   );
 }

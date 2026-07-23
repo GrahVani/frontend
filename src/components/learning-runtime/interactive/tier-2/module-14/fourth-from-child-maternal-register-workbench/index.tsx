@@ -636,15 +636,19 @@ function ZodiacStepWheel({
         const isLagna = i === lagnaIndex;
         const isHighlighted = highlighted.includes(i);
         const isTarget = i === targetIndex;
-        const x = center + radius * 0.45 * Math.cos(angle);
-        const y = center + radius * 0.45 * Math.sin(angle);
+        const isMarked = isLagna || isHighlighted || isTarget;
+        const labelRadius = isMarked ? radius * 0.45 : radius * 0.55;
+        const x = center + labelRadius * Math.cos(angle);
+        const y = center + labelRadius * Math.sin(angle);
+        const cx = center + radius * 0.45 * Math.cos(angle);
+        const cy = center + radius * 0.45 * Math.sin(angle);
         return (
           <g key={i}>
-            {(isLagna || isHighlighted || isTarget) && (
+            {isMarked && (
               <circle
-                cx={x}
-                cy={y}
-                r={18}
+                cx={cx}
+                cy={cy}
+                r={14}
                 fill={isLagna ? BLUE : isTarget ? GREEN : `${SIGN_COLORS[i]}20`}
                 stroke={isLagna ? BLUE : isTarget ? GREEN : SIGN_COLORS[i]}
                 strokeWidth={isLagna || isTarget ? 2 : 1}

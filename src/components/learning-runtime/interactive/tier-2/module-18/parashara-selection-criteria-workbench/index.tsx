@@ -28,6 +28,11 @@ const GREEN = "#2F7D55";
 const BLUE = "#356CAB";
 const AMBER = "#B88421";
 const VERMILION = "#A23A1E";
+const GOLD_TINT = "#FFF8E8";
+const GREEN_TINT = "#EAF4EE";
+const BLUE_TINT = "#EAF0F8";
+const VERMILION_TINT = "#FDEBE6";
+const MUTED_TINT = "#F4EFE4";
 
 const DASHAS: Record<DashaKey, {
   label: string;
@@ -201,7 +206,7 @@ export function ParasharaSelectionCriteriaWorkbench() {
                   padding: "0.75rem",
                   borderRadius: 8,
                   border: `1px solid ${active ? d.color : HAIRLINE}`,
-                  background: active ? `${d.color}10` : SURFACE,
+                  background: active ? tintForColor(d.color) : SURFACE,
                   cursor: "pointer",
                 }}
               >
@@ -294,8 +299,8 @@ export function ParasharaSelectionCriteriaWorkbench() {
               marginTop: "0.75rem",
               padding: "0.65rem 0.85rem",
               borderRadius: 8,
-              background: ROUTE_OPTIONS.find((o) => o.id === route)?.ok ? `${GREEN}12` : `${VERMILION}12`,
-              border: `1px solid ${ROUTE_OPTIONS.find((o) => o.id === route)?.ok ? GREEN : VERMILION}55`,
+              background: ROUTE_OPTIONS.find((o) => o.id === route)?.ok ? GREEN_TINT : VERMILION_TINT,
+              border: `1px solid ${ROUTE_OPTIONS.find((o) => o.id === route)?.ok ? GREEN : VERMILION}`,
               color: ROUTE_OPTIONS.find((o) => o.id === route)?.ok ? GREEN : VERMILION,
             }}
           >
@@ -340,8 +345,8 @@ export function ParasharaSelectionCriteriaWorkbench() {
             marginTop: "0.75rem",
             padding: "0.65rem 0.85rem",
             borderRadius: 8,
-            background: allHeld ? `${GREEN}12` : `${VERMILION}12`,
-            border: `1px solid ${allHeld ? GREEN : VERMILION}55`,
+            background: allHeld ? GREEN_TINT : VERMILION_TINT,
+            border: `1px solid ${allHeld ? GREEN : VERMILION}`,
             color: allHeld ? GREEN : VERMILION,
             fontWeight: 600,
           }}
@@ -363,8 +368,8 @@ function DetailPanel({ dashaKey }: { dashaKey: DashaKey }) {
         marginTop: "0.85rem",
         padding: "0.85rem",
         borderRadius: 8,
-        border: `1px solid ${d.color}55`,
-        background: `${d.color}0A`,
+        border: `1px solid ${d.color}`,
+        background: tintForColor(d.color),
       }}
     >
       <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: d.color, fontWeight: 700 }}>
@@ -381,15 +386,15 @@ function DetailPanel({ dashaKey }: { dashaKey: DashaKey }) {
 }
 
 function HierarchySvg() {
-  const cx = 280;
-  const cy = 110;
-  const radius = 80;
-  const satelliteR = 210;
+  const cx = 320;
+  const cy = 175;
+  const radius = 70;
+  const satelliteR = 150;
   const keys = DASHA_ORDER.filter((k) => k !== "vimshottari");
 
   return (
-    <svg viewBox="0 0 560 260" role="img" aria-label="Vimshottari default with seven conditional dashas" style={{ width: "100%", maxHeight: 280, margin: "0.5rem auto 0.75rem", display: "block" }}>
-      <circle cx={cx} cy={cy} r={radius} fill={`${BLUE}12`} stroke={BLUE} strokeWidth="3" />
+    <svg viewBox="0 0 640 360" role="img" aria-label="Vimshottari default with seven conditional dashas" style={{ width: "100%", maxHeight: 360, margin: "0.5rem auto 0.75rem", display: "block" }}>
+      <circle cx={cx} cy={cy} r={radius} fill={BLUE_TINT} stroke={BLUE} strokeWidth="3" />
       <text x={cx} y={cy - 6} textAnchor="middle" fill={BLUE} fontSize="15" fontWeight={700}>Vimśottarī</text>
       <text x={cx} y={cy + 14} textAnchor="middle" fill={INK_SECONDARY} fontSize="11" fontWeight={600}>default baseline</text>
       {keys.map((key, idx) => {
@@ -401,13 +406,13 @@ function HierarchySvg() {
         return (
           <g key={key}>
             <line x1={cx + radius * Math.cos(rad)} y1={cy + radius * Math.sin(rad)} x2={sx - 36 * Math.cos(rad)} y2={sy - 36 * Math.sin(rad)} stroke={HAIRLINE} strokeWidth="1.5" />
-            <circle cx={sx} cy={sy} r={36} fill={`${color}12`} stroke={color} strokeWidth="2" />
+            <circle cx={sx} cy={sy} r={34} fill={tintForColor(color)} stroke={color} strokeWidth="2" />
             <text x={sx} y={sy - 2} textAnchor="middle" fill={color} fontSize="10" fontWeight={700}>{DASHAS[key].label}</text>
             <text x={sx} y={sy + 12} textAnchor="middle" fill={INK_SECONDARY} fontSize="9" fontWeight={600}>{DASHAS[key].cycle}</text>
           </g>
         );
       })}
-      <text x={cx} y={245} textAnchor="middle" fill={INK_MUTED} fontSize="12" fontWeight={600}>Conditionals cross-validate, never override the default</text>
+      <text x={cx} y="335" textAnchor="middle" fill={INK_MUTED} fontSize="12" fontWeight={600}>Conditionals cross-validate, never override the default</text>
     </svg>
   );
 }
@@ -419,19 +424,19 @@ function T1_10_ArcSvg() {
       <text x="85" y="55" textAnchor="middle" fill={INK_MUTED} fontSize="12" fontWeight={700}>Ch 1-2</text>
       <text x="85" y="75" textAnchor="middle" fill={INK_SECONDARY} fontSize="10" fontWeight={600}>not re-checked</text>
 
-      <rect x="160" y="30" width="110" height="60" rx="8" fill={`${VERMILION}10`} stroke={VERMILION} strokeWidth="2" />
+      <rect x="160" y="30" width="110" height="60" rx="8" fill={VERMILION_TINT} stroke={VERMILION} strokeWidth="2" />
       <text x="215" y="55" textAnchor="middle" fill={VERMILION} fontSize="12" fontWeight={700}>Ch 3-4</text>
       <text x="215" y="75" textAnchor="middle" fill={INK_SECONDARY} fontSize="10" fontWeight={600}>confirmed gap</text>
 
-      <rect x="290" y="30" width="80" height="60" rx="8" fill={`${GREEN}10`} stroke={GREEN} strokeWidth="2" />
+      <rect x="290" y="30" width="80" height="60" rx="8" fill={GREEN_TINT} stroke={GREEN} strokeWidth="2" />
       <text x="330" y="55" textAnchor="middle" fill={GREEN} fontSize="12" fontWeight={700}>Ch 5</text>
       <text x="330" y="75" textAnchor="middle" fill={INK_SECONDARY} fontSize="10" fontWeight={600}>real</text>
 
-      <rect x="390" y="30" width="70" height="60" rx="8" fill={`${GREEN}10`} stroke={GREEN} strokeWidth="2" />
+      <rect x="390" y="30" width="70" height="60" rx="8" fill={GREEN_TINT} stroke={GREEN} strokeWidth="2" />
       <text x="425" y="55" textAnchor="middle" fill={GREEN} fontSize="12" fontWeight={700}>Ch 6</text>
       <text x="425" y="75" textAnchor="middle" fill={INK_SECONDARY} fontSize="10" fontWeight={600}>real</text>
 
-      <rect x="480" y="30" width="70" height="60" rx="8" fill={`${GREEN}10`} stroke={GREEN} strokeWidth="2" />
+      <rect x="480" y="30" width="70" height="60" rx="8" fill={GREEN_TINT} stroke={GREEN} strokeWidth="2" />
       <text x="515" y="55" textAnchor="middle" fill={GREEN} fontSize="12" fontWeight={700}>Ch 7</text>
       <text x="515" y="75" textAnchor="middle" fill={INK_SECONDARY} fontSize="10" fontWeight={600}>real</text>
 
@@ -451,7 +456,7 @@ function KeyValue({ label, value }: { label: string; value: string }) {
 
 function Panel({ title, icon, color, children }: { title: string; icon: ReactNode; color: string; children: ReactNode }) {
   return (
-    <section style={{ border: `1px solid ${color}44`, borderRadius: 8, background: SURFACE, padding: "1rem" }}>
+    <section style={{ border: `1px solid ${color}`, borderRadius: 8, background: SURFACE, padding: "1rem" }}>
       <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", color, fontWeight: 700 }}>{icon}{title}</div>
       <div style={{ marginTop: "0.75rem" }}>{children}</div>
     </section>
@@ -495,11 +500,27 @@ function togglePanelStyle(active: boolean, color: string): CSSProperties {
     textAlign: "left",
     border: `1px solid ${active ? color : HAIRLINE}`,
     borderRadius: 8,
-    background: active ? `${color}14` : "transparent",
+    background: active ? tintForColor(color) : "transparent",
     color: active ? color : INK_SECONDARY,
     padding: "0.75rem",
     cursor: "pointer",
   };
+}
+
+function tintForColor(color: string): string {
+  switch (color) {
+    case BLUE:
+      return BLUE_TINT;
+    case GREEN:
+      return GREEN_TINT;
+    case GOLD:
+    case AMBER:
+      return GOLD_TINT;
+    case VERMILION:
+      return VERMILION_TINT;
+    default:
+      return MUTED_TINT;
+  }
 }
 
 const cardStyle: CSSProperties = {

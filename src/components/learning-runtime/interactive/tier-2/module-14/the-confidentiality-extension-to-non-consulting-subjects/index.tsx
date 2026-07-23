@@ -25,10 +25,15 @@ const HAIRLINE = "var(--gl-gold-hairline)";
 const SURFACE = "var(--gl-card-surface-solid)";
 const ACCENT = "var(--gl-gold-accent)";
 const VERMILION = "var(--gl-vermilion-accent)";
+const VERMILION_TINT = "#FDEBE6";
 const GREEN = "#2F7D55";
+const GREEN_TINT = "#EAF4EE";
 const BLUE = "#356CAB";
+const BLUE_TINT = "#EAF0F8";
 const GOLD = "#B88421";
+const GOLD_TINT = "#FFF8E8";
 const PURPLE = "#6B5AA8";
+const PURPLE_TINT = "#F1EEFA";
 
 interface DisclosureScenario {
   id: string;
@@ -161,7 +166,7 @@ export function TheConfidentialityExtensionToNonConsultingSubjects() {
             {DISCLOSURE_SCENARIOS.map((scenario) => {
               const selected = disclosureAnswers[scenario.id];
               return (
-                <div key={scenario.id} style={{ padding: "0.75rem", borderRadius: 8, border: `1px solid ${selected ? (selected === scenario.verdict ? GREEN : VERMILION) : HAIRLINE}`, background: selected ? (selected === scenario.verdict ? `${GREEN}08` : `${VERMILION}08`) : SURFACE }}>
+                <div key={scenario.id} style={{ padding: "0.75rem", borderRadius: 8, border: `1px solid ${selected ? (selected === scenario.verdict ? GREEN : VERMILION) : HAIRLINE}`, background: selected ? (selected === scenario.verdict ? GREEN_TINT : VERMILION_TINT) : SURFACE }}>
                   <p style={{ margin: 0, color: INK_PRIMARY, fontSize: "0.9rem", lineHeight: 1.55 }}>{scenario.situation}</p>
                   <div style={{ display: "flex", flexWrap: "wrap", gap: "0.4rem", marginTop: "0.55rem" }}>
                     <button type="button" aria-pressed={selected === "allowed"} onClick={() => setDisclosure(scenario.id, "allowed")} style={smallChipStyle(selected === "allowed", GREEN)}>
@@ -174,7 +179,7 @@ export function TheConfidentialityExtensionToNonConsultingSubjects() {
                     </button>
                   </div>
                   {selected && (
-                    <div style={{ marginTop: "0.55rem", padding: "0.55rem", borderRadius: 6, background: selected === scenario.verdict ? `${GREEN}10` : `${VERMILION}10`, border: `1px solid ${selected === scenario.verdict ? GREEN : VERMILION}`, color: selected === scenario.verdict ? GREEN : VERMILION, fontSize: "0.85rem" }}>
+                    <div style={{ marginTop: "0.55rem", padding: "0.55rem", borderRadius: 6, background: selected === scenario.verdict ? GREEN_TINT : VERMILION_TINT, border: `1px solid ${selected === scenario.verdict ? GREEN : VERMILION}`, color: selected === scenario.verdict ? GREEN : VERMILION, fontSize: "0.85rem" }}>
                       {selected === scenario.verdict ? scenario.explanation : `This disclosure is ${scenario.verdict}. ${scenario.explanation}`}
                     </div>
                   )}
@@ -184,7 +189,7 @@ export function TheConfidentialityExtensionToNonConsultingSubjects() {
           </div>
 
           {allDisclosureAnswered && (
-            <div style={{ marginTop: "0.75rem", padding: "0.75rem", borderRadius: 8, background: allDisclosureCorrect ? `${GREEN}10` : `${VERMILION}10`, border: `1px solid ${allDisclosureCorrect ? GREEN : VERMILION}`, color: allDisclosureCorrect ? GREEN : VERMILION, fontSize: "0.9rem" }}>
+            <div style={{ marginTop: "0.75rem", padding: "0.75rem", borderRadius: 8, background: allDisclosureCorrect ? GREEN_TINT : VERMILION_TINT, border: `1px solid ${allDisclosureCorrect ? GREEN : VERMILION}`, color: allDisclosureCorrect ? GREEN : VERMILION, fontSize: "0.9rem" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                 {allDisclosureCorrect ? <BadgeCheck size={18} aria-hidden="true" /> : <AlertTriangle size={18} aria-hidden="true" />}
                 <span style={{ fontWeight: 600 }}>{allDisclosureCorrect ? "All disclosure boundaries correct." : "Some boundaries need correction — review the feedback above."}</span>
@@ -210,7 +215,7 @@ export function TheConfidentialityExtensionToNonConsultingSubjects() {
               </button>
             </div>
             {teachingChoice && (
-              <div style={{ marginTop: "0.55rem", padding: "0.55rem", borderRadius: 6, background: teachingChoice === "constructed" ? `${GREEN}10` : `${VERMILION}10`, border: `1px solid ${teachingChoice === "constructed" ? GREEN : VERMILION}`, color: teachingChoice === "constructed" ? GREEN : VERMILION, fontSize: "0.85rem" }}>
+              <div style={{ marginTop: "0.55rem", padding: "0.55rem", borderRadius: 6, background: teachingChoice === "constructed" ? GREEN_TINT : VERMILION_TINT, border: `1px solid ${teachingChoice === "constructed" ? GREEN : VERMILION}`, color: teachingChoice === "constructed" ? GREEN : VERMILION, fontSize: "0.85rem" }}>
                 {teachingChoice === "constructed"
                   ? "Correct. A constructed example-chart protects the non-consulting subject and is very often the only available option."
                   : "Risk. Without Priya's own separate written case-study consent, the real case cannot be used for teaching or public presentation."}
@@ -250,7 +255,7 @@ export function TheConfidentialityExtensionToNonConsultingSubjects() {
                   padding: "0.65rem",
                   borderRadius: 8,
                   border: `1px solid ${selected === undefined ? HAIRLINE : selected ? GREEN : VERMILION}`,
-                  background: selected === undefined ? SURFACE : selected ? `${GREEN}08` : `${VERMILION}08`,
+                  background: selected === undefined ? SURFACE : selected ? GREEN_TINT : VERMILION_TINT,
                   textAlign: "left",
                   cursor: "pointer",
                 }}
@@ -265,7 +270,7 @@ export function TheConfidentialityExtensionToNonConsultingSubjects() {
         </div>
 
         {responseAnswered && (
-          <div style={{ marginTop: "0.75rem", padding: "0.75rem", borderRadius: 8, background: responseCorrect ? `${GREEN}10` : `${VERMILION}10`, border: `1px solid ${responseCorrect ? GREEN : VERMILION}`, color: responseCorrect ? GREEN : VERMILION, fontSize: "0.9rem" }}>
+          <div style={{ marginTop: "0.75rem", padding: "0.75rem", borderRadius: 8, background: responseCorrect ? GREEN_TINT : VERMILION_TINT, border: `1px solid ${responseCorrect ? GREEN : VERMILION}`, color: responseCorrect ? GREEN : VERMILION, fontSize: "0.9rem" }}>
             <div style={{ display: "flex", alignItems: "start", gap: "0.5rem" }}>
               {responseCorrect ? <BadgeCheck size={18} aria-hidden="true" style={{ flexShrink: 0 }} /> : <AlertTriangle size={18} aria-hidden="true" style={{ flexShrink: 0 }} />}
               <span style={{ fontWeight: 600 }}>
@@ -284,22 +289,22 @@ export function TheConfidentialityExtensionToNonConsultingSubjects() {
 function ConfidentialityFlowSvg() {
   return (
     <svg viewBox="0 0 560 220" role="img" aria-label="Confidentiality flow: a non-consulting subject's data may reach the consulting client but not third parties or public teaching without separate consent" style={{ width: "100%", maxHeight: 280, margin: "0.4rem auto 0.75rem", display: "block" }}>
-      <rect x="12" y="12" width="536" height="196" rx="8" fill={`${ACCENT}08`} stroke={HAIRLINE} />
+      <rect x="12" y="12" width="536" height="196" rx="8" fill={GOLD_TINT} stroke={HAIRLINE} />
 
       {/* Nodes */}
-      <circle cx="100" cy="110" r="36" fill={`${BLUE}18`} stroke={BLUE} strokeWidth="2" />
+      <circle cx="100" cy="110" r="36" fill={BLUE_TINT} stroke={BLUE} strokeWidth="2" />
       <text x="100" y="106" textAnchor="middle" fill={INK_PRIMARY} fontSize="12" fontWeight={600}>Ansh</text>
       <text x="100" y="120" textAnchor="middle" fill={INK_MUTED} fontSize="9" fontWeight={600}>client</text>
 
-      <circle cx="280" cy="60" r="36" fill={`${PURPLE}18`} stroke={PURPLE} strokeWidth="2" />
+      <circle cx="280" cy="60" r="36" fill={PURPLE_TINT} stroke={PURPLE} strokeWidth="2" />
       <text x="280" y="56" textAnchor="middle" fill={INK_PRIMARY} fontSize="12" fontWeight={600}>Practitioner</text>
       <text x="280" y="70" textAnchor="middle" fill={INK_MUTED} fontSize="9" fontWeight={600}>records</text>
 
-      <circle cx="460" cy="110" r="36" fill={`${GOLD}18`} stroke={GOLD} strokeWidth="2" />
+      <circle cx="460" cy="110" r="36" fill={GOLD_TINT} stroke={GOLD} strokeWidth="2" />
       <text x="460" y="106" textAnchor="middle" fill={INK_PRIMARY} fontSize="12" fontWeight={600}>Priya</text>
       <text x="460" y="120" textAnchor="middle" fill={INK_MUTED} fontSize="9" fontWeight={600}>non-consulting</text>
 
-      <circle cx="280" cy="170" r="36" fill={`${VERMILION}10`} stroke={VERMILION} strokeWidth="2" />
+      <circle cx="280" cy="170" r="36" fill={VERMILION_TINT} stroke={VERMILION} strokeWidth="2" />
       <text x="280" y="166" textAnchor="middle" fill={INK_PRIMARY} fontSize="12" fontWeight={600}>Third parties</text>
       <text x="280" y="180" textAnchor="middle" fill={INK_MUTED} fontSize="9" fontWeight={600}>teaching / public</text>
 
@@ -352,13 +357,22 @@ function toggleRowStyle(active: boolean, color: string): CSSProperties {
     padding: "0.55rem",
     borderRadius: 6,
     border: `1px solid ${active ? color : HAIRLINE}`,
-    background: active ? `${color}10` : SURFACE,
+    background: active ? tintForColor(color) : SURFACE,
     color: active ? color : INK_PRIMARY,
     fontSize: "0.85rem",
     fontWeight: 600,
     cursor: "pointer",
     textAlign: "left",
   };
+}
+
+function tintForColor(color: string): string {
+  if (color === VERMILION) return VERMILION_TINT;
+  if (color === GREEN) return GREEN_TINT;
+  if (color === BLUE) return BLUE_TINT;
+  if (color === GOLD || color === ACCENT) return GOLD_TINT;
+  if (color === PURPLE) return PURPLE_TINT;
+  return SURFACE;
 }
 
 const cardStyle: CSSProperties = {
@@ -401,7 +415,7 @@ function smallChipStyle(active: boolean, color: string): CSSProperties {
     padding: "0.35rem 0.6rem",
     borderRadius: 999,
     border: `1px solid ${active ? color : HAIRLINE}`,
-    background: active ? `${color}12` : SURFACE,
+    background: active ? tintForColor(color) : SURFACE,
     color: active ? color : INK_PRIMARY,
     fontSize: "0.8rem",
     fontWeight: 600,

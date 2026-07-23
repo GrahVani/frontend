@@ -31,6 +31,11 @@ const GREEN = "#2F7D55";
 const GOLD = "#B88421";
 const VERMILION = "#A23A1E";
 const PURPLE = "#6B5AA8";
+const VERMILION_TINT = "#FDEBE6";
+const GREEN_TINT = "#EAF4EE";
+const BLUE_TINT = "#EAF0F8";
+const GOLD_TINT = "#FFF8E8";
+const PURPLE_TINT = "#F1EEFA";
 
 type ScenarioKey = "hip-window" | "bypass-fixed" | "cesarean-window" | "emergency-fixed";
 type PanelKey = "exceptions" | "safety" | "adhikara";
@@ -88,6 +93,15 @@ const TIKSHNA_NAKSHATRAS = ["Ārdrā", "Āśleṣā", "Jyeṣṭhā", "Mūla"];
 
 const LOCKED_VERBATIM = `I would not recommend asking the medical team to reschedule based on it -- the medical and surgical considerations should take precedence; muhūrta-input is one consideration among several and should not over-ride medical-team judgment.`;
 
+function tintForColor(color: string): string {
+  if (color === VERMILION) return VERMILION_TINT;
+  if (color === GREEN) return GREEN_TINT;
+  if (color === BLUE) return BLUE_TINT;
+  if (color === GOLD || color === ACCENT) return GOLD_TINT;
+  if (color === PURPLE) return PURPLE_TINT;
+  return SURFACE;
+}
+
 export function SurgeryMedicalPrimacyWorkbench() {
   const [scenario, setScenario] = useState<ScenarioKey>("hip-window");
   const [showError, setShowError] = useState(false);
@@ -127,7 +141,7 @@ export function SurgeryMedicalPrimacyWorkbench() {
             gap: "0.375rem",
             padding: "0.25rem 0.5rem",
             borderRadius: 4,
-            background: `${BLUE}10`,
+            background: BLUE_TINT,
             color: BLUE,
             fontSize: "0.72rem",
             fontWeight: 500,
@@ -155,7 +169,7 @@ export function SurgeryMedicalPrimacyWorkbench() {
                     padding: "0.75rem",
                     borderRadius: 8,
                     border: `1px solid ${selected ? s.verdictColor : HAIRLINE}`,
-                    background: selected ? `${s.verdictColor}10` : SURFACE,
+                    background: selected ? tintForColor(s.verdictColor) : SURFACE,
                     cursor: "pointer",
                   }}
                 >
@@ -176,7 +190,7 @@ export function SurgeryMedicalPrimacyWorkbench() {
               padding: "0.65rem",
               borderRadius: 6,
               border: `1px solid ${active.verdictColor}`,
-              background: `${active.verdictColor}10`,
+              background: tintForColor(active.verdictColor),
             }}
           >
             <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", fontSize: "0.78rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.04em", color: active.verdictColor, marginBottom: "0.25rem" }}>
@@ -207,7 +221,7 @@ export function SurgeryMedicalPrimacyWorkbench() {
                 padding: "0.85rem",
                 borderRadius: 8,
                 border: `1px solid ${VERMILION}`,
-                background: `${VERMILION}10`,
+                background: VERMILION_TINT,
               }}
             >
               <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", fontSize: "0.78rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.04em", color: VERMILION, marginBottom: "0.35rem" }}>
@@ -226,7 +240,7 @@ export function SurgeryMedicalPrimacyWorkbench() {
                 padding: "0.85rem",
                 borderRadius: 8,
                 border: `1px solid ${GREEN}`,
-                background: `${GREEN}10`,
+                background: GREEN_TINT,
               }}
             >
               <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", fontSize: "0.78rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.04em", color: GREEN, marginBottom: "0.35rem" }}>
@@ -247,7 +261,7 @@ export function SurgeryMedicalPrimacyWorkbench() {
                       margin: "0.65rem 0 0",
                       padding: "0.55rem 0.75rem",
                       borderLeft: `3px solid ${GOLD}`,
-                      background: `${GOLD}08`,
+                      background: GOLD_TINT,
                       borderRadius: "0 6px 6px 0",
                       fontSize: "0.88rem",
                       color: INK_SECONDARY,
@@ -280,19 +294,19 @@ export function SurgeryMedicalPrimacyWorkbench() {
               {`Tuesday (Maṅgala-vāra) and Tīkṣṇa-class nakṣatras are generally avoided for auspicious initiations — but they carry a named exception for surgical procedures because their sharp, incisive character matches the event.`}
             </p>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: "0.65rem" }}>
-              <div style={{ padding: "0.75rem", borderRadius: 8, border: `1px solid ${VERMILION}`, background: `${VERMILION}08` }}>
+              <div style={{ padding: "0.75rem", borderRadius: 8, border: `1px solid ${VERMILION}`, background: VERMILION_TINT }}>
                 <div style={{ fontSize: "0.75rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em", color: VERMILION, marginBottom: "0.35rem" }}>Tuesday / Mars vāra</div>
                 <div style={{ fontSize: "0.85rem", color: INK_PRIMARY, lineHeight: 1.55 }}>
                   {`Normally avoided for initiations. For surgery, Mars-character matches cutting and intervention — a named exception.`}
                 </div>
               </div>
-              <div style={{ padding: "0.75rem", borderRadius: 8, border: `1px solid ${PURPLE}`, background: `${PURPLE}08` }}>
+              <div style={{ padding: "0.75rem", borderRadius: 8, border: `1px solid ${PURPLE}`, background: PURPLE_TINT }}>
                 <div style={{ fontSize: "0.75rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em", color: PURPLE, marginBottom: "0.35rem" }}>Tīkṣṇa-class nakṣatras</div>
                 <div style={{ fontSize: "0.85rem", color: INK_PRIMARY, lineHeight: 1.55 }}>
                   {TIKSHNA_NAKSHATRAS.join(", ")}. Sharp, incisive energy that aligns with surgical action.
                 </div>
               </div>
-              <div style={{ padding: "0.75rem", borderRadius: 8, border: `1px solid ${GREEN}`, background: `${GREEN}08` }}>
+              <div style={{ padding: "0.75rem", borderRadius: 8, border: `1px solid ${GREEN}`, background: GREEN_TINT }}>
                 <div style={{ fontSize: "0.75rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em", color: GREEN, marginBottom: "0.35rem" }}>Combined window</div>
                 <div style={{ fontSize: "0.85rem", color: INK_PRIMARY, lineHeight: 1.55 }}>
                   {`Tuesday + Tīkṣṇa-nakṣatra is considered a strong surgical-timing window inside a medically-approved candidate range.`}
@@ -312,7 +326,7 @@ export function SurgeryMedicalPrimacyWorkbench() {
                 padding: "0.65rem 0.85rem",
                 borderRadius: 6,
                 border: `1px solid ${BLUE}`,
-                background: `${BLUE}08`,
+                background: BLUE_TINT,
                 fontSize: "0.85rem",
                 color: INK_SECONDARY,
                 lineHeight: 1.55,
@@ -330,13 +344,13 @@ export function SurgeryMedicalPrimacyWorkbench() {
               {`The medical-primacy rule is not a courtesy — it is a competence boundary. T1-24 Lesson 24.2.4's adhikāra doctrine states that a practitioner's expertise has real edges. Prescribing or second-guessing surgical timing is outside the astrologer's adhikāra.`}
             </p>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "0.65rem" }}>
-              <div style={{ padding: "0.75rem", borderRadius: 8, border: `1px solid ${GREEN}`, background: `${GREEN}08` }}>
+              <div style={{ padding: "0.75rem", borderRadius: 8, border: `1px solid ${GREEN}`, background: GREEN_TINT }}>
                 <div style={{ fontSize: "0.75rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em", color: GREEN, marginBottom: "0.35rem" }}>Inside adhikāra</div>
                 <div style={{ fontSize: "0.85rem", color: INK_PRIMARY, lineHeight: 1.55 }}>
                   {`Casting and commenting on the muhūrta-chart; selecting within a medically-approved range; naming classical surgical exceptions.`}
                 </div>
               </div>
-              <div style={{ padding: "0.75rem", borderRadius: 8, border: `1px solid ${VERMILION}`, background: `${VERMILION}08` }}>
+              <div style={{ padding: "0.75rem", borderRadius: 8, border: `1px solid ${VERMILION}`, background: VERMILION_TINT }}>
                 <div style={{ fontSize: "0.75rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em", color: VERMILION, marginBottom: "0.35rem" }}>Outside adhikāra</div>
                 <div style={{ fontSize: "0.85rem", color: INK_PRIMARY, lineHeight: 1.55 }}>
                   {`Overruling the medical team's fixed time; suggesting reschedule for astrological reasons; claiming surgical safety expertise.`}
@@ -353,7 +367,7 @@ export function SurgeryMedicalPrimacyWorkbench() {
 function DecisionSvg({ hasWindow }: { hasWindow: boolean }) {
   return (
     <svg viewBox="0 0 480 220" role="img" aria-label="Decision flowchart: medical team provides a range, then candidate window test branches to selection or commentary only" style={{ width: "100%", maxHeight: 220, display: "block" }}>
-      <rect x={190} y={12} width={100} height={36} rx={6} fill={`${BLUE}10`} stroke={BLUE} strokeWidth={1.5} />
+      <rect x={190} y={12} width={100} height={36} rx={6} fill={BLUE_TINT} stroke={BLUE} strokeWidth={1.5} />
       <text x={240} y={35} textAnchor="middle" fontSize={10} fill={BLUE} fontWeight={600}>
         Medical range
       </text>
@@ -369,7 +383,7 @@ function DecisionSvg({ hasWindow }: { hasWindow: boolean }) {
       <line x1={210} y1={96} x2={120} y2={140} stroke={hasWindow ? GREEN : HAIRLINE} strokeWidth={hasWindow ? 2.5 : 1.5} />
       <line x1={270} y1={96} x2={360} y2={140} stroke={!hasWindow ? VERMILION : HAIRLINE} strokeWidth={!hasWindow ? 2.5 : 1.5} />
 
-      <rect x={45} y={140} width={150} height={48} rx={6} fill={hasWindow ? `${GREEN}10` : SURFACE} stroke={hasWindow ? GREEN : HAIRLINE} strokeWidth={hasWindow ? 2 : 1} />
+      <rect x={45} y={140} width={150} height={48} rx={6} fill={hasWindow ? GREEN_TINT : SURFACE} stroke={hasWindow ? GREEN : HAIRLINE} strokeWidth={hasWindow ? 2 : 1} />
       <text x={120} y={162} textAnchor="middle" fontSize={10} fill={hasWindow ? GREEN : INK_SECONDARY} fontWeight={600}>
         Muhūrta-selection
       </text>
@@ -377,7 +391,7 @@ function DecisionSvg({ hasWindow }: { hasWindow: boolean }) {
         inside range only
       </text>
 
-      <rect x={285} y={140} width={150} height={48} rx={6} fill={!hasWindow ? `${VERMILION}10` : SURFACE} stroke={!hasWindow ? VERMILION : HAIRLINE} strokeWidth={!hasWindow ? 2 : 1} />
+      <rect x={285} y={140} width={150} height={48} rx={6} fill={!hasWindow ? VERMILION_TINT : SURFACE} stroke={!hasWindow ? VERMILION : HAIRLINE} strokeWidth={!hasWindow ? 2 : 1} />
       <text x={360} y={162} textAnchor="middle" fontSize={10} fill={!hasWindow ? VERMILION : INK_SECONDARY} fontWeight={600}>
         Commentary only
       </text>
@@ -387,7 +401,7 @@ function DecisionSvg({ hasWindow }: { hasWindow: boolean }) {
 
       <line x1={120} y1={188} x2={120} y2={208} stroke={hasWindow ? GREEN : HAIRLINE} strokeWidth={1.5} />
       <line x1={360} y1={188} x2={360} y2={208} stroke={!hasWindow ? VERMILION : HAIRLINE} strokeWidth={1.5} />
-      <rect x={150} y={200} width={180} height={18} rx={4} fill={`${ACCENT}15`} stroke={ACCENT} strokeWidth={1} />
+      <rect x={150} y={200} width={180} height={18} rx={4} fill={GOLD_TINT} stroke={ACCENT} strokeWidth={1} />
       <text x={240} y={212} textAnchor="middle" fontSize={9} fill={ACCENT} fontWeight={600}>
         Medical judgment is the hard boundary
       </text>
@@ -417,7 +431,7 @@ function PanelButton({
         padding: "0.5rem 0.75rem",
         borderRadius: 6,
         border: `1px solid ${active ? ACCENT : HAIRLINE}`,
-        background: active ? `${ACCENT}15` : SURFACE,
+        background: active ? GOLD_TINT : SURFACE,
         color: active ? ACCENT : INK_SECONDARY,
         fontWeight: 600,
         fontSize: "0.82rem",
@@ -457,7 +471,7 @@ function buttonStyle(active: boolean, color: string): CSSProperties {
     padding: "0.45rem 0.75rem",
     borderRadius: 6,
     border: `1px solid ${active ? color : HAIRLINE}`,
-    background: active ? `${color}15` : SURFACE,
+    background: active ? tintForColor(color) : SURFACE,
     color: active ? color : INK_SECONDARY,
     fontWeight: 600,
     fontSize: "0.82rem",

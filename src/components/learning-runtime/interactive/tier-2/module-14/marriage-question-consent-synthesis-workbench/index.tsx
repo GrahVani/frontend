@@ -23,13 +23,19 @@ const HAIRLINE = "var(--gl-gold-hairline)";
 const SURFACE = "var(--gl-card-surface-solid)";
 const ACCENT = "var(--gl-gold-accent)";
 const VERMILION = "var(--gl-vermilion-accent)";
+const VERMILION_TINT = "#FDEBE6";
 const GREEN = "#2F7D55";
+const GREEN_TINT = "#EAF4EE";
 const BLUE = "#356CAB";
+const BLUE_TINT = "#EAF0F8";
 const GOLD = "#B88421";
+const GOLD_TINT = "#FFF8E8";
+const MUTED_STROKE = "#C9B88F";
+const GREEN_TRANSLUCENT = "#2F7D5588";
 
 const CONFIDENCE_COLORS: Record<ConfidenceKey, string> = {
   strong: GREEN,
-  "moderate-strong": `${GREEN}88`,
+  "moderate-strong": GREEN_TRANSLUCENT,
   moderate: GOLD,
   "weak-moderate": VERMILION,
 };
@@ -153,7 +159,7 @@ export function MarriageQuestionConsentSynthesisWorkbench() {
           ) : (
             <>
               <DepthComparisonSvg tier={tier} />
-              <div style={{ marginTop: "0.75rem", padding: "0.75rem", borderRadius: 8, background: `${VERMILION}08`, border: `1px solid ${VERMILION}` }}>
+              <div style={{ marginTop: "0.75rem", padding: "0.75rem", borderRadius: 8, background: VERMILION_TINT, border: `1px solid ${VERMILION}` }}>
                 <div style={{ display: "flex", alignItems: "start", gap: "0.5rem" }}>
                   <Lock size={18} style={{ color: VERMILION, flexShrink: 0 }} />
                   <div>
@@ -172,7 +178,7 @@ export function MarriageQuestionConsentSynthesisWorkbench() {
                 Try to add a degree-specific claim
               </button>
               {blockedAttempt && (
-                <div style={{ marginTop: "0.55rem", padding: "0.65rem", borderRadius: 8, background: `${VERMILION}10`, border: `1px solid ${VERMILION}`, color: VERMILION, fontSize: "0.85rem" }}>
+                <div style={{ marginTop: "0.55rem", padding: "0.65rem", borderRadius: 8, background: VERMILION_TINT, border: `1px solid ${VERMILION}`, color: VERMILION, fontSize: "0.85rem" }}>
                   <div style={{ display: "flex", alignItems: "start", gap: "0.5rem" }}>
                     <AlertTriangle size={16} aria-hidden="true" style={{ flexShrink: 0 }} />
                     <span>Blocked: Tier C does not support degree-specific claims about a non-consenting subject.</span>
@@ -193,11 +199,11 @@ export function MarriageQuestionConsentSynthesisWorkbench() {
 
           <Panel title="What changes, what does not" icon={<BookOpen size={18} />} color={BLUE}>
             <div style={{ display: "grid", gap: "0.45rem" }}>
-              <div style={{ padding: "0.5rem", borderRadius: 6, background: `${GREEN}08`, border: `1px solid ${GREEN}` }}>
+              <div style={{ padding: "0.5rem", borderRadius: 6, background: GREEN_TINT, border: `1px solid ${GREEN}` }}>
                 <span style={{ color: GREEN, fontWeight: 600, fontSize: "0.85rem" }}>Does not change</span>
                 <p style={{ margin: "0.2rem 0 0", color: INK_SECONDARY, fontSize: "0.8rem" }}>The mechanical technique: composite, house-overlay, Jaimini, and KP thinking all proceed the same way.</p>
               </div>
-              <div style={{ padding: "0.5rem", borderRadius: 6, background: `${VERMILION}08`, border: `1px solid ${VERMILION}` }}>
+              <div style={{ padding: "0.5rem", borderRadius: 6, background: VERMILION_TINT, border: `1px solid ${VERMILION}` }}>
                 <span style={{ color: VERMILION, fontWeight: 600, fontSize: "0.85rem" }}>Changes</span>
                 <p style={{ margin: "0.2rem 0 0", color: INK_SECONDARY, fontSize: "0.8rem" }}>Reporting depth. Tier C stays at tendency level; no specific houses, signs, or degrees for the absent partner.</p>
               </div>
@@ -210,23 +216,23 @@ export function MarriageQuestionConsentSynthesisWorkbench() {
 }
 
 function DepthComparisonSvg({ tier }: { tier: TierKey }) {
-  const deepColor = tier === "A" ? GREEN : `${INK_MUTED}55`;
-  const shallowColor = tier === "C" ? VERMILION : `${INK_MUTED}55`;
+  const deepColor = tier === "A" ? GREEN : MUTED_STROKE;
+  const shallowColor = tier === "C" ? VERMILION : MUTED_STROKE;
 
   return (
     <svg viewBox="0 0 560 140" role="img" aria-label={`Consent tier ${tier} reading depth`} style={{ width: "100%", maxHeight: 220, margin: "0.4rem auto 0.75rem", display: "block" }}>
-      <rect x="12" y="12" width="536" height="116" rx="8" fill={`${ACCENT}08`} stroke={HAIRLINE} />
+      <rect x="12" y="12" width="536" height="116" rx="8" fill={GOLD_TINT} stroke={HAIRLINE} />
       <text x="280" y="34" textAnchor="middle" fill={INK_PRIMARY} fontSize="13" fontWeight={600}>
         Reporting depth by tier
       </text>
 
       {/* Tier A funnel */}
-      <polygon points="80,50 180,50 160,110 100,110" fill={`${GREEN}10`} stroke={deepColor} strokeWidth="2" />
+      <polygon points="80,50 180,50 160,110 100,110" fill={GREEN_TINT} stroke={deepColor} strokeWidth="2" />
       <text x="130" y="80" textAnchor="middle" fill={deepColor} fontSize="11" fontWeight={600}>Tier A</text>
       <text x="130" y="126" textAnchor="middle" fill={tier === "A" ? GREEN : INK_MUTED} fontSize="10" fontWeight={600}>specific houses / signs / degrees</text>
 
       {/* Tier C funnel */}
-      <polygon points="380,70 480,70 460,110 400,110" fill={`${VERMILION}10`} stroke={shallowColor} strokeWidth="2" />
+      <polygon points="380,70 480,70 460,110 400,110" fill={VERMILION_TINT} stroke={shallowColor} strokeWidth="2" />
       <text x="430" y="90" textAnchor="middle" fill={shallowColor} fontSize="11" fontWeight={600}>Tier C</text>
       <text x="430" y="126" textAnchor="middle" fill={tier === "C" ? VERMILION : INK_MUTED} fontSize="10" fontWeight={600}>tendency-level pattern only</text>
 
@@ -239,7 +245,7 @@ function DepthComparisonSvg({ tier }: { tier: TierKey }) {
 function ConfidenceBadge({ confidence }: { confidence: ConfidenceKey }) {
   const color = CONFIDENCE_COLORS[confidence];
   return (
-    <span style={{ padding: "0.12rem 0.45rem", borderRadius: 999, background: `${color}12`, color, fontSize: "0.7rem", fontWeight: 600, border: `1px solid ${color}` }}>
+    <span style={{ padding: "0.12rem 0.45rem", borderRadius: 999, background: tintForColor(color), color, fontSize: "0.7rem", fontWeight: 600, border: `1px solid ${color}` }}>
       {CONFIDENCE_LABELS[confidence]}
     </span>
   );
@@ -299,6 +305,14 @@ function buttonStyle(primary: boolean, color: string): CSSProperties {
   };
 }
 
+function tintForColor(color: string): string {
+  if (color === VERMILION) return VERMILION_TINT;
+  if (color === GREEN || color === CONFIDENCE_COLORS["moderate-strong"]) return GREEN_TINT;
+  if (color === BLUE) return BLUE_TINT;
+  if (color === GOLD || color === ACCENT) return GOLD_TINT;
+  return SURFACE;
+}
+
 function toggleRowStyle(active: boolean, color: string): CSSProperties {
   return {
     display: "inline-flex",
@@ -307,7 +321,7 @@ function toggleRowStyle(active: boolean, color: string): CSSProperties {
     padding: "0.45rem 0.75rem",
     borderRadius: 999,
     border: `1px solid ${active ? color : HAIRLINE}`,
-    background: active ? `${color}10` : SURFACE,
+    background: active ? tintForColor(color) : SURFACE,
     color: active ? color : INK_PRIMARY,
     fontSize: "0.85rem",
     fontWeight: 600,

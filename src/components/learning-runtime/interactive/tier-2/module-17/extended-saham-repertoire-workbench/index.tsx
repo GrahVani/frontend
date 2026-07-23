@@ -31,6 +31,13 @@ const VERMILION = "#A23A1E";
 const AMBER = "#D97706";
 const BLUE = "#356CAB";
 const PURPLE = "#6B5AA8";
+const MUTED_TINT = "#F4EFE4";
+const GOLD_TINT = "#FFF8E8";
+const GREEN_TINT = "#EAF4EE";
+const VERMILION_TINT = "#FDEBE6";
+const AMBER_TINT = "#FFF4DE";
+const BLUE_TINT = "#EAF0F8";
+const PURPLE_TINT = "#F1EEFA";
 
 type Category =
   | "Relationship"
@@ -306,8 +313,8 @@ export function ExtendedSahamRepertoireWorkbench() {
                 key={s.key}
                 style={{
                   ...cardStyle,
-                  borderColor: s.highRisk ? `${VERMILION}55` : HAIRLINE,
-                  background: s.highRisk ? `${VERMILION}08` : SURFACE
+                  borderColor: s.highRisk ? VERMILION : HAIRLINE,
+                  background: s.highRisk ? VERMILION_TINT : SURFACE
                 }}
               >
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", gap: "0.5rem" }}>
@@ -324,7 +331,7 @@ export function ExtendedSahamRepertoireWorkbench() {
                       textTransform: "uppercase",
                       letterSpacing: "0.08em",
                       color: categoryColor(s.category),
-                      background: `${categoryColor(s.category)}15`,
+                      background: tintForColor(categoryColor(s.category)),
                       padding: "0.25rem 0.5rem",
                       borderRadius: "999px",
                       whiteSpace: "nowrap"
@@ -357,7 +364,7 @@ export function ExtendedSahamRepertoireWorkbench() {
                       marginTop: "0.6rem",
                       padding: "0.55rem 0.7rem",
                       borderRadius: "8px",
-                      background: `${VERMILION}12`,
+                      background: VERMILION_TINT,
                       color: VERMILION,
                       fontSize: "0.8rem",
                       lineHeight: 1.45
@@ -430,12 +437,12 @@ export function ExtendedSahamRepertoireWorkbench() {
             </div>
             <div style={workbenchTwoColumnStyle}>
               {MARRIAGE_FALLBACK[native].natal && (
-                <div style={{ ...cardStyle, background: `${BLUE}08` }}>
+                <div style={{ ...cardStyle, background: BLUE_TINT }}>
                   <p style={{ ...eyebrowStyle, margin: 0, color: BLUE }}>Natal chart</p>
                   <p style={{ margin: "0.5rem 0 0", color: INK_SECONDARY, lineHeight: 1.55 }}>{MARRIAGE_FALLBACK[native].natal}</p>
                 </div>
               )}
-              <div style={{ ...cardStyle, background: `${GREEN}08` }}>
+              <div style={{ ...cardStyle, background: GREEN_TINT }}>
                 <p style={{ ...eyebrowStyle, margin: 0, color: GREEN }}>Varṣaphala chart</p>
                 <p style={{ margin: "0.5rem 0 0", color: INK_SECONDARY, lineHeight: 1.55 }}>{MARRIAGE_FALLBACK[native].varsa}</p>
               </div>
@@ -466,8 +473,8 @@ export function ExtendedSahamRepertoireWorkbench() {
                 style={{
                   padding: "0.9rem",
                   borderRadius: "10px",
-                  background: `${VERMILION}08`,
-                  border: `1px solid ${VERMILION}30`,
+                  background: VERMILION_TINT,
+                  border: `1px solid ${VERMILION}`,
                   color: INK_PRIMARY,
                   lineHeight: 1.55,
                   marginBottom: "0.85rem"
@@ -491,7 +498,7 @@ export function ExtendedSahamRepertoireWorkbench() {
                         padding: "0.85rem 1rem",
                         borderRadius: "10px",
                         border: `1.5px solid ${state === "correct" ? GREEN : state === "wrong" ? VERMILION : HAIRLINE}`,
-                        background: state === "correct" ? `${GREEN}10` : state === "wrong" ? `${VERMILION}10` : SURFACE,
+                        background: state === "correct" ? GREEN_TINT : state === "wrong" ? VERMILION_TINT : SURFACE,
                         color: INK_PRIMARY,
                         fontSize: "0.95rem",
                         lineHeight: 1.5,
@@ -513,7 +520,7 @@ export function ExtendedSahamRepertoireWorkbench() {
                     marginTop: "0.85rem",
                     padding: "0.85rem",
                     borderRadius: "10px",
-                    background: isCorrect ? `${GREEN}10` : `${VERMILION}10`,
+                    background: isCorrect ? GREEN_TINT : VERMILION_TINT,
                     border: `1px solid ${isCorrect ? GREEN : VERMILION}`,
                     color: INK_SECONDARY,
                     lineHeight: 1.6
@@ -541,7 +548,7 @@ export function ExtendedSahamRepertoireWorkbench() {
                         padding: "0.55rem 0.75rem",
                         borderRadius: "8px",
                         border: `1.5px solid ${scenarioIndex === idx ? AMBER : HAIRLINE}`,
-                        background: scenarioIndex === idx ? `${AMBER}10` : SURFACE,
+                        background: scenarioIndex === idx ? AMBER_TINT : SURFACE,
                         color: scenarioIndex === idx ? AMBER : INK_SECONDARY,
                         fontSize: "0.85rem",
                         fontWeight: scenarioIndex === idx ? 600 : 500
@@ -569,24 +576,24 @@ export function ExtendedSahamRepertoireWorkbench() {
 
 function CountDiagram() {
   return (
-    <svg viewBox="0 0 560 120" role="img" aria-label="Saham count comparison" style={{ width: "100%", maxHeight: 160, marginTop: "0.75rem" }}>
+    <svg viewBox="0 0 660 120" role="img" aria-label="Saham count comparison" style={{ width: "100%", maxHeight: 160, marginTop: "0.75rem" }}>
       <text x="20" y="24" fill={INK_MUTED} fontSize="12" fontWeight={600}>External compilations (disagree)</text>
-      <rect x="20" y="34" width="120" height="46" rx="6" fill={`${INK_MUTED}15`} stroke={INK_MUTED} />
+      <rect x="20" y="34" width="120" height="46" rx="6" fill={MUTED_TINT} stroke={INK_MUTED} />
       <text x="80" y="54" textAnchor="middle" fill={INK_PRIMARY} fontSize="13" fontWeight={600}>~40</text>
       <text x="80" y="72" textAnchor="middle" fill={INK_MUTED} fontSize="10">variant A</text>
 
-      <rect x="155" y="34" width="120" height="46" rx="6" fill={`${INK_MUTED}15`} stroke={INK_MUTED} />
+      <rect x="155" y="34" width="120" height="46" rx="6" fill={MUTED_TINT} stroke={INK_MUTED} />
       <text x="215" y="54" textAnchor="middle" fill={INK_PRIMARY} fontSize="13" fontWeight={600}>~50</text>
       <text x="215" y="72" textAnchor="middle" fill={INK_MUTED} fontSize="10">variant B</text>
 
-      <rect x="290" y="34" width="120" height="46" rx="6" fill={`${INK_MUTED}15`} stroke={INK_MUTED} />
+      <rect x="290" y="34" width="120" height="46" rx="6" fill={MUTED_TINT} stroke={INK_MUTED} />
       <text x="350" y="54" textAnchor="middle" fill={INK_PRIMARY} fontSize="13" fontWeight={600}>~70</text>
       <text x="350" y="72" textAnchor="middle" fill={INK_MUTED} fontSize="10">variant C</text>
 
       <path d="M 440 57 L 480 57" stroke={GOLD} strokeWidth="2" strokeDasharray="4 2" />
       <polygon points="480,57 474,52 474,62" fill={GOLD} />
 
-      <rect x="495" y="34" width="140" height="70" rx="8" fill={`${GREEN}12`} stroke={GREEN} strokeWidth="2" />
+      <rect x="495" y="34" width="140" height="70" rx="8" fill={GREEN_TINT} stroke={GREEN} strokeWidth="2" />
       <text x="565" y="60" textAnchor="middle" fill={INK_PRIMARY} fontSize="16" fontWeight={600}>22</text>
       <text x="565" y="78" textAnchor="middle" fill={GREEN} fontSize="10" fontWeight={600}>individually named</text>
       <text x="565" y="92" textAnchor="middle" fill={INK_MUTED} fontSize="9">in T1-19</text>
@@ -597,29 +604,29 @@ function CountDiagram() {
 function FallbackDiagram({ domain }: { domain: DomainKey }) {
   const d = DOMAINS[domain];
   return (
-    <svg viewBox="0 0 560 140" role="img" aria-label="House lord fallback pathway" style={{ width: "100%", maxHeight: 180, marginTop: "0.4rem" }}>
-      <rect x="20" y="45" width="110" height="50" rx="8" fill={`${BLUE}12`} stroke={BLUE} />
+    <svg viewBox="0 0 560 160" role="img" aria-label="House lord fallback pathway" style={{ width: "100%", maxHeight: 180, marginTop: "0.4rem" }}>
+      <rect x="20" y="45" width="110" height="50" rx="8" fill={BLUE_TINT} stroke={BLUE} />
       <text x="75" y="62" textAnchor="middle" fill={INK_PRIMARY} fontSize="11" fontWeight={600}>Client asks</text>
       <text x="75" y="80" textAnchor="middle" fill={INK_SECONDARY} fontSize="10">{d.question}</text>
 
       <path d="M 135 70 L 175 70" stroke={GOLD} strokeWidth="2" />
       <polygon points="175,70 169,65 169,75" fill={GOLD} />
 
-      <rect x="185" y="45" width="110" height="50" rx="8" fill={`${GREEN}12`} stroke={GREEN} />
+      <rect x="185" y="45" width="110" height="50" rx="8" fill={GREEN_TINT} stroke={GREEN} />
       <text x="240" y="62" textAnchor="middle" fill={INK_PRIMARY} fontSize="11" fontWeight={600}>Fallback house</text>
       <text x="240" y="80" textAnchor="middle" fill={INK_SECONDARY} fontSize="10">House {d.house}{d.secondaryHouse ? ` + ${d.secondaryHouse}` : ""}</text>
 
       <path d="M 300 70 L 340 70" stroke={GOLD} strokeWidth="2" />
       <polygon points="340,70 334,65 334,75" fill={GOLD} />
 
-      <rect x="350" y="45" width="110" height="50" rx="8" fill={`${PURPLE}12`} stroke={PURPLE} />
+      <rect x="350" y="45" width="110" height="50" rx="8" fill={PURPLE_TINT} stroke={PURPLE} />
       <text x="405" y="62" textAnchor="middle" fill={INK_PRIMARY} fontSize="11" fontWeight={600}>House lord</text>
       <text x="405" y="80" textAnchor="middle" fill={INK_SECONDARY} fontSize="10">sign, dignity, placement</text>
 
       <path d="M 405 100 L 405 115" stroke={PURPLE} strokeWidth="2" />
       <polygon points="405,115 400,109 410,109" fill={PURPLE} />
 
-      <rect x="320" y="118" width="170" height="34" rx="8" fill={`${GOLD}12`} stroke={GOLD} />
+      <rect x="320" y="118" width="170" height="34" rx="8" fill={GOLD_TINT} stroke={GOLD} />
       <text x="405" y="134" textAnchor="middle" fill={INK_PRIMARY} fontSize="10" fontWeight={600}>Contextual reading, not a saham value</text>
 
       <text x="280" y="20" textAnchor="middle" fill={INK_MUTED} fontSize="11" fontWeight={600}>
@@ -650,9 +657,21 @@ function categoryColor(category: Category): string {
   }
 }
 
+function tintForColor(color: string): string {
+  switch (color) {
+    case BLUE: return BLUE_TINT;
+    case GREEN: return GREEN_TINT;
+    case GOLD: return GOLD_TINT;
+    case VERMILION: return VERMILION_TINT;
+    case PURPLE: return PURPLE_TINT;
+    case AMBER: return AMBER_TINT;
+    default: return MUTED_TINT;
+  }
+}
+
 function Panel({ title, icon, color, children }: { title: string; icon: ReactNode; color: string; children: ReactNode }) {
   return (
-    <section style={{ ...cardStyle, borderColor: `${color}55` }}>
+    <section style={{ ...cardStyle, borderColor: color }}>
       <div style={{ display: "flex", alignItems: "center", gap: "0.45rem", marginBottom: "0.55rem" }}>
         <span style={{ color }}>{icon}</span>
         <p style={{ ...eyebrowStyle, margin: 0, color }}>{title}</p>
@@ -664,7 +683,7 @@ function Panel({ title, icon, color, children }: { title: string; icon: ReactNod
 
 function MiniFact({ icon, title, body, color }: { icon: ReactNode; title: string; body: string; color: string }) {
   return (
-    <div style={{ display: "flex", alignItems: "start", gap: "0.55rem", padding: "0.65rem", borderRadius: "8px", background: `${color}10`, border: `1px solid ${color}30` }}>
+    <div style={{ display: "flex", alignItems: "start", gap: "0.55rem", padding: "0.65rem", borderRadius: "8px", background: tintForColor(color), border: `1px solid ${color}` }}>
       <span style={{ color, marginTop: "0.1rem" }}>{icon}</span>
       <div>
         <p style={{ margin: 0, fontSize: "0.75rem", fontWeight: 700, color, textTransform: "uppercase", letterSpacing: "0.06em" }}>{title}</p>
@@ -702,7 +721,7 @@ function smallChipStyle(active: boolean, color: string): CSSProperties {
     padding: "0.45rem 0.75rem",
     borderRadius: "999px",
     border: `1.5px solid ${active ? color : HAIRLINE}`,
-    background: active ? `${color}15` : SURFACE,
+    background: active ? tintForColor(color) : SURFACE,
     color: active ? color : INK_SECONDARY,
     fontWeight: 600,
     fontSize: "0.85rem",
@@ -719,7 +738,7 @@ function buttonStyle(active: boolean, color: string): CSSProperties {
     padding: "0.5rem 0.85rem",
     borderRadius: "8px",
     border: `1.5px solid ${active ? color : HAIRLINE}`,
-    background: active ? `${color}15` : SURFACE,
+    background: active ? tintForColor(color) : SURFACE,
     color: active ? color : INK_SECONDARY,
     fontWeight: 600,
     fontSize: "0.85rem",

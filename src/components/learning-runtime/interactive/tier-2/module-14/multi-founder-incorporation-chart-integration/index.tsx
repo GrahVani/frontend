@@ -28,10 +28,15 @@ const HAIRLINE = "var(--gl-gold-hairline)";
 const SURFACE = "var(--gl-card-surface-solid)";
 const ACCENT = "var(--gl-gold-accent)";
 const VERMILION = "var(--gl-vermilion-accent)";
+const VERMILION_TINT = "#FDEBE6";
 const GREEN = "#2F7D55";
+const GREEN_TINT = "#EAF4EE";
 const BLUE = "#356CAB";
+const BLUE_TINT = "#EAF0F8";
 const GOLD = "#B88421";
+const GOLD_TINT = "#FFF8E8";
 const PURPLE = "#6B5AA8";
+const PURPLE_TINT = "#F1EEFA";
 
 const INDICATOR_COLORS: Record<IndicatorKey, string> = {
   green: GREEN,
@@ -414,7 +419,7 @@ export function MultiFounderIncorporationChartIntegration() {
               Try compute combined score
             </button>
             {blendedAttempted && (
-              <div style={{ marginTop: "0.55rem", padding: "0.55rem", borderRadius: 6, background: `${VERMILION}10`, border: `1px solid ${VERMILION}`, color: VERMILION, fontSize: "0.8rem" }}>
+              <div style={{ marginTop: "0.55rem", padding: "0.55rem", borderRadius: 6, background: VERMILION_TINT, border: `1px solid ${VERMILION}`, color: VERMILION, fontSize: "0.8rem" }}>
                 <div style={{ display: "flex", alignItems: "start", gap: "0.45rem" }}>
                   <ShieldAlert size={16} aria-hidden="true" style={{ flexShrink: 0 }} />
                   <span>Blending two founders into one score hides the asymmetry this lesson exists to protect.</span>
@@ -493,7 +498,7 @@ export function MultiFounderIncorporationChartIntegration() {
           {auditRun && (
             <div style={{ marginTop: "0.75rem", display: "grid", gap: "0.55rem" }}>
               {auditPassed ? (
-                <div style={{ padding: "0.75rem", borderRadius: 8, background: `${GREEN}10`, border: `1px solid ${GREEN}`, color: GREEN, fontSize: "0.9rem" }}>
+                <div style={{ padding: "0.75rem", borderRadius: 8, background: GREEN_TINT, border: `1px solid ${GREEN}`, color: GREEN, fontSize: "0.9rem" }}>
                   <div style={{ display: "flex", alignItems: "start", gap: "0.5rem" }}>
                     <BadgeCheck size={18} aria-hidden="true" style={{ flexShrink: 0 }} />
                     <span>Statement passes: no determinism, no leadership overreach, all findings represented, referral included.</span>
@@ -530,7 +535,7 @@ export function MultiFounderIncorporationChartIntegration() {
 
 function FounderInventoryPanel({ founder }: { founder: FounderProfile }) {
   return (
-    <div style={{ border: `1px solid ${founder.color}`, borderRadius: 8, background: `${founder.color}08`, padding: "0.75rem" }}>
+    <div style={{ border: `1px solid ${founder.color}`, borderRadius: 8, background: tintForColor(founder.color), padding: "0.75rem" }}>
       <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.5rem" }}>
         <span style={{ width: 10, height: 10, borderRadius: "50%", background: founder.color }} />
         <h4 style={{ margin: 0, color: founder.color, fontSize: "1rem", fontWeight: 600 }}>{founder.label}&apos;s inventory</h4>
@@ -557,7 +562,7 @@ function FounderInventoryPanel({ founder }: { founder: FounderProfile }) {
 function ClassificationBadge({ classification }: { classification: IndicatorKey }) {
   const color = INDICATOR_COLORS[classification];
   return (
-    <span style={{ padding: "0.12rem 0.45rem", borderRadius: 999, background: `${color}12`, color, fontSize: "0.7rem", fontWeight: 600, border: `1px solid ${color}` }}>
+    <span style={{ padding: "0.12rem 0.45rem", borderRadius: 999, background: tintForColor(color), color, fontSize: "0.7rem", fontWeight: 600, border: `1px solid ${color}` }}>
       {INDICATOR_LABELS[classification]}
     </span>
   );
@@ -602,7 +607,7 @@ function ClassificationTallySvg({
 
   return (
     <svg viewBox="0 0 560 220" role="img" aria-label="Classification tally comparing Ansh and Priya" style={{ width: "100%", maxHeight: 280, margin: "0.4rem auto 0", display: "block" }}>
-      <rect x="24" y="24" width="512" height="172" rx="8" fill={`${ACCENT}08`} stroke={HAIRLINE} />
+      <rect x="24" y="24" width="512" height="172" rx="8" fill={GOLD_TINT} stroke={HAIRLINE} />
       <text x="280" y="50" textAnchor="middle" fill={INK_PRIMARY} fontSize="14" fontWeight={600}>
         Green / Mixed / Caution counts
       </text>
@@ -622,7 +627,7 @@ function ClassificationTallySvg({
               const y = baseY - height;
               return (
                 <g key={indicator}>
-                  <rect x={x} y={y} width={barWidth} height={height} rx={4} fill={count === 0 ? `${INDICATOR_COLORS[indicator]}33` : INDICATOR_COLORS[indicator]} stroke={INDICATOR_COLORS[indicator]} strokeWidth={1} />
+                  <rect x={x} y={y} width={barWidth} height={height} rx={4} fill={count === 0 ? tintForColor(INDICATOR_COLORS[indicator]) : INDICATOR_COLORS[indicator]} stroke={INDICATOR_COLORS[indicator]} strokeWidth={1} />
                   <text x={x + barWidth / 2} y={y - 8} textAnchor="middle" fill={count === 0 ? INK_MUTED : INK_PRIMARY} fontSize="12" fontWeight={600}>
                     {count}
                   </text>
@@ -641,7 +646,7 @@ function ClassificationTallySvg({
 
 function AuditIssue({ children }: { children: ReactNode }) {
   return (
-    <div style={{ padding: "0.65rem", borderRadius: 8, background: `${VERMILION}10`, border: `1px solid ${VERMILION}`, color: VERMILION, fontSize: "0.85rem" }}>
+    <div style={{ padding: "0.65rem", borderRadius: 8, background: VERMILION_TINT, border: `1px solid ${VERMILION}`, color: VERMILION, fontSize: "0.85rem" }}>
       <div style={{ display: "flex", alignItems: "start", gap: "0.5rem" }}>
         <AlertTriangle size={16} aria-hidden="true" style={{ flexShrink: 0 }} />
         <span>{children}</span>
@@ -695,6 +700,15 @@ function buttonStyle(primary: boolean, color: string): CSSProperties {
   };
 }
 
+function tintForColor(color: string): string {
+  if (color === VERMILION) return VERMILION_TINT;
+  if (color === GREEN) return GREEN_TINT;
+  if (color === BLUE) return BLUE_TINT;
+  if (color === GOLD || color === ACCENT) return GOLD_TINT;
+  if (color === PURPLE) return PURPLE_TINT;
+  return SURFACE;
+}
+
 function smallChipStyle(active: boolean, color: string): CSSProperties {
   return {
     display: "inline-flex",
@@ -703,7 +717,7 @@ function smallChipStyle(active: boolean, color: string): CSSProperties {
     padding: "0.35rem 0.6rem",
     borderRadius: 999,
     border: `1px solid ${active ? color : HAIRLINE}`,
-    background: active ? `${color}12` : SURFACE,
+    background: active ? tintForColor(color) : SURFACE,
     color: active ? color : INK_PRIMARY,
     fontSize: "0.8rem",
     fontWeight: 600,

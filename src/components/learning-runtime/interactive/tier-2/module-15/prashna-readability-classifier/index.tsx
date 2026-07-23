@@ -22,10 +22,15 @@ const HAIRLINE = "var(--gl-gold-hairline)";
 const SURFACE = "var(--gl-card-surface-solid)";
 const ACCENT = "var(--gl-gold-accent)";
 const VERMILION = "var(--gl-vermilion-accent)";
+const VERMILION_TINT = "#FDEBE6";
 const GREEN = "#2F7D55";
+const GREEN_TINT = "#EAF4EE";
 const BLUE = "#356CAB";
+const BLUE_TINT = "#EAF0F8";
 const GOLD = "#B88421";
+const GOLD_TINT = "#FFF8E8";
 const PURPLE = "#6B5AA8";
+const PURPLE_TINT = "#F1EEFA";
 
 const PROPERTIES = [
   { key: "bounded", label: "Bounded", description: "A specific matter with a discoverable endpoint." },
@@ -171,7 +176,7 @@ export function PrashnaReadabilityClassifier() {
             </div>
             <div style={{ display: "grid", gap: "0.4rem" }}>
               {PROPERTIES.map((p) => (
-                <div key={p.key} style={{ padding: "0.45rem", borderRadius: 6, background: `${GREEN}08`, border: `1px solid ${GREEN}` }}>
+                <div key={p.key} style={{ padding: "0.45rem", borderRadius: 6, background: GREEN_TINT, border: `1px solid ${GREEN}` }}>
                   <span style={{ color: GREEN, fontWeight: 600, fontSize: "0.85rem" }}>{p.label}</span>
                   <p style={{ margin: "0.15rem 0 0", color: INK_SECONDARY, fontSize: "0.78rem" }}>{p.description}</p>
                 </div>
@@ -186,7 +191,7 @@ export function PrashnaReadabilityClassifier() {
             </div>
             <div style={{ display: "grid", gap: "0.4rem" }}>
               {CATEGORIES.map((c) => (
-                <div key={c.key} style={{ padding: "0.45rem", borderRadius: 6, background: `${c.color}08`, border: `1px solid ${c.color}` }}>
+                <div key={c.key} style={{ padding: "0.45rem", borderRadius: 6, background: tintForColor(c.color), border: `1px solid ${c.color}` }}>
                   <span style={{ color: c.color, fontWeight: 600, fontSize: "0.8rem" }}>{c.label}</span>
                   <p style={{ margin: "0.15rem 0 0", color: INK_SECONDARY, fontSize: "0.75rem" }}>{c.description}</p>
                 </div>
@@ -217,7 +222,7 @@ export function PrashnaReadabilityClassifier() {
             const showThisFeedback = showFeedback && isAnswered;
             const isCorrect = showThisFeedback && answer.verdict === scenario.verdict && (scenario.verdict !== "unreadable" || answer.category === scenario.category);
             return (
-              <div key={scenario.id} style={{ padding: "0.75rem", borderRadius: 8, border: `1px solid ${showThisFeedback ? (isCorrect ? GREEN : VERMILION) : HAIRLINE}`, background: showThisFeedback ? (isCorrect ? `${GREEN}08` : `${VERMILION}08`) : SURFACE }}>
+              <div key={scenario.id} style={{ padding: "0.75rem", borderRadius: 8, border: `1px solid ${showThisFeedback ? (isCorrect ? GREEN : VERMILION) : HAIRLINE}`, background: showThisFeedback ? (isCorrect ? GREEN_TINT : VERMILION_TINT) : SURFACE }}>
                 <div style={{ display: "flex", justifyContent: "space-between", gap: "0.5rem", alignItems: "start" }}>
                   <p style={{ margin: 0, color: INK_PRIMARY, fontSize: "0.9rem", lineHeight: 1.55 }}>{scenario.question}</p>
                   {showThisFeedback && (isCorrect ? <BadgeCheck size={18} style={{ color: GREEN, flexShrink: 0 }} /> : <AlertTriangle size={18} style={{ color: VERMILION, flexShrink: 0 }} />)}
@@ -258,7 +263,7 @@ export function PrashnaReadabilityClassifier() {
         </button>
 
         {showFeedback && (
-          <div style={{ marginTop: "0.75rem", padding: "0.75rem", borderRadius: 8, background: allCorrect ? `${GREEN}10` : `${VERMILION}10`, border: `1px solid ${allCorrect ? GREEN : VERMILION}`, color: allCorrect ? GREEN : VERMILION, fontSize: "0.9rem" }}>
+          <div style={{ marginTop: "0.75rem", padding: "0.75rem", borderRadius: 8, background: allCorrect ? GREEN_TINT : VERMILION_TINT, border: `1px solid ${allCorrect ? GREEN : VERMILION}`, color: allCorrect ? GREEN : VERMILION, fontSize: "0.9rem" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
               {allCorrect ? <BadgeCheck size={18} aria-hidden="true" /> : <AlertTriangle size={18} aria-hidden="true" />}
               <span style={{ fontWeight: 600 }}>{allCorrect ? "All classifications match the readability framework." : "Some classifications need correction — review the feedback above."}</span>
@@ -273,7 +278,7 @@ export function PrashnaReadabilityClassifier() {
 function ReadabilityFlowSvg() {
   return (
     <svg viewBox="0 0 560 220" role="img" aria-label="Praśna readability decision flow: check four properties, then readable, unreadable by category, or investigate first" style={{ width: "100%", maxHeight: 280, margin: "0.4rem auto 0", display: "block" }}>
-      <rect x="12" y="12" width="536" height="196" rx="8" fill={`${ACCENT}08`} stroke={HAIRLINE} />
+      <rect x="12" y="12" width="536" height="196" rx="8" fill={GOLD_TINT} stroke={HAIRLINE} />
 
       {/* Start */}
       <rect x="220" y="24" width="120" height="32" rx="6" fill={SURFACE} stroke={INK_MUTED} />
@@ -287,7 +292,7 @@ function ReadabilityFlowSvg() {
         { label: "Actionable", x: 410 },
       ].map((p) => (
         <g key={p.label}>
-          <rect x={p.x - 40} y="78" width="80" height="28" rx="6" fill={`${GREEN}10`} stroke={GREEN} />
+          <rect x={p.x - 40} y="78" width="80" height="28" rx="6" fill={GREEN_TINT} stroke={GREEN} />
           <text x={p.x} y="97" textAnchor="middle" fill={GREEN} fontSize="10" fontWeight={600}>{p.label}</text>
         </g>
       ))}
@@ -299,19 +304,19 @@ function ReadabilityFlowSvg() {
       ))}
 
       {/* Readable branch */}
-      <rect x="60" y="138" width="100" height="36" rx="6" fill={`${GREEN}10`} stroke={GREEN} />
+      <rect x="60" y="138" width="100" height="36" rx="6" fill={GREEN_TINT} stroke={GREEN} />
       <text x="110" y="155" textAnchor="middle" fill={GREEN} fontSize="10" fontWeight={700}>All four yes</text>
       <text x="110" y="168" textAnchor="middle" fill={INK_PRIMARY} fontSize="10" fontWeight={600}>Readable</text>
       <line x1="110" y1="106" x2="110" y2="138" stroke={GREEN} strokeWidth="2" />
 
       {/* Investigate branch */}
-      <rect x="230" y="138" width="100" height="36" rx="6" fill={`${GOLD}10`} stroke={GOLD} />
+      <rect x="230" y="138" width="100" height="36" rx="6" fill={GOLD_TINT} stroke={GOLD} />
       <text x="280" y="155" textAnchor="middle" fill={GOLD} fontSize="10" fontWeight={700}>Ordinary check first</text>
       <text x="280" y="168" textAnchor="middle" fill={INK_PRIMARY} fontSize="10" fontWeight={600}>Investigate</text>
       <line x1="280" y1="106" x2="280" y2="138" stroke={GOLD} strokeWidth="2" />
 
       {/* Unreadable branch */}
-      <rect x="400" y="138" width="100" height="36" rx="6" fill={`${VERMILION}10`} stroke={VERMILION} />
+      <rect x="400" y="138" width="100" height="36" rx="6" fill={VERMILION_TINT} stroke={VERMILION} />
       <text x="450" y="155" textAnchor="middle" fill={VERMILION} fontSize="10" fontWeight={700}>Any property no</text>
       <text x="450" y="168" textAnchor="middle" fill={INK_PRIMARY} fontSize="10" fontWeight={600}>Unreadable</text>
       <line x1="450" y1="106" x2="450" y2="138" stroke={VERMILION} strokeWidth="2" />
@@ -351,6 +356,15 @@ function buttonStyle(primary: boolean, color: string): CSSProperties {
   };
 }
 
+function tintForColor(color: string): string {
+  if (color === VERMILION) return VERMILION_TINT;
+  if (color === GREEN) return GREEN_TINT;
+  if (color === BLUE) return BLUE_TINT;
+  if (color === GOLD || color === ACCENT) return GOLD_TINT;
+  if (color === PURPLE) return PURPLE_TINT;
+  return SURFACE;
+}
+
 function smallChipStyle(active: boolean, color: string): CSSProperties {
   return {
     display: "inline-flex",
@@ -359,7 +373,7 @@ function smallChipStyle(active: boolean, color: string): CSSProperties {
     padding: "0.35rem 0.6rem",
     borderRadius: 999,
     border: `1px solid ${active ? color : HAIRLINE}`,
-    background: active ? `${color}12` : SURFACE,
+    background: active ? tintForColor(color) : SURFACE,
     color: active ? color : INK_PRIMARY,
     fontSize: "0.8rem",
     fontWeight: 600,

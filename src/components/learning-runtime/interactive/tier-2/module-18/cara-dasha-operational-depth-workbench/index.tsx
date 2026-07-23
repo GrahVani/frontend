@@ -28,6 +28,12 @@ const BLUE = "#356CAB";
 const AMBER = "#B88421";
 const VERMILION = "#A23A1E";
 const PURPLE = "#6B5AA8";
+const GOLD_TINT = "#FFF8E8";
+const GREEN_TINT = "#EAF4EE";
+const BLUE_TINT = "#EAF0F8";
+const VERMILION_TINT = "#FDEBE6";
+const PURPLE_TINT = "#F1EEFA";
+const MUTED_TINT = "#F4EFE4";
 
 const ELEMENT_COLORS: Record<ElementKey, string> = {
   fire: VERMILION,
@@ -158,7 +164,7 @@ export function CaraDashaOperationalDepthWorkbench() {
               <h3 style={{ margin: 0, color: ELEMENT_COLORS[selectedData.element], fontSize: "1.25rem", fontWeight: 600 }}>
                 {selectedData.label}
               </h3>
-              <span style={{ padding: "0.25rem 0.6rem", borderRadius: "9999px", background: `${ELEMENT_COLORS[selectedData.element]}15`, color: ELEMENT_COLORS[selectedData.element], border: `1px solid ${ELEMENT_COLORS[selectedData.element]}55`, fontSize: "0.78rem", fontWeight: 700 }}>
+              <span style={{ padding: "0.25rem 0.6rem", borderRadius: "9999px", background: tintForColor(ELEMENT_COLORS[selectedData.element]), color: ELEMENT_COLORS[selectedData.element], border: `1px solid ${ELEMENT_COLORS[selectedData.element]}`, fontSize: "0.78rem", fontWeight: 700 }}>
                 {selectedData.period} years
               </span>
             </div>
@@ -169,14 +175,14 @@ export function CaraDashaOperationalDepthWorkbench() {
               <KeyValue label="Sequence window" value={selectedSeq ? `${formatAge(selectedSeq.start)}–${formatAge(selectedSeq.end)}` : "—"} />
             </div>
             {selectedData.direction !== "own-sign" ? (
-              <div style={{ marginTop: "0.75rem", padding: "0.65rem", borderRadius: 8, background: `${ELEMENT_COLORS[selectedData.element]}0F`, border: `1px solid ${ELEMENT_COLORS[selectedData.element]}33` }}>
+              <div style={{ marginTop: "0.75rem", padding: "0.65rem", borderRadius: 8, background: tintForColor(ELEMENT_COLORS[selectedData.element]), border: `1px solid ${ELEMENT_COLORS[selectedData.element]}` }}>
                 <p style={{ margin: 0, color: INK_SECONDARY, fontSize: "0.88rem", lineHeight: 1.55 }}>
                   Count {selectedData.direction} from {selectedData.label} to {selectedData.lordSign}: {countPath.join(" → ")}.
                   Inclusive count = {countPath.length}. Period = {countPath.length} − 1 = {selectedData.period} years.
                 </p>
               </div>
             ) : (
-              <div style={{ marginTop: "0.75rem", padding: "0.65rem", borderRadius: 8, background: `${GREEN}0F`, border: `1px solid ${GREEN}33` }}>
+              <div style={{ marginTop: "0.75rem", padding: "0.65rem", borderRadius: 8, background: GREEN_TINT, border: `1px solid ${GREEN}` }}>
                 <p style={{ margin: 0, color: INK_SECONDARY, fontSize: "0.88rem", lineHeight: 1.55 }}>
                   Lord {selectedData.lord} sits in {selectedData.label}, its own sign. The count-and-minus-one rule is overridden; the period is fixed at 12 years.
                 </p>
@@ -192,7 +198,7 @@ export function CaraDashaOperationalDepthWorkbench() {
         <div style={{ overflowX: "auto", marginTop: "0.85rem" }}>
           <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.82rem", minWidth: 520 }}>
             <thead>
-              <tr style={{ background: `${GOLD}08` }}>
+              <tr style={{ background: GOLD_TINT }}>
                 <th style={thStyle}>Order</th>
                 <th style={thStyle}>Sign</th>
                 <th style={thStyle}>Lord</th>
@@ -209,7 +215,7 @@ export function CaraDashaOperationalDepthWorkbench() {
                   <tr
                     key={key}
                     onClick={() => setSelected(key)}
-                    style={{ background: isSelected ? `${ELEMENT_COLORS[s.element]}10` : "transparent", cursor: "pointer" }}
+                    style={{ background: isSelected ? tintForColor(ELEMENT_COLORS[s.element]) : "transparent", cursor: "pointer" }}
                   >
                     <td style={tdStyle}>{idx + 1}</td>
                     <td style={tdStyle}>
@@ -227,7 +233,7 @@ export function CaraDashaOperationalDepthWorkbench() {
         </div>
       </section>
 
-      <section style={{ ...cardStyle, borderColor: `${PURPLE}66`, background: `${PURPLE}0F` }}>
+      <section style={{ ...cardStyle, borderColor: PURPLE, background: PURPLE_TINT }}>
         <p style={eyebrowStyle}>Key structural finding</p>
         <h3 style={{ margin: "0.15rem 0 0", color: PURPLE, fontSize: "1.18rem", fontWeight: 600 }}>
           Moon mahādaśā sits entirely inside Pisces Cara mahādaśā
@@ -266,8 +272,8 @@ export function CaraDashaOperationalDepthWorkbench() {
             marginTop: "0.75rem",
             padding: "0.65rem 0.85rem",
             borderRadius: 8,
-            background: allHeld ? `${GREEN}12` : `${VERMILION}12`,
-            border: `1px solid ${allHeld ? GREEN : VERMILION}55`,
+            background: allHeld ? GREEN_TINT : VERMILION_TINT,
+            border: `1px solid ${allHeld ? GREEN : VERMILION}`,
             color: allHeld ? GREEN : VERMILION,
             fontWeight: 600,
           }}
@@ -278,7 +284,7 @@ export function CaraDashaOperationalDepthWorkbench() {
         </div>
       </section>
 
-      <section style={{ ...cardStyle, background: `${AMBER}0A`, borderColor: `${AMBER}88` }}>
+      <section style={{ ...cardStyle, background: GOLD_TINT, borderColor: AMBER }}>
         <p style={eyebrowStyle}>Scope boundary</p>
         <h3 style={{ margin: "0.15rem 0 0", color: AMBER, fontSize: "1.1rem", fontWeight: 600 }}>
           Antar-rāśi (Cara sub-periods) are not computed in this module
@@ -337,7 +343,7 @@ function ZodiacWheel({ selected, onSelect }: { selected: string; onSelect: (key:
   }
 
   return (
-    <svg viewBox="0 0 420 420" role="img" aria-label="Kavya’s zodiac wheel with Cara sequence" style={{ width: "100%", maxHeight: 420, margin: "0.5rem auto 0.85rem", display: "block" }}>
+    <svg viewBox="0 0 420 470" role="img" aria-label="Kavya’s zodiac wheel with Cara sequence" style={{ width: "100%", maxHeight: 470, margin: "0.5rem auto 0.85rem", display: "block" }}>
       <circle cx={cx} cy={cy} r={rOut + 6} fill="none" stroke={HAIRLINE} strokeWidth="1" />
       {ZODIAC_KEYS.map((key, idx) => {
         const start = idx * 30;
@@ -351,7 +357,7 @@ function ZodiacWheel({ selected, onSelect }: { selected: string; onSelect: (key:
           <g key={key} onClick={() => onSelect(key)} style={{ cursor: "pointer" }}>
             <path
               d={arcPath(start, end)}
-              fill={`${color}${isSelected ? "22" : "12"}`}
+              fill={isSelected ? tintForColor(color) : SURFACE}
               stroke={isSelected ? color : isPisces ? PURPLE : HAIRLINE}
               strokeWidth={isSelected ? 4 : isPisces ? 3 : 1.5}
             />
@@ -371,7 +377,7 @@ function ZodiacWheel({ selected, onSelect }: { selected: string; onSelect: (key:
       <text x={cx} y={cy - 6} textAnchor="middle" fill={GOLD} fontSize="13" fontWeight={700}>Cara</text>
       <text x={cx} y={cy + 12} textAnchor="middle" fill={INK_SECONDARY} fontSize="11" fontWeight={600}>from Lagna</text>
       <path
-        d={`M ${cx - 30} ${cy + 60} A 70 70 0 1 0 ${cx + 30} ${cy + 60}`}
+        d={`M ${cx - 84} ${cy + 182} A 84 42 0 0 0 ${cx + 84} ${cy + 182}`}
         fill="none"
         stroke={BLUE}
         strokeWidth="3"
@@ -383,7 +389,7 @@ function ZodiacWheel({ selected, onSelect }: { selected: string; onSelect: (key:
           <path d="M0,0 L0,6 L9,3 z" fill={BLUE} />
         </marker>
       </defs>
-      <text x={cx} y={cy + 120} textAnchor="middle" fill={BLUE} fontSize="12" fontWeight={700}>Backward sequence from Cancer</text>
+      <text x={cx} y={cy + 212} textAnchor="middle" fill={BLUE} fontSize="12" fontWeight={700}>Backward sequence from Cancer</text>
     </svg>
   );
 }
@@ -438,7 +444,7 @@ function Timeline({ sequenceData }: { sequenceData: { key: string; start: number
         width={x(MOON_MD.end) - x(MOON_MD.start)}
         height={trackH + 32}
         rx="4"
-        fill={`${GREEN}18`}
+        fill={GREEN_TINT}
         stroke={GREEN}
         strokeWidth="2"
         strokeDasharray="6 4"
@@ -464,7 +470,7 @@ function KeyValue({ label, value }: { label: string; value: string }) {
 
 function MiniFact({ icon, title, body, color }: { icon: ReactNode; title: string; body: string; color: string }) {
   return (
-    <div style={{ border: `1px solid ${color}44`, borderRadius: 8, background: `${color}0F`, padding: "0.7rem" }}>
+    <div style={{ border: `1px solid ${color}`, borderRadius: 8, background: tintForColor(color), padding: "0.7rem" }}>
       <div style={{ display: "flex", alignItems: "center", gap: "0.45rem", color, fontWeight: 700 }}>{icon}{title}</div>
       <p style={{ margin: "0.35rem 0 0", color: INK_SECONDARY, lineHeight: 1.35, fontSize: "0.88rem" }}>{body}</p>
     </div>
@@ -473,7 +479,7 @@ function MiniFact({ icon, title, body, color }: { icon: ReactNode; title: string
 
 function Panel({ title, icon, color, children }: { title: string; icon: ReactNode; color: string; children: ReactNode }) {
   return (
-    <section style={{ border: `1px solid ${color}44`, borderRadius: 8, background: SURFACE, padding: "1rem" }}>
+    <section style={{ border: `1px solid ${color}`, borderRadius: 8, background: SURFACE, padding: "1rem" }}>
       <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", color, fontWeight: 700 }}>{icon}{title}</div>
       <div style={{ marginTop: "0.75rem" }}>{children}</div>
     </section>
@@ -504,11 +510,29 @@ function togglePanelStyle(active: boolean, color: string): CSSProperties {
     textAlign: "left",
     border: `1px solid ${active ? color : HAIRLINE}`,
     borderRadius: 8,
-    background: active ? `${color}14` : "transparent",
+    background: active ? tintForColor(color) : "transparent",
     color: active ? color : INK_SECONDARY,
     padding: "0.75rem",
     cursor: "pointer",
   };
+}
+
+function tintForColor(color: string): string {
+  switch (color) {
+    case BLUE:
+      return BLUE_TINT;
+    case GREEN:
+      return GREEN_TINT;
+    case GOLD:
+    case AMBER:
+      return GOLD_TINT;
+    case VERMILION:
+      return VERMILION_TINT;
+    case PURPLE:
+      return PURPLE_TINT;
+    default:
+      return MUTED_TINT;
+  }
 }
 
 const cardStyle: CSSProperties = {

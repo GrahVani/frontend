@@ -32,6 +32,17 @@ const VERMILION = "#A23A1E";
 const AMBER = "#D97706";
 const BLUE = "#356CAB";
 const PURPLE = "#6B5AA8";
+const MUTED_TINT = "#F4EFE4";
+const GOLD_TINT = "#FFF8E8";
+const GREEN_TINT = "#EAF4EE";
+const VERMILION_TINT = "#FDEBE6";
+const AMBER_TINT = "#FFF4DE";
+const BLUE_TINT = "#EAF0F8";
+const PURPLE_TINT = "#F1EEFA";
+const TEAL_TINT = "#EAF6F5";
+const BROWN_TINT = "#F7EFE8";
+const SLATE_TINT = "#EEF1F4";
+const OLIVE_TINT = "#F1F5E8";
 
 const SIGNS = [
   "Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo",
@@ -296,8 +307,8 @@ export function SahamApplicationDomainsWorkbench() {
                   style={{
                     padding: "0.45rem 0.75rem",
                     borderRadius: "8px",
-                    background: `${domainColor(i)}10`,
-                    border: `1px solid ${domainColor(i)}40`,
+                    background: tintForColor(domainColor(i)),
+                    border: `1px solid ${domainColor(i)}`,
                     color: domainColor(i),
                     fontSize: "0.85rem",
                     fontWeight: 600
@@ -325,7 +336,7 @@ export function SahamApplicationDomainsWorkbench() {
                 </button>
               ))}
             </div>
-            <div style={{ marginTop: "0.75rem", padding: "0.75rem", borderRadius: "10px", background: `${BLUE}08`, border: `1px solid ${BLUE}30`, color: INK_SECONDARY, lineHeight: 1.55 }}>
+            <div style={{ marginTop: "0.75rem", padding: "0.75rem", borderRadius: "10px", background: BLUE_TINT, border: `1px solid ${BLUE}`, color: INK_SECONDARY, lineHeight: 1.55 }}>
               <strong style={{ fontWeight: 600, color: INK_PRIMARY }}>Client question:</strong>{" "}
               {ex.question} <span style={{ color: INK_MUTED }}>({ex.domainModule})</span>
             </div>
@@ -341,11 +352,11 @@ export function SahamApplicationDomainsWorkbench() {
                 T1-19&apos;s own worked example uses a five-saham cluster for a wealth question. Here, only Punya carries a verified formula. The other sahams that conceptually relate to {ex.domain.toLowerCase()} are named, but their formulas are unavailable.
               </p>
               <div style={{ marginTop: "0.85rem", display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
-                <span style={{ padding: "0.5rem 0.85rem", borderRadius: "999px", background: `${GREEN}15`, border: `1.5px solid ${GREEN}`, color: GREEN, fontWeight: 600 }}>Punya Saham — computable</span>
-                <span style={{ padding: "0.5rem 0.85rem", borderRadius: "999px", background: `${AMBER}10`, border: `1.5px solid ${AMBER}60`, color: AMBER, fontWeight: 600 }}>Related sahams — formula unavailable</span>
+                <span style={{ padding: "0.5rem 0.85rem", borderRadius: "999px", background: GREEN_TINT, border: `1.5px solid ${GREEN}`, color: GREEN, fontWeight: 600 }}>Punya Saham — computable</span>
+                <span style={{ padding: "0.5rem 0.85rem", borderRadius: "999px", background: AMBER_TINT, border: `1.5px solid ${AMBER}`, color: AMBER, fontWeight: 600 }}>Related sahams — formula unavailable</span>
               </div>
               {ex.verdict === "NO-HIT" && (
-                <div style={{ marginTop: "0.85rem", padding: "0.75rem", borderRadius: "10px", background: `${VERMILION}08`, border: `1px solid ${VERMILION}40`, color: INK_SECONDARY, lineHeight: 1.55 }}>
+                <div style={{ marginTop: "0.85rem", padding: "0.75rem", borderRadius: "10px", background: VERMILION_TINT, border: `1px solid ${VERMILION}`, color: INK_SECONDARY, lineHeight: 1.55 }}>
                   <AlertTriangle size={16} color={VERMILION} style={{ display: "inline", marginRight: "0.35rem", verticalAlign: "middle" }} />
                   This example deliberately asks a domain question that Punya&apos;s placement does not touch, to practise the no-hit discipline.
                 </div>
@@ -377,7 +388,7 @@ export function SahamApplicationDomainsWorkbench() {
             <section style={cardStyle}>
               <p style={eyebrowStyle}>Step 3 — Check house-placement</p>
               <div style={workbenchDiagramLayoutStyle}>
-                <section style={{ ...cardStyle, flex: "1 1 260px", borderColor: `${GREEN}55` }}>
+                <section style={{ ...cardStyle, flex: "1 1 260px", borderColor: GREEN }}>
                   <MiniFact icon={<Home size={16} />} title="Punya house" body={`House ${ex.punyaHouse} from Varṣa Lagna`} color={GREEN} />
                   <MiniFact icon={<MapPinned size={16} />} title="Sign" body={signName(ex.punya)} color={BLUE} />
                   <MiniFact icon={<Eye size={16} />} title="Sign lord" body={lordName(ex.punya)} color={PURPLE} />
@@ -453,7 +464,7 @@ function Stepper({ step, setStep }: { step: StepKey; setStep: (s: StepKey) => vo
               padding: "0.55rem 0.75rem",
               borderRadius: "10px",
               border: `1.5px solid ${isCurrent ? GOLD : HAIRLINE}`,
-              background: isCurrent ? `${GOLD}12` : SURFACE,
+              background: isCurrent ? GOLD_TINT : SURFACE,
               cursor: "pointer"
             }}
           >
@@ -465,7 +476,7 @@ function Stepper({ step, setStep }: { step: StepKey; setStep: (s: StepKey) => vo
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                background: isCurrent ? GOLD : isDone ? GREEN : `${INK_MUTED}20`,
+                background: isCurrent ? GOLD : isDone ? GREEN : MUTED_TINT,
                 color: isCurrent || isDone ? "#fff" : INK_MUTED,
                 fontSize: "11px",
                 fontWeight: 700
@@ -486,27 +497,27 @@ function Stepper({ step, setStep }: { step: StepKey; setStep: (s: StepKey) => vo
 
 function DomainDiagram() {
   return (
-    <svg viewBox="0 0 700 140" role="img" aria-label="Twelve use-case domains title grounded in ten curriculum modules" style={{ width: "100%", maxHeight: 180, marginTop: "0.75rem" }}>
+    <svg viewBox="0 0 760 190" role="img" aria-label="Twelve use-case domains title grounded in ten curriculum modules" style={{ width: "100%", maxHeight: 220, marginTop: "0.75rem" }}>
       <text x="20" y="22" fill={INK_MUTED} fontSize="12" fontWeight={600}>Inherited module-overview framing</text>
       {Array.from({ length: 12 }).map((_, i) => (
-        <rect key={i} x={20 + i * 52} y="32" width="44" height="36" rx="5" fill={`${INK_MUTED}12`} stroke={INK_MUTED} />
+        <rect key={i} x={20 + i * 58} y="36" width="48" height="36" rx="5" fill={MUTED_TINT} stroke={INK_MUTED} />
       ))}
-      <text x="332" y="54" textAnchor="middle" fill={INK_PRIMARY} fontSize="12" fontWeight={600}>12 use-case domains</text>
+      <text x="357" y="94" textAnchor="middle" fill={INK_PRIMARY} fontSize="12" fontWeight={600}>12 use-case domains</text>
 
-      <path d="M 332 72 L 332 88" stroke={GOLD} strokeWidth="2" />
-      <polygon points="332,88 327,82 337,82" fill={GOLD} />
+      <path d="M 357 104 L 357 122" stroke={GOLD} strokeWidth="2" />
+      <polygon points="357,122 352,116 362,116" fill={GOLD} />
 
-      <text x="20" y="110" fill={GOLD_DEEP} fontSize="12" fontWeight={600}>Grounded in this curriculum</text>
+      <text x="20" y="142" fill={GOLD_DEEP} fontSize="12" fontWeight={600}>Grounded in this curriculum</text>
       {DOMAIN_MODULES.map((mod, i) => (
         <g key={mod}>
-          <rect x={20 + i * 66} y="116" width="60" height="20" rx="4" fill={`${domainColor(i)}12`} stroke={domainColor(i)} />
-          <text x={50 + i * 66} y="130" textAnchor="middle" fill={domainColor(i)} fontSize="8" fontWeight={600}>{mod.split(" ")[0]}</text>
+          <rect x={20 + i * 70} y="150" width="64" height="22" rx="4" fill={tintForColor(domainColor(i))} stroke={domainColor(i)} />
+          <text x={52 + i * 70} y="165" textAnchor="middle" fill={domainColor(i)} fontSize="8" fontWeight={600}>{mod.split(" ")[0]}</text>
         </g>
       ))}
-      <rect x={680} y="116" width="14" height="20" rx="4" fill="none" stroke={`${INK_MUTED}40`} strokeDasharray="3 2" />
-      <text x="687" y="130" textAnchor="middle" fill={INK_MUTED} fontSize="10">?</text>
+      <rect x="724" y="150" width="18" height="22" rx="4" fill="none" stroke={INK_MUTED} strokeDasharray="3 2" />
+      <text x="733" y="165" textAnchor="middle" fill={INK_MUTED} fontSize="10">?</text>
 
-      <text x="350" y="100" fill={INK_MUTED} fontSize="10" fontWeight={600}>10 traced modules + 2 disclosed gap</text>
+      <text x="380" y="132" textAnchor="middle" fill={INK_MUTED} fontSize="10" fontWeight={600}>10 traced modules + 2 disclosed gap</text>
     </svg>
   );
 }
@@ -539,7 +550,7 @@ function ChartHighlight({ punyaHouse }: { punyaHouse: number }) {
         <path
           key={h}
           d={HOUSE_PATHS[h]}
-          fill={h === punyaHouse ? `${GREEN}30` : "transparent"}
+          fill={h === punyaHouse ? GREEN_TINT : "transparent"}
           stroke={h === punyaHouse ? GREEN : HAIRLINE}
           strokeWidth={h === punyaHouse ? 2 : 1}
         />
@@ -577,15 +588,15 @@ function OrbGauge({ punya, aspect }: { punya: number; aspect: { planet: string; 
           {aspect.exact ? "Exact 0.00° conjunction" : `${aspect.orb.toFixed(1)}° separation`}
         </span>
         {aspect.exact ? (
-          <span style={{ marginLeft: "auto", fontSize: "0.75rem", fontWeight: 700, color: GOLD, background: `${GOLD}15`, padding: "0.2rem 0.5rem", borderRadius: "999px" }}>EXACT</span>
+          <span style={{ marginLeft: "auto", fontSize: "0.75rem", fontWeight: 700, color: GOLD, background: GOLD_TINT, padding: "0.2rem 0.5rem", borderRadius: "999px" }}>EXACT</span>
         ) : Math.abs(signedOffset) <= orbLimit ? (
-          <span style={{ marginLeft: "auto", fontSize: "0.75rem", fontWeight: 700, color: GREEN, background: `${GREEN}15`, padding: "0.2rem 0.5rem", borderRadius: "999px" }}>WITHIN ORB</span>
+          <span style={{ marginLeft: "auto", fontSize: "0.75rem", fontWeight: 700, color: GREEN, background: GREEN_TINT, padding: "0.2rem 0.5rem", borderRadius: "999px" }}>WITHIN ORB</span>
         ) : (
-          <span style={{ marginLeft: "auto", fontSize: "0.75rem", fontWeight: 700, color: INK_MUTED, background: `${INK_MUTED}15`, padding: "0.2rem 0.5rem", borderRadius: "999px" }}>OUTSIDE ORB</span>
+          <span style={{ marginLeft: "auto", fontSize: "0.75rem", fontWeight: 700, color: INK_MUTED, background: MUTED_TINT, padding: "0.2rem 0.5rem", borderRadius: "999px" }}>OUTSIDE ORB</span>
         )}
       </div>
       <div style={{ position: "relative", height: "34px", borderRadius: "8px", background: "rgba(156, 122, 47, 0.08)", overflow: "hidden" }}>
-        <div style={{ position: "absolute", left: `${leftLimit}%`, right: `${100 - rightLimit}%`, top: 0, bottom: 0, background: `${GREEN}15` }} />
+        <div style={{ position: "absolute", left: `${leftLimit}%`, right: `${100 - rightLimit}%`, top: 0, bottom: 0, background: GREEN_TINT }} />
         <div style={{ position: "absolute", left: "50%", top: 0, bottom: 0, width: "2px", background: GOLD, transform: "translateX(-50%)" }} />
         <div style={{ position: "absolute", left: `${percent}%`, top: "50%", transform: "translate(-50%, -50%)", display: "flex", flexDirection: "column", alignItems: "center" }}>
           <div style={{ width: "12px", height: "12px", borderRadius: "50%", background: aspect.exact ? GOLD : Math.abs(signedOffset) <= orbLimit ? GREEN : INK_MUTED, border: "2px solid #fff" }} />
@@ -611,7 +622,7 @@ function ConvergenceDashboard({ layers, verdict, verdictText }: { layers: Exampl
     <div style={{ display: "grid", gap: "0.75rem" }}>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "0.55rem" }}>
         {items.map(({ key, label, status, text }) => (
-          <div key={key} style={{ ...cardStyle, borderColor: `${layerColor(status)}55`, background: `${layerColor(status)}08` }}>
+          <div key={key} style={{ ...cardStyle, borderColor: layerColor(status), background: tintForColor(layerColor(status)) }}>
             <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", marginBottom: "0.35rem" }}>
               {status === "support" ? <CheckCircle2 size={16} color={GREEN} /> : status === "silent" ? <MinusCircle size={16} color={INK_MUTED} /> : <AlertCircle size={16} color={AMBER} />}
               <span style={{ fontSize: "0.8rem", fontWeight: 700, color: layerColor(status), textTransform: "uppercase", letterSpacing: "0.06em" }}>{label}</span>
@@ -621,7 +632,7 @@ function ConvergenceDashboard({ layers, verdict, verdictText }: { layers: Exampl
         ))}
       </div>
 
-      <div style={{ ...cardStyle, borderColor: `${verdictColor}55`, background: `${verdictColor}08` }}>
+      <div style={{ ...cardStyle, borderColor: verdictColor, background: tintForColor(verdictColor) }}>
         <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.35rem" }}>
           {verdict === "NO-HIT" ? <XCircle size={18} color={verdictColor} /> : <CheckCircle2 size={18} color={verdictColor} />}
           <span style={{ fontSize: "0.95rem", fontWeight: 600, color: verdictColor }}>Verdict: {verdict} CONVERGENCE</span>
@@ -655,9 +666,25 @@ function domainColor(index: number): string {
   return colors[index % colors.length];
 }
 
+function tintForColor(color: string): string {
+  switch (color) {
+    case BLUE: return BLUE_TINT;
+    case GREEN: return GREEN_TINT;
+    case GOLD: return GOLD_TINT;
+    case VERMILION: return VERMILION_TINT;
+    case PURPLE: return PURPLE_TINT;
+    case AMBER: return AMBER_TINT;
+    case "#2E8B8B": return TEAL_TINT;
+    case "#8B4513": return BROWN_TINT;
+    case "#708090": return SLATE_TINT;
+    case "#556B2F": return OLIVE_TINT;
+    default: return MUTED_TINT;
+  }
+}
+
 function MiniFact({ icon, title, body, color }: { icon: ReactNode; title: string; body: string; color: string }) {
   return (
-    <div style={{ display: "flex", alignItems: "start", gap: "0.55rem", padding: "0.65rem", borderRadius: "8px", background: `${color}10`, border: `1px solid ${color}30` }}>
+    <div style={{ display: "flex", alignItems: "start", gap: "0.55rem", padding: "0.65rem", borderRadius: "8px", background: tintForColor(color), border: `1px solid ${color}` }}>
       <span style={{ color, marginTop: "0.1rem" }}>{icon}</span>
       <div>
         <p style={{ margin: 0, fontSize: "0.75rem", fontWeight: 700, color, textTransform: "uppercase", letterSpacing: "0.06em" }}>{title}</p>
@@ -688,7 +715,7 @@ function smallChipStyle(active: boolean, color: string): CSSProperties {
     padding: "0.45rem 0.75rem",
     borderRadius: "999px",
     border: `1.5px solid ${active ? color : HAIRLINE}`,
-    background: active ? `${color}15` : SURFACE,
+    background: active ? tintForColor(color) : SURFACE,
     color: active ? color : INK_SECONDARY,
     fontWeight: 600,
     fontSize: "0.85rem",
@@ -705,7 +732,7 @@ function buttonStyle(active: boolean, color: string): CSSProperties {
     padding: "0.5rem 0.85rem",
     borderRadius: "8px",
     border: `1.5px solid ${active ? color : HAIRLINE}`,
-    background: active ? `${color}15` : SURFACE,
+    background: active ? tintForColor(color) : SURFACE,
     color: active ? color : INK_SECONDARY,
     fontWeight: 600,
     fontSize: "0.85rem",

@@ -23,6 +23,12 @@ const GREEN = "#2F7D55";
 const GOLD = "#B88421";
 const VERMILION = "#A23A1E";
 const PURPLE = "#6B5AA8";
+const VERMILION_TINT = "#FDEBE6";
+const GREEN_TINT = "#EAF4EE";
+const BLUE_TINT = "#EAF0F8";
+const GOLD_TINT = "#FFF8E8";
+const PURPLE_TINT = "#F1EEFA";
+const NEUTRAL_TINT = "#F4EFE6";
 
 type Direction = "east" | "north" | "south" | "west";
 type Assessment = "yes" | "no" | "not-sure";
@@ -106,10 +112,19 @@ function statusColor(status: VerdictStatus): string {
   }
 }
 
+function tintForColor(color: string): string {
+  if (color === VERMILION) return VERMILION_TINT;
+  if (color === GREEN) return GREEN_TINT;
+  if (color === BLUE) return BLUE_TINT;
+  if (color === GOLD) return GOLD_TINT;
+  if (color === PURPLE) return PURPLE_TINT;
+  return NEUTRAL_TINT;
+}
+
 function ScopeSvg() {
   return (
     <svg viewBox="0 0 720 140" role="img" aria-label="Muhurta timing and Vastu remediation are independent questions" style={{ width: "100%", maxHeight: 180, display: "block" }}>
-      <rect x="40" y="20" width="280" height="64" rx="8" fill={`${GOLD}10`} stroke={GOLD} strokeWidth={1} />
+      <rect x="40" y="20" width="280" height="64" rx="8" fill={GOLD_TINT} stroke={GOLD} strokeWidth={1} />
       <text x="180" y="48" textAnchor="middle" fontSize="13" fill={INK_PRIMARY} fontWeight={600}>
         Muhūrta-timing question
       </text>
@@ -117,7 +132,7 @@ function ScopeSvg() {
         When to perform gṛha-praveśa?
       </text>
 
-      <rect x="400" y="20" width="280" height="64" rx="8" fill={`${PURPLE}10`} stroke={PURPLE} strokeWidth={1} />
+      <rect x="400" y="20" width="280" height="64" rx="8" fill={PURPLE_TINT} stroke={PURPLE} strokeWidth={1} />
       <text x="540" y="48" textAnchor="middle" fontSize="13" fill={INK_PRIMARY} fontWeight={600}>
         Vāstu-remediation question
       </text>
@@ -130,7 +145,7 @@ function ScopeSvg() {
       <polygon points="175,105 180,115 185,105" fill={GOLD} />
       <polygon points="535,105 540,115 545,105" fill={PURPLE} />
 
-      <rect x="220" y="100" width="280" height="34" rx="8" fill={`${GREEN}08`} stroke={GREEN} />
+      <rect x="220" y="100" width="280" height="34" rx="8" fill={GREEN_TINT} stroke={GREEN} />
       <text x="360" y="122" textAnchor="middle" fontSize="11" fill={GREEN} fontWeight={600}>
         Two independent inputs to the same recommendation
       </text>
@@ -169,7 +184,7 @@ function FloorPlanSvg({ direction, onSelect }: { direction: Direction; onSelect:
                 width={side.width}
                 height={side.height}
                 rx={4}
-                fill={active ? `${meta.color}25` : `${meta.color}08`}
+                fill={active ? tintForColor(meta.color) : SURFACE}
                 stroke={active ? meta.color : HAIRLINE}
                 strokeWidth={active ? 2 : 1}
                 style={{ cursor: "pointer" }}
@@ -221,7 +236,7 @@ function ToggleGroup<T extends string>({
             padding: "0.35rem 0.65rem",
             borderRadius: 6,
             border: `1px solid ${value === opt.key ? opt.color : HAIRLINE}`,
-            background: value === opt.key ? `${opt.color}15` : "transparent",
+            background: value === opt.key ? tintForColor(opt.color) : "transparent",
             color: value === opt.key ? opt.color : INK_SECONDARY,
             fontSize: "0.8rem",
             fontWeight: 600,
@@ -237,7 +252,7 @@ function ToggleGroup<T extends string>({
 
 function MistakeCard({ title, body }: { title: string; body: string }) {
   return (
-    <div style={{ ...cardStyle, borderColor: `${VERMILION}50`, background: `${VERMILION}08` }}>
+    <div style={{ ...cardStyle, borderColor: VERMILION, background: VERMILION_TINT }}>
       <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", fontSize: "0.78rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.04em", color: VERMILION, marginBottom: "0.35rem" }}>
         <AlertTriangle size={12} />
         Common mistake
@@ -302,7 +317,7 @@ export function VastuPurificationOverlayWorkbench() {
             gap: "0.375rem",
             padding: "0.25rem 0.5rem",
             borderRadius: 4,
-            background: `${BLUE}10`,
+            background: BLUE_TINT,
             color: BLUE,
             fontSize: "0.72rem",
             fontWeight: 500,
@@ -394,7 +409,7 @@ export function VastuPurificationOverlayWorkbench() {
         style={{
           ...cardStyle,
           borderColor: color,
-          background: `${color}10`,
+          background: tintForColor(color),
           display: "flex",
           alignItems: "flex-start",
           gap: "0.75rem",
@@ -485,7 +500,7 @@ const buttonStyle = (active: boolean, color: string): CSSProperties => ({
   padding: "0.45rem 0.85rem",
   borderRadius: 6,
   border: `1px solid ${active ? color : HAIRLINE}`,
-  background: active ? `${color}15` : "transparent",
+  background: active ? tintForColor(color) : "transparent",
   color: active ? color : INK_PRIMARY,
   fontSize: "0.85rem",
   fontWeight: 500,

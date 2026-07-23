@@ -30,7 +30,11 @@ const GREEN = "#2F7D55";
 const GOLD = "#B88421";
 const VERMILION = "#A23A1E";
 const PURPLE = "#6B5AA8";
-
+const VERMILION_TINT = "#FDEBE6";
+const GREEN_TINT = "#EAF4EE";
+const BLUE_TINT = "#EAF0F8";
+const GOLD_TINT = "#FFF8E8";
+const PURPLE_TINT = "#F1EEFA";
 
 const STEPS: { id: StepId; label: string; description: string; color: string }[] = [
   { id: "genuine", label: "Genuineness", description: "Sincere and spontaneous, not rehearsed or repeated.", color: VERMILION },
@@ -386,7 +390,7 @@ export function QuestionQualityScreener() {
       )}
 
       {flaggedSteps.length > 0 && (
-        <section style={{ ...cardStyle, borderColor: `${GOLD}66`, background: `${GOLD}08` }}>
+        <section style={{ ...cardStyle, borderColor: GOLD, background: GOLD_TINT }}>
           <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.65rem" }}>
             <ScanSearch size={18} style={{ color: GOLD }} aria-hidden="true" />
             <p style={{ margin: 0, color: GOLD, fontSize: "0.85rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em" }}>Response router</p>
@@ -405,10 +409,10 @@ export function QuestionQualityScreener() {
               const intrusive = isIntrusiveClaim(text);
               const effectiveResponse = showTier && (tier === "C" || intrusive) ? { ...response, label: "Decline", color: VERMILION, explanation: "This specific claim about a non-consenting individual cannot be responsibly reframed. Decline outright." } : response;
               return (
-                <div key={step.id} style={{ ...cardStyle, background: SURFACE, borderColor: `${effectiveResponse.color}44` }}>
+                <div key={step.id} style={{ ...cardStyle, background: SURFACE, borderColor: effectiveResponse.color }}>
                   <div style={{ display: "flex", justifyContent: "space-between", gap: "0.5rem", alignItems: "start", flexWrap: "wrap" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                      <span style={{ ...responseBadgeStyle, background: `${effectiveResponse.color}18`, color: effectiveResponse.color, borderColor: effectiveResponse.color }}>{effectiveResponse.label}</span>
+                      <span style={{ ...responseBadgeStyle, background: tintForColor(effectiveResponse.color), color: effectiveResponse.color, borderColor: effectiveResponse.color }}>{effectiveResponse.label}</span>
                       <span style={{ color: INK_SECONDARY, fontSize: "0.85rem", fontWeight: 600 }}>{step.label}</span>
                     </div>
                     {showTier && (
@@ -461,7 +465,7 @@ export function QuestionQualityScreener() {
       )}
 
       {allPass && (
-        <section style={{ ...cardStyle, borderColor: `${GREEN}66`, background: `${GREEN}0A` }}>
+        <section style={{ ...cardStyle, borderColor: GREEN, background: GREEN_TINT }}>
           <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
             <BadgeCheck size={22} style={{ color: GREEN }} aria-hidden="true" />
             <div>
@@ -489,7 +493,7 @@ export function QuestionQualityScreener() {
               const partFlags = STEPS.filter((s) => partAuto[s.id].flag);
               const partPass = partFlags.length === 0 && part.trim().length > 0;
               return (
-                <div key={index} style={{ ...cardStyle, borderColor: partPass ? `${GREEN}66` : HAIRLINE, background: partPass ? `${GREEN}08` : SURFACE }}>
+                <div key={index} style={{ ...cardStyle, borderColor: partPass ? GREEN : HAIRLINE, background: partPass ? GREEN_TINT : SURFACE }}>
                   <div style={{ display: "flex", justifyContent: "space-between", gap: "0.5rem", alignItems: "start", flexWrap: "wrap" }}>
                     <span style={{ color: INK_MUTED, fontSize: "0.8rem", fontWeight: 700 }}>Sub-question {index + 1}</span>
                     {partPass ? <BadgeCheck size={16} style={{ color: GREEN }} aria-hidden="true" /> : <AlertTriangle size={16} style={{ color: GOLD }} aria-hidden="true" />}
@@ -512,7 +516,7 @@ export function QuestionQualityScreener() {
                             ? { ...response, label: "Decline", color: VERMILION }
                             : response;
                           return (
-                            <div key={step.id} style={{ display: "flex", alignItems: "center", gap: "0.35rem", padding: "0.35rem 0.55rem", borderRadius: 6, background: `${effective.color}12`, border: `1px solid ${effective.color}` }}>
+                            <div key={step.id} style={{ display: "flex", alignItems: "center", gap: "0.35rem", padding: "0.35rem 0.55rem", borderRadius: 6, background: tintForColor(effective.color), border: `1px solid ${effective.color}` }}>
                               <span style={{ color: effective.color, fontWeight: 600, fontSize: "0.8rem" }}>{effective.label}</span>
                               <span style={{ color: INK_SECONDARY, fontSize: "0.78rem" }}>{step.label}</span>
                             </div>
@@ -559,11 +563,11 @@ function ScreeningPipelineSvg() {
   const stepColors = [VERMILION, GOLD, GOLD, BLUE, VERMILION, PURPLE, GOLD, GREEN];
   return (
     <svg viewBox="0 0 800 150" role="img" aria-label="Eight-step screening pipeline: genuineness, boundedness, specificity, consent, do-no-harm, single-matter, ordinary investigation, actionability" style={{ width: "100%", maxHeight: 220, marginTop: "0.5rem", display: "block" }}>
-      <rect x="12" y="12" width="776" height="126" rx="8" fill={`${ACCENT}08`} stroke={HAIRLINE} />
+      <rect x="12" y="12" width="776" height="126" rx="8" fill={GOLD_TINT} stroke={HAIRLINE} />
       {stepPositions.map((x, i) => (
         <g key={i}>
           {i < stepPositions.length - 1 && <line x1={x + 22} y1="50" x2={stepPositions[i + 1] - 22} y2="50" stroke={HAIRLINE} strokeWidth="2" />}
-          <circle cx={x} cy="50" r="22" fill={`${stepColors[i]}10`} stroke={stepColors[i]} strokeWidth="2" />
+          <circle cx={x} cy="50" r="22" fill={tintForColor(stepColors[i])} stroke={stepColors[i]} strokeWidth="2" />
           <text x={x} y="55" textAnchor="middle" fill={stepColors[i]} fontSize="12" fontWeight={700}>{i + 1}</text>
           <text x={x} y="92" textAnchor="middle" fill={INK_PRIMARY} fontSize="10" fontWeight={600}>{stepLabels[i]}</text>
         </g>
@@ -608,11 +612,11 @@ function HighlightSummary({ text, auto }: { text: string; auto: Record<StepId, D
   }, [text, auto]);
 
   return (
-    <div style={{ marginTop: "0.6rem", padding: "0.6rem", borderRadius: 6, background: `${ACCENT}08`, border: `1px solid ${HAIRLINE}` }}>
+    <div style={{ marginTop: "0.6rem", padding: "0.6rem", borderRadius: 6, background: GOLD_TINT, border: `1px solid ${HAIRLINE}` }}>
       <p style={{ ...eyebrowStyle, marginBottom: "0.35rem" }}>Detected phrases</p>
       <p style={{ margin: 0, lineHeight: 1.6, fontSize: "0.9rem" }}>
         {segments.map((seg, i) => (
-          <span key={i} style={seg.color ? { background: `${seg.color}22`, borderBottom: `2px solid ${seg.color}`, color: INK_PRIMARY } : { color: INK_SECONDARY }}>
+          <span key={i} style={seg.color ? { background: tintForColor(seg.color), borderBottom: `2px solid ${seg.color}`, color: INK_PRIMARY } : { color: INK_SECONDARY }}>
             {seg.text}
           </span>
         ))}
@@ -679,6 +683,15 @@ function buttonStyle(active: boolean, color: string): CSSProperties {
   };
 }
 
+function tintForColor(color: string): string {
+  if (color === VERMILION) return VERMILION_TINT;
+  if (color === GREEN) return GREEN_TINT;
+  if (color === BLUE) return BLUE_TINT;
+  if (color === GOLD || color === ACCENT) return GOLD_TINT;
+  if (color === PURPLE) return PURPLE_TINT;
+  return SURFACE;
+}
+
 function stepCardStyle(flagged: boolean, color: string): CSSProperties {
   return {
     display: "flex",
@@ -690,7 +703,7 @@ function stepCardStyle(flagged: boolean, color: string): CSSProperties {
     padding: "0.65rem",
     borderRadius: 8,
     border: `1px solid ${flagged ? color : HAIRLINE}`,
-    background: flagged ? `${color}10` : SURFACE,
+    background: flagged ? tintForColor(color) : SURFACE,
     color: flagged ? color : INK_PRIMARY,
     cursor: "pointer",
     textAlign: "left",
@@ -725,7 +738,7 @@ function tierChipStyle(active: boolean, color: string): CSSProperties {
     padding: "0.3rem 0.55rem",
     borderRadius: 6,
     border: `1px solid ${active ? color : HAIRLINE}`,
-    background: active ? `${color}18` : SURFACE,
+    background: active ? tintForColor(color) : SURFACE,
     color: active ? color : INK_SECONDARY,
     fontSize: "0.78rem",
     fontWeight: 600,

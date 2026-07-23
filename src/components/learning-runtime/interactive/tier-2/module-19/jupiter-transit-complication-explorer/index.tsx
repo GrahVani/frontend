@@ -295,7 +295,7 @@ function JupiterMapSvg({ moonIndex, jupiterIndex }: { moonIndex: number; jupiter
   const cy = 180;
   const r = 140;
   return (
-    <svg viewBox="0 0 360 360" role="img" aria-label="Twelve position Jupiter from Moon map" style={{ width: "100%", maxHeight: 360, margin: "0.55rem auto 0.25rem", display: "block" }}>
+    <svg viewBox="0 0 360 380" role="img" aria-label="Twelve position Jupiter from Moon map" style={{ width: "100%", maxHeight: 380, margin: "0.55rem auto 0.25rem", display: "block" }}>
       <circle cx={cx} cy={cy} r={r} fill="transparent" stroke={HAIRLINE} strokeWidth="1.5" />
       <circle cx={cx} cy={cy} r={28} fill={`${GOLD}18`} stroke={GOLD} strokeWidth="2" />
       <text x={cx} y={cy + 4} textAnchor="middle" fill={GOLD} fontSize="11" fontWeight={600}>Moon</text>
@@ -314,16 +314,17 @@ function JupiterMapSvg({ moonIndex, jupiterIndex }: { moonIndex: number; jupiter
         const ly = cy + labelR * Math.sin(angle);
         const isJupiter = i === jupiterIndex;
         const isMoon = i === moonIndex;
+        const quality = QUALITY_LABELS[data.quality];
         return (
           <g key={i}>
-            <circle cx={lx} cy={ly} r={16} fill={isJupiter ? `${QUALITY_LABELS[data.quality].color}30` : `${QUALITY_LABELS[data.quality].color}12`} stroke={isJupiter ? QUALITY_LABELS[data.quality].color : HAIRLINE} strokeWidth={isJupiter ? 3 : 1.5} />
-            <text x={lx} y={ly - 2} textAnchor="middle" fill={isJupiter ? QUALITY_LABELS[data.quality].color : INK_SECONDARY} fontSize="9" fontWeight={600}>{SIGNS[i].slice(0, 3)}</text>
+            <circle cx={lx} cy={ly} r={16} fill={isJupiter ? "#F6E8C6" : "#FBF5E8"} stroke={isJupiter ? quality.color : HAIRLINE} strokeWidth={isJupiter ? 3 : 1.5} />
+            <text x={lx} y={ly - 2} textAnchor="middle" fill={isJupiter ? quality.color : INK_SECONDARY} fontSize="9" fontWeight={600}>{SIGNS[i].slice(0, 3)}</text>
             <text x={lx} y={ly + 8} textAnchor="middle" fill={INK_MUTED} fontSize="8" fontWeight={600}>{pos}</text>
             {isMoon && <text x={cx + (r - 30) * Math.cos(angle)} y={cy + (r - 30) * Math.sin(angle) + 3} textAnchor="middle" fill={GOLD} fontSize="9" fontWeight={600}>Mo</text>}
           </g>
         );
       })}
-      <text x={cx} y={340} textAnchor="middle" fill={INK_MUTED} fontSize="11" fontWeight={600}>Green = very favourable · Blue = favourable · Amber = less favourable · Muted = neutral</text>
+      <text x={cx} y={360} textAnchor="middle" fill={INK_MUTED} fontSize="11" fontWeight={600}>Green = very favourable · Blue = favourable · Amber = less favourable · Muted = neutral</text>
     </svg>
   );
 }

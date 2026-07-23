@@ -30,6 +30,13 @@ const AMBER = "#B88421";
 const VERMILION = "#A23A1E";
 const PURPLE = "#6B5AA8";
 const TEAL = "#2E7D7A";
+const GOLD_TINT = "#FFF8E8";
+const GREEN_TINT = "#EAF4EE";
+const BLUE_TINT = "#EAF0F8";
+const VERMILION_TINT = "#FDEBE6";
+const PURPLE_TINT = "#F1EEFA";
+const TEAL_TINT = "#EAF6F5";
+const MUTED_TINT = "#F4EFE4";
 
 const PILLARS: Record<PillarKey, { label: string; icon: ReactNode; color: string; role: string; source: string; scale: string; missing: string }> = {
   transit: {
@@ -145,8 +152,8 @@ export function TdvModelIntroExplorer() {
               marginTop: "0.75rem",
               padding: "0.75rem",
               borderRadius: 8,
-              border: `1px solid ${PILLARS[activePillar].color}55`,
-              background: `${PILLARS[activePillar].color}10`,
+              border: `1px solid ${PILLARS[activePillar].color}`,
+              background: tintForColor(PILLARS[activePillar].color),
             }}
           >
             <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: PILLARS[activePillar].color, fontWeight: 600 }}>
@@ -193,8 +200,8 @@ export function TdvModelIntroExplorer() {
             marginTop: "0.75rem",
             padding: "0.75rem",
             borderRadius: 8,
-            border: `1px solid ${claimComplete ? GREEN : VERMILION}55`,
-            background: claimComplete ? `${GREEN}12` : `${VERMILION}12`,
+            border: `1px solid ${claimComplete ? GREEN : VERMILION}`,
+            background: claimComplete ? GREEN_TINT : VERMILION_TINT,
             color: claimComplete ? GREEN : VERMILION,
           }}
         >
@@ -228,8 +235,8 @@ export function TdvModelIntroExplorer() {
             marginTop: "0.75rem",
             padding: "0.75rem",
             borderRadius: 8,
-            border: `1px solid ${vedhaStatus === "clear" ? GREEN : vedhaStatus === "obstructed" ? VERMILION : AMBER}55`,
-            background: vedhaStatus === "clear" ? `${GREEN}12` : vedhaStatus === "obstructed" ? `${VERMILION}12` : `${AMBER}12`,
+            border: `1px solid ${vedhaStatus === "clear" ? GREEN : vedhaStatus === "obstructed" ? VERMILION : AMBER}`,
+            background: vedhaStatus === "clear" ? GREEN_TINT : vedhaStatus === "obstructed" ? VERMILION_TINT : GOLD_TINT,
             color: vedhaStatus === "clear" ? GREEN : vedhaStatus === "obstructed" ? VERMILION : AMBER,
           }}
         >
@@ -259,7 +266,7 @@ export function TdvModelIntroExplorer() {
                   textAlign: "left",
                   border: `1px solid ${on ? (CITATIONS[key].ok ? GREEN : VERMILION) : HAIRLINE}`,
                   borderRadius: 8,
-                  background: on ? `${CITATIONS[key].ok ? GREEN : VERMILION}10` : "transparent",
+                  background: on ? (CITATIONS[key].ok ? GREEN_TINT : VERMILION_TINT) : "transparent",
                   color: on ? (CITATIONS[key].ok ? GREEN : VERMILION) : INK_SECONDARY,
                   padding: "0.75rem",
                   cursor: "pointer",
@@ -300,8 +307,8 @@ export function TdvModelIntroExplorer() {
             marginTop: "0.75rem",
             padding: "0.65rem 0.85rem",
             borderRadius: 8,
-            background: allMistakesHeld ? `${GREEN}12` : `${VERMILION}12`,
-            border: `1px solid ${allMistakesHeld ? GREEN : VERMILION}55`,
+            background: allMistakesHeld ? GREEN_TINT : VERMILION_TINT,
+            border: `1px solid ${allMistakesHeld ? GREEN : VERMILION}`,
             color: allMistakesHeld ? GREEN : VERMILION,
             fontWeight: 600,
           }}
@@ -322,7 +329,7 @@ function ThreePillarSvg({ active, onSelect }: { active: PillarKey; onSelect: (k:
   return (
     <svg viewBox="0 0 440 250" role="img" aria-label="T-D-V three pillar diagram" style={{ width: "100%", maxHeight: 260, margin: "0.65rem auto 0.25rem", display: "block" }}>
       {/* shared cap */}
-      <rect x="40" y={capY} width="360" height="36" rx="8" fill={`${GOLD}18`} stroke={GOLD} strokeWidth="2" />
+      <rect x="40" y={capY} width="360" height="36" rx="8" fill={GOLD_TINT} stroke={GOLD} strokeWidth="2" />
       <text x="220" y={capY + 23} textAnchor="middle" fill={GOLD} fontSize="14" fontWeight={600}>High-confidence event-timing claim</text>
 
       {PILLAR_ORDER.map((key) => {
@@ -331,7 +338,7 @@ function ThreePillarSvg({ active, onSelect }: { active: PillarKey; onSelect: (k:
         const h = baseY - (capY + 36);
         return (
           <g key={key} style={{ cursor: "pointer" }} onClick={() => onSelect(key)}>
-            <rect x={cx - 34} y={capY + 36} width="68" height={h} rx="6" fill={isActive ? `${PILLARS[key].color}22` : `${PILLARS[key].color}10`} stroke={PILLARS[key].color} strokeWidth={isActive ? 3 : 2} />
+            <rect x={cx - 34} y={capY + 36} width="68" height={h} rx="6" fill={tintForColor(PILLARS[key].color)} stroke={PILLARS[key].color} strokeWidth={isActive ? 3 : 2} />
             <text x={cx} y={capY + 70} textAnchor="middle" fill={PILLARS[key].color} fontSize="13" fontWeight={600}>{PILLARS[key].label}</text>
             <foreignObject x={cx - 30} y={capY + 85} width="60" height="90">
               <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%", color: PILLARS[key].color }}>
@@ -350,7 +357,7 @@ function ThreePillarSvg({ active, onSelect }: { active: PillarKey; onSelect: (k:
 function ForwardRefSvg() {
   return (
     <svg viewBox="0 0 440 90" role="img" aria-label="Forward reference from T2-01 to T2-19" style={{ width: "100%", maxHeight: 100, margin: "0.55rem auto 0.25rem", display: "block" }}>
-      <rect x="20" y="20" width="120" height="50" rx="8" fill={`${BLUE}12`} stroke={BLUE} strokeWidth="2" />
+      <rect x="20" y="20" width="120" height="50" rx="8" fill={BLUE_TINT} stroke={BLUE} strokeWidth="2" />
       <text x="80" y="40" textAnchor="middle" fill={BLUE} fontSize="12" fontWeight={600}>T2-01 1.1.4</text>
       <text x="80" y="56" textAnchor="middle" fill={INK_SECONDARY} fontSize="10" fontWeight={600}>seeds T-D-V</text>
 
@@ -358,7 +365,7 @@ function ForwardRefSvg() {
       <polygon points="270,45 264,41 264,49" fill={HAIRLINE} />
       <text x="205" y="38" textAnchor="middle" fill={INK_MUTED} fontSize="10" fontWeight={600}>forward-reference</text>
 
-      <rect x="280" y="20" width="140" height="50" rx="8" fill={`${GOLD}12`} stroke={GOLD} strokeWidth="2" />
+      <rect x="280" y="20" width="140" height="50" rx="8" fill={GOLD_TINT} stroke={GOLD} strokeWidth="2" />
       <text x="350" y="40" textAnchor="middle" fill={GOLD} fontSize="12" fontWeight={600}>T2-19 Module 19</text>
       <text x="350" y="56" textAnchor="middle" fill={INK_SECONDARY} fontSize="10" fontWeight={600}>full operational depth</text>
     </svg>
@@ -368,41 +375,42 @@ function ForwardRefSvg() {
 function KavyaScenarioSvg() {
   // Simple zodiac arc: Sagittarius (Moon), Libra (Saturn transit), Aries (vedha point + natal Mars)
   return (
-    <svg viewBox="0 0 560 220" role="img" aria-label="Kavya Saturn transit and vedha scenario" style={{ width: "100%", maxHeight: 220, margin: "0.55rem auto 0.25rem", display: "block" }}>
-      <path d="M 60 160 A 220 220 0 0 1 500 160" fill="none" stroke={HAIRLINE} strokeWidth="2" strokeLinecap="round" />
+    <svg viewBox="0 0 560 260" role="img" aria-label="Kavya Saturn transit and vedha scenario" style={{ width: "100%", maxHeight: 260, margin: "0.55rem auto 0.25rem", display: "block" }}>
+      <path d="M 60 178 A 220 220 0 0 1 500 178" fill="none" stroke={HAIRLINE} strokeWidth="2" strokeLinecap="round" />
 
       {/* Sagittarius - Moon */}
-      <g transform="translate(120 70)">
-        <circle r="28" fill={`${AMBER}18`} stroke={AMBER} strokeWidth="2" />
-        <text textAnchor="middle" fill={AMBER} fontSize="11" fontWeight={600}>Sagittarius</text>
-        <text y="14" textAnchor="middle" fill={INK_SECONDARY} fontSize="10" fontWeight={600}>natal Moon</text>
+      <g transform="translate(120 86)">
+        <circle r="32" fill={GOLD_TINT} stroke={AMBER} strokeWidth="2" />
+        <text y="-7" textAnchor="middle" fill={AMBER} fontSize="9.5" fontWeight={600}>Sagittarius</text>
+        <text y="7" textAnchor="middle" fill={INK_SECONDARY} fontSize="8.5" fontWeight={600}>natal Moon</text>
       </g>
 
       {/* Libra - Saturn transit */}
-      <g transform="translate(280 45)">
-        <circle r="32" fill={`${BLUE}18`} stroke={BLUE} strokeWidth="3" />
-        <text textAnchor="middle" fill={BLUE} fontSize="12" fontWeight={600}>Libra</text>
-        <text y="14" textAnchor="middle" fill={INK_SECONDARY} fontSize="10" fontWeight={600}>Saturn transit</text>
-        <text y="28" textAnchor="middle" fill={INK_MUTED} fontSize="9" fontWeight={600}>11th from Moon · uccha</text>
+      <g transform="translate(280 62)">
+        <circle r="38" fill={BLUE_TINT} stroke={BLUE} strokeWidth="3" />
+        <text y="-14" textAnchor="middle" fill={BLUE} fontSize="11" fontWeight={600}>Libra</text>
+        <text y="1" textAnchor="middle" fill={INK_SECONDARY} fontSize="8.5" fontWeight={600}>Saturn transit</text>
+        <text y="14" textAnchor="middle" fill={INK_MUTED} fontSize="8" fontWeight={600}>11th from Moon</text>
+        <text y="26" textAnchor="middle" fill={INK_MUTED} fontSize="8" fontWeight={600}>uccha</text>
       </g>
 
       {/* Aries - vedha point, natal Mars */}
-      <g transform="translate(440 70)">
-        <circle r="28" fill={`${TEAL}18`} stroke={TEAL} strokeWidth="2" />
-        <text textAnchor="middle" fill={TEAL} fontSize="11" fontWeight={600}>Aries</text>
-        <text y="14" textAnchor="middle" fill={INK_SECONDARY} fontSize="10" fontWeight={600}>vedha-point</text>
-        <text y="26" textAnchor="middle" fill={VERMILION} fontSize="9" fontWeight={600}>natal Mars</text>
+      <g transform="translate(440 86)">
+        <circle r="32" fill={TEAL_TINT} stroke={TEAL} strokeWidth="2" />
+        <text y="-12" textAnchor="middle" fill={TEAL} fontSize="10" fontWeight={600}>Aries</text>
+        <text y="2" textAnchor="middle" fill={INK_SECONDARY} fontSize="8.5" fontWeight={600}>vedha-point</text>
+        <text y="15" textAnchor="middle" fill={VERMILION} fontSize="8" fontWeight={600}>natal Mars</text>
       </g>
 
       {/* labels */}
-      <text x="280" y="190" textAnchor="middle" fill={INK_MUTED} fontSize="12" fontWeight={600}>Saturn&apos;s favourable-from-Moon transit; Aries vedha-point holds natal Mars</text>
+      <text x="280" y="218" textAnchor="middle" fill={INK_MUTED} fontSize="12" fontWeight={600}>Saturn&apos;s favourable-from-Moon transit; Aries vedha-point holds natal Mars</text>
     </svg>
   );
 }
 
 function Panel({ title, icon, color, children }: { title: string; icon: ReactNode; color: string; children: ReactNode }) {
   return (
-    <section style={{ border: `1px solid ${color}44`, borderRadius: 8, background: SURFACE, padding: "1rem" }}>
+    <section style={{ border: `1px solid ${color}`, borderRadius: 8, background: SURFACE, padding: "1rem" }}>
       <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", color, fontWeight: 600 }}>{icon}{title}</div>
       <div style={{ marginTop: "0.75rem" }}>{children}</div>
     </section>
@@ -433,11 +441,31 @@ function togglePanelStyle(active: boolean, color: string): CSSProperties {
     textAlign: "left",
     border: `1px solid ${active ? color : HAIRLINE}`,
     borderRadius: 8,
-    background: active ? `${color}14` : "transparent",
+    background: active ? tintForColor(color) : "transparent",
     color: active ? color : INK_SECONDARY,
     padding: "0.75rem",
     cursor: "pointer",
   };
+}
+
+function tintForColor(color: string): string {
+  switch (color) {
+    case BLUE:
+      return BLUE_TINT;
+    case GREEN:
+      return GREEN_TINT;
+    case GOLD:
+    case AMBER:
+      return GOLD_TINT;
+    case VERMILION:
+      return VERMILION_TINT;
+    case PURPLE:
+      return PURPLE_TINT;
+    case TEAL:
+      return TEAL_TINT;
+    default:
+      return MUTED_TINT;
+  }
 }
 
 const cardStyle: CSSProperties = {

@@ -45,6 +45,12 @@ const GREEN = "#2F7D55";
 const GOLD = "#B88421";
 const VERMILION = "#A23A1E";
 const PURPLE = "#6B5AA8";
+const BLUE_TINT = "#EAF0F8";
+const GREEN_TINT = "#EAF4EE";
+const GOLD_TINT = "#FFF8E8";
+const VERMILION_TINT = "#FDEBE6";
+const PURPLE_TINT = "#F1EEFA";
+const MUTED_TINT = "#F4EFE4";
 
 const LORDS: Record<
   LordKey,
@@ -322,7 +328,7 @@ export function FiveLevelCascadeOperationalDepthWorkbench() {
                   style={{
                     border: `1px solid ${isActive ? level.color : HAIRLINE}`,
                     borderRadius: 8,
-                    background: isActive ? `${level.color}14` : "transparent",
+                    background: isActive ? tintForColor(level.color) : "transparent",
                     color: isActive ? level.color : INK_SECONDARY,
                     padding: "0.65rem",
                     textAlign: "left",
@@ -405,7 +411,7 @@ export function FiveLevelCascadeOperationalDepthWorkbench() {
                 margin: "0.55rem 0 0",
                 padding: "0.55rem",
                 borderRadius: 8,
-                background: `${GOLD}0F`,
+                background: GOLD_TINT,
                 color: INK_PRIMARY,
                 fontSize: "0.9rem",
               }}
@@ -536,9 +542,9 @@ export function FiveLevelCascadeOperationalDepthWorkbench() {
           {disclosureMode === "assumed" ? (
             <div
               style={{
-                border: `1px solid ${VERMILION}44`,
+                border: `1px solid ${VERMILION}`,
                 borderRadius: 8,
-                background: `${VERMILION}0F`,
+                background: VERMILION_TINT,
                 padding: "0.75rem",
                 color: INK_SECONDARY,
                 lineHeight: 1.55,
@@ -564,9 +570,9 @@ export function FiveLevelCascadeOperationalDepthWorkbench() {
           ) : (
             <div
               style={{
-                border: `1px solid ${GREEN}44`,
+                border: `1px solid ${GREEN}`,
                 borderRadius: 8,
-                background: `${GREEN}0F`,
+                background: GREEN_TINT,
                 padding: "0.75rem",
                 color: INK_SECONDARY,
                 lineHeight: 1.55,
@@ -619,8 +625,8 @@ export function FiveLevelCascadeOperationalDepthWorkbench() {
                     borderRadius: 8,
                     background: selected
                       ? isCorrect
-                        ? `${GREEN}0F`
-                        : `${VERMILION}0F`
+                        ? GREEN_TINT
+                        : VERMILION_TINT
                       : "transparent",
                     padding: "0.75rem",
                   }}
@@ -703,12 +709,21 @@ function CascadeSvg({
   activeLevel: LevelKey;
   onSelect: (level: LevelKey) => void;
 }) {
-  const sizes: Array<{ level: LevelKey; x: number; y: number; w: number; h: number; r: number }> = [
-    { level: "md", x: 30, y: 20, w: 500, h: 220, r: 48 },
-    { level: "ad", x: 70, y: 50, w: 420, h: 180, r: 40 },
-    { level: "pd", x: 110, y: 80, w: 340, h: 140, r: 32 },
-    { level: "sd", x: 150, y: 110, w: 260, h: 100, r: 24 },
-    { level: "prd", x: 190, y: 140, w: 180, h: 60, r: 16 },
+  const sizes: Array<{
+    level: LevelKey;
+    x: number;
+    y: number;
+    w: number;
+    h: number;
+    r: number;
+    labelY: number;
+    spanY: number;
+  }> = [
+    { level: "md", x: 30, y: 20, w: 500, h: 220, r: 48, labelY: 56, spanY: 74 },
+    { level: "ad", x: 70, y: 52, w: 420, h: 176, r: 40, labelY: 88, spanY: 106 },
+    { level: "pd", x: 110, y: 84, w: 340, h: 132, r: 32, labelY: 120, spanY: 138 },
+    { level: "sd", x: 150, y: 116, w: 260, h: 88, r: 24, labelY: 152, spanY: 170 },
+    { level: "prd", x: 190, y: 148, w: 180, h: 44, r: 16, labelY: 172, spanY: 186 },
   ];
 
   return (
@@ -723,7 +738,7 @@ function CascadeSvg({
         display: "block",
       }}
     >
-      {sizes.map(({ level, x, y, w, h, r }, index) => {
+      {sizes.map(({ level, x, y, w, h, r, labelY, spanY }, index) => {
         const isActive = level === activeLevel;
         const color = LEVELS[level].color;
         return (
@@ -738,26 +753,26 @@ function CascadeSvg({
               width={w}
               height={h}
               rx={r}
-              fill={isActive ? `${color}18` : `${color}0A`}
+              fill={isActive ? tintForColor(color) : SURFACE}
               stroke={isActive ? color : HAIRLINE}
               strokeWidth={isActive ? 3 : 1.5}
             />
             <text
               x={x + w / 2}
-              y={y + h / 2 - 6}
+              y={labelY}
               textAnchor="middle"
               fill={isActive ? color : INK_PRIMARY}
-              fontSize={15 + index * 1.5}
+              fontSize={Math.max(16 - index, 12)}
               fontWeight={700}
             >
               {LEVELS[level].abbreviation}
             </text>
             <text
               x={x + w / 2}
-              y={y + h / 2 + 14}
+              y={spanY}
               textAnchor="middle"
               fill={INK_MUTED}
-              fontSize={11}
+              fontSize={index === sizes.length - 1 ? 9 : 10}
               fontWeight={600}
             >
               {LEVELS[level].span}
@@ -813,7 +828,7 @@ function LevelTable({
         style={{
           padding: "0.75rem",
           borderBottom: `1px solid ${HAIRLINE}`,
-          background: `${GOLD}0A`,
+          background: GOLD_TINT,
         }}
       >
         <p style={{ margin: 0, color: GOLD, fontWeight: 700, fontSize: "0.78rem", textTransform: "uppercase", letterSpacing: "0.06em" }}>
@@ -826,7 +841,7 @@ function LevelTable({
       <div style={{ maxHeight: 260, overflow: "auto" }}>
         <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.85rem" }}>
           <thead>
-            <tr style={{ background: `${GOLD}08` }}>
+            <tr style={{ background: GOLD_TINT }}>
               <th style={thStyle}>Lord</th>
               <th style={thStyle}>Years</th>
               <th style={thStyle}>Length</th>
@@ -840,7 +855,7 @@ function LevelTable({
                   key={row.lord}
                   onClick={() => onSelect(row.lord)}
                   style={{
-                    background: isSelected ? `${LORDS[row.lord].color}12` : "transparent",
+                    background: isSelected ? tintForColor(LORDS[row.lord].color) : "transparent",
                     cursor: "pointer",
                   }}
                 >
@@ -882,7 +897,7 @@ function LevelTable({
           alignItems: "center",
           gap: "0.5rem",
           flexWrap: "wrap",
-          background: closes ? `${GREEN}08` : `${VERMILION}08`,
+          background: closes ? GREEN_TINT : VERMILION_TINT,
         }}
       >
         <span style={{ color: INK_SECONDARY, fontSize: "0.85rem" }}>
@@ -916,7 +931,7 @@ function Panel({
   return (
     <section
       style={{
-        border: `1px solid ${color}44`,
+        border: `1px solid ${color}`,
         borderRadius: 8,
         background: SURFACE,
         padding: "1rem",
@@ -965,6 +980,23 @@ function smallChipStyle(active: boolean, color: string): CSSProperties {
     cursor: "pointer",
     fontSize: "0.85rem",
   };
+}
+
+function tintForColor(color: string): string {
+  switch (color) {
+    case BLUE:
+      return BLUE_TINT;
+    case GREEN:
+      return GREEN_TINT;
+    case GOLD:
+      return GOLD_TINT;
+    case VERMILION:
+      return VERMILION_TINT;
+    case PURPLE:
+      return PURPLE_TINT;
+    default:
+      return MUTED_TINT;
+  }
 }
 
 const cardStyle: CSSProperties = {

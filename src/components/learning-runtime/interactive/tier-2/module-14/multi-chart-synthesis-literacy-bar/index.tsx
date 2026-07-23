@@ -22,9 +22,13 @@ const HAIRLINE = "var(--gl-gold-hairline)";
 const SURFACE = "var(--gl-card-surface-solid)";
 const ACCENT = "var(--gl-gold-accent)";
 const VERMILION = "var(--gl-vermilion-accent)";
+const VERMILION_TINT = "#FDEBE6";
 const GREEN = "#2F7D55";
+const GREEN_TINT = "#EAF4EE";
 const BLUE = "#356CAB";
+const BLUE_TINT = "#EAF0F8";
 const GOLD = "#B88421";
+const GOLD_TINT = "#FFF8E8";
 
 interface LiteracyItem {
   id: number;
@@ -174,7 +178,7 @@ export function MultiChartSynthesisLiteracyBar() {
             ))}
           </div>
           {selfCheckedCount === ITEMS.length && (
-            <div style={{ marginTop: "0.75rem", padding: "0.75rem", borderRadius: 8, background: `${GREEN}10`, border: `1px solid ${GREEN}`, color: GREEN, fontSize: "0.9rem" }}>
+            <div style={{ marginTop: "0.75rem", padding: "0.75rem", borderRadius: 8, background: GREEN_TINT, border: `1px solid ${GREEN}`, color: GREEN, fontSize: "0.9rem" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                 <BadgeCheck size={18} aria-hidden="true" />
                 <span style={{ fontWeight: 600 }}>All ten items self-checked. Remember: this is a per-statement discipline, not a one-time credential.</span>
@@ -209,7 +213,7 @@ export function MultiChartSynthesisLiteracyBar() {
             {ITEMS.map((item) => {
               const answer = auditAnswers[item.id];
               return (
-                <div key={item.id} style={{ padding: "0.5rem", borderRadius: 6, border: `1px solid ${answer ? (answer === expected[item.id] ? GREEN : VERMILION) : HAIRLINE}`, background: answer ? (answer === expected[item.id] ? `${GREEN}08` : `${VERMILION}08`) : SURFACE }}>
+                <div key={item.id} style={{ padding: "0.5rem", borderRadius: 6, border: `1px solid ${answer ? (answer === expected[item.id] ? GREEN : VERMILION) : HAIRLINE}`, background: answer ? (answer === expected[item.id] ? GREEN_TINT : VERMILION_TINT) : SURFACE }}>
                   <div style={{ display: "flex", justifyContent: "space-between", gap: "0.5rem", alignItems: "start" }}>
                     <span style={{ color: answer === expected[item.id] ? INK_PRIMARY : INK_SECONDARY, fontSize: "0.85rem", lineHeight: 1.5 }}>
                       <span style={{ color: CLUSTER_META[item.cluster].color, fontWeight: 600 }}>{item.id}.</span> {item.text}
@@ -239,7 +243,7 @@ export function MultiChartSynthesisLiteracyBar() {
           </button>
 
           {auditRun && (
-            <div style={{ marginTop: "0.75rem", padding: "0.75rem", borderRadius: 8, background: allCorrect ? `${GREEN}10` : `${VERMILION}10`, border: `1px solid ${allCorrect ? GREEN : VERMILION}`, color: allCorrect ? GREEN : VERMILION, fontSize: "0.9rem" }}>
+            <div style={{ marginTop: "0.75rem", padding: "0.75rem", borderRadius: 8, background: allCorrect ? GREEN_TINT : VERMILION_TINT, border: `1px solid ${allCorrect ? GREEN : VERMILION}`, color: allCorrect ? GREEN : VERMILION, fontSize: "0.9rem" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                 {allCorrect ? <BadgeCheck size={18} aria-hidden="true" /> : <AlertTriangle size={18} aria-hidden="true" />}
                 <span style={{ fontWeight: 600 }}>{allCorrect ? "Audit matches the literacy bar." : "Some items need correction — review the expected results above."}</span>
@@ -260,13 +264,13 @@ function LiteracyBarSvg() {
 
   return (
     <svg viewBox={`0 0 ${totalWidth} 80`} role="img" aria-label="Ten-item literacy bar grouped into citation-and-technique, people, and consent-and-scope clusters" style={{ width: "100%", maxHeight: 180, margin: "0.4rem auto 0", display: "block" }}>
-      <rect x="12" y="12" width={totalWidth - 24} height="56" rx="8" fill={`${ACCENT}08`} stroke={HAIRLINE} />
+      <rect x="12" y="12" width={totalWidth - 24} height="56" rx="8" fill={GOLD_TINT} stroke={HAIRLINE} />
       {ITEMS.map((item, index) => {
         const x = startX + index * (segmentWidth + gap);
         const color = CLUSTER_META[item.cluster].color;
         return (
           <g key={item.id}>
-            <rect x={x} y="24" width={segmentWidth} height="32" rx={4} fill={`${color}18`} stroke={color} strokeWidth="2" />
+            <rect x={x} y="24" width={segmentWidth} height="32" rx={4} fill={tintForColor(color)} stroke={color} strokeWidth="2" />
             <text x={x + segmentWidth / 2} y="45" textAnchor="middle" fill={color} fontSize="14" fontWeight={700}>
               {item.id}
             </text>
@@ -309,6 +313,14 @@ function buttonStyle(primary: boolean, color: string): CSSProperties {
   };
 }
 
+function tintForColor(color: string): string {
+  if (color === VERMILION) return VERMILION_TINT;
+  if (color === GREEN) return GREEN_TINT;
+  if (color === BLUE) return BLUE_TINT;
+  if (color === GOLD || color === ACCENT) return GOLD_TINT;
+  return SURFACE;
+}
+
 function smallChipStyle(active: boolean, color: string): CSSProperties {
   return {
     display: "inline-flex",
@@ -317,7 +329,7 @@ function smallChipStyle(active: boolean, color: string): CSSProperties {
     padding: "0.35rem 0.6rem",
     borderRadius: 999,
     border: `1px solid ${active ? color : HAIRLINE}`,
-    background: active ? `${color}12` : SURFACE,
+    background: active ? tintForColor(color) : SURFACE,
     color: active ? color : INK_PRIMARY,
     fontSize: "0.8rem",
     fontWeight: 600,

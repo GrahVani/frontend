@@ -32,6 +32,11 @@ const GREEN = "#2F7D55";
 const GOLD = "#B88421";
 const VERMILION = "#A23A1E";
 const PURPLE = "#6B5AA8";
+const VERMILION_TINT = "#FDEBE6";
+const GREEN_TINT = "#EAF4EE";
+const BLUE_TINT = "#EAF0F8";
+const GOLD_TINT = "#FFF8E8";
+const PURPLE_TINT = "#F1EEFA";
 
 const STEPS: { id: StepId; label: string }[] = [
   { id: "genuine", label: "Genuineness" },
@@ -337,7 +342,7 @@ export function PrashnaTimeRecorder() {
                   padding: "0.45rem",
                   borderRadius: 6,
                   border: `1px solid ${screening[step.id] ? GREEN : HAIRLINE}`,
-                  background: screening[step.id] ? `${GREEN}10` : SURFACE,
+                  background: screening[step.id] ? GREEN_TINT : SURFACE,
                   cursor: "pointer",
                   fontSize: "0.85rem",
                 }}
@@ -438,7 +443,7 @@ export function PrashnaTimeRecorder() {
       </section>
 
       {fixed && parsed && varaInfo && (
-        <section style={{ ...cardStyle, borderColor: `${GREEN}66`, background: `${GREEN}08` }}>
+        <section style={{ ...cardStyle, borderColor: GREEN, background: GREEN_TINT }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", gap: "1rem", flexWrap: "wrap" }}>
             <div>
               <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
@@ -453,7 +458,7 @@ export function PrashnaTimeRecorder() {
                 {activeCity.label} · {activeCity.lat.toFixed(2)}°, {activeCity.lng.toFixed(2)}° · {formatOffset(offsetMinutes)} {isDst ? "(DST applied)" : ""}
               </p>
             </div>
-            <span style={{ ...responseBadgeStyle, background: `${precision.color}18`, color: precision.color, borderColor: precision.color }}>{precision.label}</span>
+            <span style={{ ...responseBadgeStyle, background: tintForColor(precision.color), color: precision.color, borderColor: precision.color }}>{precision.label}</span>
           </div>
 
           <div style={{ ...workbenchTwoColumnStyle, marginTop: "0.85rem" }}>
@@ -474,7 +479,7 @@ export function PrashnaTimeRecorder() {
                     )}
                   </p>
                   {varaInfo.preSunrise && (
-                    <div style={{ marginTop: "0.55rem", padding: "0.5rem", borderRadius: 6, background: `${VERMILION}12`, border: `1px solid ${VERMILION}`, color: VERMILION, fontSize: "0.85rem" }}>
+                    <div style={{ marginTop: "0.55rem", padding: "0.5rem", borderRadius: 6, background: VERMILION_TINT, border: `1px solid ${VERMILION}`, color: VERMILION, fontSize: "0.85rem" }}>
                       <AlertTriangle size={15} style={{ verticalAlign: "middle", marginRight: 4 }} aria-hidden="true" />
                       The recorded time is before local sunrise. The vāra resolves to the previous day.
                     </div>
@@ -505,7 +510,7 @@ export function PrashnaTimeRecorder() {
           </div>
 
           {scenario !== "free" && SCENARIOS[scenario].note && (
-            <div style={{ marginTop: "0.75rem", padding: "0.65rem", borderRadius: 6, background: `${ACCENT}10`, border: `1px solid ${HAIRLINE}`, color: INK_SECONDARY, fontSize: "0.9rem", lineHeight: 1.55 }}>
+            <div style={{ marginTop: "0.75rem", padding: "0.65rem", borderRadius: 6, background: GOLD_TINT, border: `1px solid ${HAIRLINE}`, color: INK_SECONDARY, fontSize: "0.9rem", lineHeight: 1.55 }}>
               <strong style={{ color: ACCENT, fontWeight: 700 }}>Teaching note:</strong> {SCENARIOS[scenario].note}
             </div>
           )}
@@ -527,21 +532,21 @@ export function PrashnaTimeRecorder() {
             </button>
           </div>
           {system === "kp" && (
-            <div style={{ padding: "0.65rem", borderRadius: 6, background: `${PURPLE}10`, border: `1px solid ${PURPLE}` }}>
+            <div style={{ padding: "0.65rem", borderRadius: 6, background: PURPLE_TINT, border: `1px solid ${PURPLE}` }}>
               <label htmlFor="kp-number" style={{ ...eyebrowStyle, display: "block", marginBottom: "0.35rem" }}>Querent number (preview only)</label>
               <input id="kp-number" type="number" min={1} max={249} defaultValue={1} disabled style={{ ...inputStyle, width: 120, opacity: 0.7 }} />
               <p style={{ margin: "0.35rem 0 0", color: INK_SECONDARY, fontSize: "0.8rem" }}>The 1–249 number is entered here in Chapter 2&apos;s own KP-horary tools.</p>
             </div>
           )}
           {system === "tajika" && (
-            <div style={{ padding: "0.65rem", borderRadius: 6, background: `${GOLD}10`, border: `1px solid ${GOLD}` }}>
+            <div style={{ padding: "0.65rem", borderRadius: 6, background: GOLD_TINT, border: `1px solid ${GOLD}` }}>
               <p style={{ margin: 0, color: INK_SECONDARY, fontSize: "0.85rem" }}>
                 Tājika readiness: exact planetary longitudes at the fixed moment are used for orb-based aspect judgement. Preview only here.
               </p>
             </div>
           )}
           {system === "parashari" && (
-            <div style={{ padding: "0.65rem", borderRadius: 6, background: `${BLUE}10`, border: `1px solid ${BLUE}` }}>
+            <div style={{ padding: "0.65rem", borderRadius: 6, background: BLUE_TINT, border: `1px solid ${BLUE}` }}>
               <p style={{ margin: 0, color: INK_SECONDARY, fontSize: "0.85rem" }}>
                 Parāśarī readiness: house-lord placement from the fixed Ascendant is the decisive layer. No extra input is required at this stage.
               </p>
@@ -556,7 +561,7 @@ export function PrashnaTimeRecorder() {
 function MomentFlowSvg() {
   return (
     <svg viewBox="0 0 720 110" role="img" aria-label="Screen first, then fix moment: raw question to screening gate, then moment entry, then sunrise and vāra check" style={{ width: "100%", maxHeight: 180, marginTop: "0.5rem", display: "block" }}>
-      <rect x="10" y="10" width="700" height="90" rx="8" fill={`${ACCENT}08`} stroke={HAIRLINE} />
+      <rect x="10" y="10" width="700" height="90" rx="8" fill={GOLD_TINT} stroke={HAIRLINE} />
 
       <rect x="30" y="32" width="120" height="46" rx="6" fill={SURFACE} stroke={INK_MUTED} />
       <text x="90" y="52" textAnchor="middle" fill={INK_PRIMARY} fontSize="11" fontWeight={600}>Raw question</text>
@@ -565,7 +570,7 @@ function MomentFlowSvg() {
       <line x1="150" y1="55" x2="190" y2="55" stroke={HAIRLINE} strokeWidth="2" />
       <polygon points="190,55 182,50 182,60" fill={HAIRLINE} />
 
-      <rect x="195" y="32" width="130" height="46" rx="6" fill={`${GOLD}10`} stroke={GOLD} />
+      <rect x="195" y="32" width="130" height="46" rx="6" fill={GOLD_TINT} stroke={GOLD} />
       <text x="260" y="52" textAnchor="middle" fill={GOLD} fontSize="11" fontWeight={600}>Screening gate</text>
       <text x="260" y="68" textAnchor="middle" fill={INK_MUTED} fontSize="10">8 steps</text>
 
@@ -575,14 +580,14 @@ function MomentFlowSvg() {
       <line x1="325" y1="55" x2="365" y2="55" stroke={HAIRLINE} strokeWidth="2" />
       <polygon points="365,55 357,50 357,60" fill={HAIRLINE} />
 
-      <rect x="370" y="32" width="130" height="46" rx="6" fill={`${GREEN}10`} stroke={GREEN} />
+      <rect x="370" y="32" width="130" height="46" rx="6" fill={GREEN_TINT} stroke={GREEN} />
       <text x="435" y="52" textAnchor="middle" fill={GREEN} fontSize="11" fontWeight={600}>Fix moment</text>
       <text x="435" y="68" textAnchor="middle" fill={INK_MUTED} fontSize="10">time + place</text>
 
       <line x1="500" y1="55" x2="540" y2="55" stroke={HAIRLINE} strokeWidth="2" />
       <polygon points="540,55 532,50 532,60" fill={HAIRLINE} />
 
-      <rect x="545" y="32" width="145" height="46" rx="6" fill={`${BLUE}10`} stroke={BLUE} />
+      <rect x="545" y="32" width="145" height="46" rx="6" fill={BLUE_TINT} stroke={BLUE} />
       <text x="617" y="52" textAnchor="middle" fill={BLUE} fontSize="11" fontWeight={600}>Sunrise &amp; vāra</text>
       <text x="617" y="68" textAnchor="middle" fill={INK_MUTED} fontSize="10">cast when clear</text>
     </svg>
@@ -628,6 +633,15 @@ const selectStyle: CSSProperties = {
   cursor: "pointer",
   width: "100%",
 };
+
+function tintForColor(color: string): string {
+  if (color === VERMILION) return VERMILION_TINT;
+  if (color === GREEN) return GREEN_TINT;
+  if (color === BLUE) return BLUE_TINT;
+  if (color === GOLD || color === ACCENT) return GOLD_TINT;
+  if (color === PURPLE) return PURPLE_TINT;
+  return SURFACE;
+}
 
 function buttonStyle(active: boolean, color: string): CSSProperties {
   return {

@@ -28,6 +28,12 @@ const BLUE = "#356CAB";
 const AMBER = "#B88421";
 const VERMILION = "#A23A1E";
 const PURPLE = "#6B5AA8";
+const GOLD_TINT = "#FFF8E8";
+const GREEN_TINT = "#EAF4EE";
+const BLUE_TINT = "#EAF0F8";
+const VERMILION_TINT = "#FDEBE6";
+const PURPLE_TINT = "#F1EEFA";
+const MUTED_TINT = "#F4EFE4";
 
 const ROWS: Record<RowKey, { label: string; ch13: string; ch4: string; ch5: string; total: string; tier: string; tierColor: string; note: string }> = {
   moon: { label: "Moon/Moon", ch13: "— (unevaluated)", ch4: "Dārākāraka self-rule (1)", ch5: "none", total: "1", tier: "Weak", tierColor: AMBER, note: "Moon itself as spouse-significator gives one structural reason." },
@@ -135,7 +141,7 @@ export function MarriageSynthesisCapstoneWorkbench() {
           <div style={{ overflowX: "auto", marginTop: "0.75rem" }}>
             <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.82rem", minWidth: 560 }}>
               <thead>
-                <tr style={{ background: `${GOLD}08` }}>
+                <tr style={{ background: GOLD_TINT }}>
                   <th style={thStyle}>Antardaśā</th>
                   <th style={thStyle}>Ch 1-3</th>
                   <th style={thStyle}>Ch 4</th>
@@ -152,7 +158,7 @@ export function MarriageSynthesisCapstoneWorkbench() {
                     <tr
                       key={key}
                       onClick={() => setSelectedRow(key)}
-                      style={{ background: active ? `${GOLD}10` : "transparent", cursor: "pointer" }}
+                      style={{ background: active ? GOLD_TINT : "transparent", cursor: "pointer" }}
                     >
                       <td style={tdStyle}><span style={{ fontWeight: active ? 600 : 400 }}>{row.label}</span></td>
                       <td style={tdStyle}>{row.ch13}</td>
@@ -166,7 +172,7 @@ export function MarriageSynthesisCapstoneWorkbench() {
               </tbody>
             </table>
           </div>
-          <div style={{ marginTop: "0.75rem", padding: "0.75rem", borderRadius: 8, border: `1px solid ${GOLD}44`, background: `${GOLD}0A` }}>
+          <div style={{ marginTop: "0.75rem", padding: "0.75rem", borderRadius: 8, border: `1px solid ${GOLD}`, background: GOLD_TINT }}>
             <div style={{ color: GOLD, fontWeight: 600, marginBottom: "0.35rem" }}>{ROWS[selectedRow].label}</div>
             <p style={{ margin: 0, color: INK_SECONDARY, lineHeight: 1.55 }}>{ROWS[selectedRow].note}</p>
           </div>
@@ -194,8 +200,8 @@ export function MarriageSynthesisCapstoneWorkbench() {
                 marginTop: "0.65rem",
                 padding: "0.55rem 0.75rem",
                 borderRadius: 8,
-                background: allScopesHeld ? `${GREEN}12` : `${VERMILION}12`,
-                border: `1px solid ${allScopesHeld ? GREEN : VERMILION}55`,
+                background: allScopesHeld ? GREEN_TINT : VERMILION_TINT,
+                border: `1px solid ${allScopesHeld ? GREEN : VERMILION}`,
                 color: allScopesHeld ? GREEN : VERMILION,
                 fontWeight: 600,
               }}
@@ -273,7 +279,7 @@ export function MarriageSynthesisCapstoneWorkbench() {
           </div>
         </section>
 
-        <section style={{ ...cardStyle, flex: "1 1 320px", borderColor: precision === "clock" ? `${VERMILION}66` : `${GREEN}66`, background: precision === "clock" ? `${VERMILION}0A` : `${GREEN}0A` }}>
+        <section style={{ ...cardStyle, flex: "1 1 320px", borderColor: precision === "clock" ? VERMILION : GREEN, background: precision === "clock" ? VERMILION_TINT : GREEN_TINT }}>
           <p style={eyebrowStyle}>Live client-ready statement</p>
           <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: precision === "clock" ? VERMILION : GREEN, marginBottom: "0.65rem" }}>
             <MessageSquareQuote size={18} aria-hidden="true" />
@@ -315,8 +321,8 @@ export function MarriageSynthesisCapstoneWorkbench() {
             marginTop: "0.75rem",
             padding: "0.65rem 0.85rem",
             borderRadius: 8,
-            background: allMistakesHeld ? `${GREEN}12` : `${VERMILION}12`,
-            border: `1px solid ${allMistakesHeld ? GREEN : VERMILION}55`,
+            background: allMistakesHeld ? GREEN_TINT : VERMILION_TINT,
+            border: `1px solid ${allMistakesHeld ? GREEN : VERMILION}`,
             color: allMistakesHeld ? GREEN : VERMILION,
             fontWeight: 600,
           }}
@@ -381,28 +387,32 @@ function buildStatement({ findings, disclosure, precision }: { findings: Record<
 
 function ChapterFlowSvg() {
   const boxes = [
-    { x: 20, label: "Ch 1-3", detail: "Vimśottarī + cusp/kāraka checks", color: BLUE },
-    { x: 130, label: "Ch 4", detail: "Cara + Sthira Jaimini cross-check", color: PURPLE },
-    { x: 260, label: "Ch 5.1", detail: "Scope decision: recognition depth", color: AMBER },
-    { x: 370, label: "Ch 5.2", detail: "Aṣṭottarī / Yoginī co-apply", color: GREEN },
-    { x: 480, label: "Ch 5.3", detail: "No new row — honest synthesis", color: VERMILION },
+    { x: 20, label: "Ch 1-3", lines: ["Vimśottarī +", "cusp/kāraka"], color: BLUE },
+    { x: 146, label: "Ch 4", lines: ["Cara + Sthira", "cross-check"], color: PURPLE },
+    { x: 272, label: "Ch 5.1", lines: ["Recognition", "scope"], color: AMBER },
+    { x: 398, label: "Ch 5.2", lines: ["Aṣṭottarī /", "Yoginī"], color: GREEN },
+    { x: 524, label: "Ch 5.3", lines: ["No new row", "honest synthesis"], color: VERMILION },
   ];
   return (
-    <svg viewBox="0 0 580 120" role="img" aria-label="Five chapter synthesis flow" style={{ width: "100%", maxHeight: 160, margin: "0.55rem auto 0.25rem", display: "block" }}>
+    <svg viewBox="0 0 650 145" role="img" aria-label="Five chapter synthesis flow" style={{ width: "100%", maxHeight: 185, margin: "0.55rem auto 0.25rem", display: "block" }}>
       {boxes.map((b, i) => (
         <g key={b.label}>
-          <rect x={b.x} y="20" width="90" height="50" rx="8" fill={`${b.color}12`} stroke={b.color} strokeWidth="2" />
-          <text x={b.x + 45} y="38" textAnchor="middle" fill={b.color} fontSize="11" fontWeight={600}>{b.label}</text>
-          <text x={b.x + 45} y="55" textAnchor="middle" fill={INK_SECONDARY} fontSize="9" fontWeight={600}>{b.detail}</text>
+          <rect x={b.x} y="18" width="106" height="64" rx="8" fill={tintForColor(b.color)} stroke={b.color} strokeWidth="2" />
+          <text x={b.x + 53} y="38" textAnchor="middle" fill={b.color} fontSize="11" fontWeight={600}>{b.label}</text>
+          {b.lines.map((line, lineIndex) => (
+            <text key={line} x={b.x + 53} y={lineIndex === 0 ? 56 : 70} textAnchor="middle" fill={INK_SECONDARY} fontSize="8.5" fontWeight={600}>
+              {line}
+            </text>
+          ))}
           {i < boxes.length - 1 && (
             <>
-              <line x1={b.x + 90} y1="45" x2={boxes[i + 1].x - 6} y2="45" stroke={HAIRLINE} strokeWidth="2" />
-              <polygon points={`${boxes[i + 1].x - 6},45 ${boxes[i + 1].x - 12},41 ${boxes[i + 1].x - 12},49`} fill={HAIRLINE} />
+              <line x1={b.x + 106} y1="50" x2={boxes[i + 1].x - 8} y2="50" stroke={HAIRLINE} strokeWidth="2" />
+              <polygon points={`${boxes[i + 1].x - 8},50 ${boxes[i + 1].x - 14},46 ${boxes[i + 1].x - 14},54`} fill={HAIRLINE} />
             </>
           )}
         </g>
       ))}
-      <text x="290" y="100" textAnchor="middle" fill={INK_MUTED} fontSize="12" fontWeight={600}>Chapter 5’s conclusion is that its own limits prevent a sharper finding</text>
+      <text x="325" y="116" textAnchor="middle" fill={INK_MUTED} fontSize="12" fontWeight={600}>Chapter 5’s conclusion is that its own limits prevent a sharper finding</text>
     </svg>
   );
 }
@@ -422,7 +432,7 @@ function ScopeToggle({ label, active, onClick }: { label: string; active: boolea
         width: "100%",
         border: `1px solid ${active ? GREEN : HAIRLINE}`,
         borderRadius: 8,
-        background: active ? `${GREEN}14` : "transparent",
+        background: active ? GREEN_TINT : "transparent",
         color: active ? GREEN : INK_SECONDARY,
         padding: "0.65rem",
         marginTop: "0.5rem",
@@ -437,7 +447,7 @@ function ScopeToggle({ label, active, onClick }: { label: string; active: boolea
 
 function Panel({ title, icon, color, children }: { title: string; icon: ReactNode; color: string; children: ReactNode }) {
   return (
-    <section style={{ border: `1px solid ${color}44`, borderRadius: 8, background: SURFACE, padding: "1rem" }}>
+    <section style={{ border: `1px solid ${color}`, borderRadius: 8, background: SURFACE, padding: "1rem" }}>
       <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", color, fontWeight: 600 }}>{icon}{title}</div>
       <div style={{ marginTop: "0.75rem" }}>{children}</div>
     </section>
@@ -480,11 +490,29 @@ function togglePanelStyle(active: boolean, color: string): CSSProperties {
     textAlign: "left",
     border: `1px solid ${active ? color : HAIRLINE}`,
     borderRadius: 8,
-    background: active ? `${color}14` : "transparent",
+    background: active ? tintForColor(color) : "transparent",
     color: active ? color : INK_SECONDARY,
     padding: "0.75rem",
     cursor: "pointer",
   };
+}
+
+function tintForColor(color: string): string {
+  switch (color) {
+    case BLUE:
+      return BLUE_TINT;
+    case GREEN:
+      return GREEN_TINT;
+    case GOLD:
+    case AMBER:
+      return GOLD_TINT;
+    case VERMILION:
+      return VERMILION_TINT;
+    case PURPLE:
+      return PURPLE_TINT;
+    default:
+      return MUTED_TINT;
+  }
 }
 
 const cardStyle: CSSProperties = {

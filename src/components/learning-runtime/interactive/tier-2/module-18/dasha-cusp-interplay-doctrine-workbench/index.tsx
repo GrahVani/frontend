@@ -106,6 +106,12 @@ const GOLD = "var(--gold-dark, #9C7A2F)";
 const GREEN = "#2F7D55";
 const VERMILION = "#A23A1E";
 const AMBER = "#B88421";
+const GOLD_TINT = "#FFF8E8";
+const GREEN_TINT = "#EAF4EE";
+const VERMILION_TINT = "#FDEBE6";
+const AMBER_TINT = "#FFF4DE";
+const BLUE_TINT = "#EAF0F8";
+const MUTED_TINT = "#F4EFE4";
 
 const QUESTIONS = [
   { label: "Marriage", house: 7 },
@@ -246,7 +252,7 @@ export function DashaCuspInterplayDoctrineWorkbench() {
                     padding: "0.35rem 0.6rem",
                     borderRadius: "6px",
                     border: `1px solid ${isSelected ? LORD_COLOR[lord] : HAIRLINE}`,
-                    background: isSelected ? `${LORD_COLOR[lord]}18` : SURFACE,
+                    background: isSelected ? tintForLord(lord) : SURFACE,
                     color: isSelected ? LORD_COLOR[lord] : INK_PRIMARY,
                     fontSize: "0.8rem",
                     fontWeight: 600,
@@ -306,7 +312,7 @@ export function DashaCuspInterplayDoctrineWorkbench() {
                 marginTop: "0.75rem",
                 padding: "0.9rem",
                 borderRadius: "8px",
-                background: `${GOLD}0A`,
+                background: GOLD_TINT,
                 border: `1px solid ${HAIRLINE}`,
               }}
             >
@@ -342,7 +348,7 @@ export function DashaCuspInterplayDoctrineWorkbench() {
         <div style={{ overflowX: "auto", marginTop: "0.75rem" }}>
           <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.85rem", minWidth: 480 }}>
             <thead>
-              <tr style={{ background: `${GOLD}08` }}>
+              <tr style={{ background: GOLD_TINT }}>
                 <th style={thStyle}>AD lord</th>
                 <th style={thStyle}>Sign / House</th>
                 <th style={thStyle}>Occupies</th>
@@ -361,7 +367,7 @@ export function DashaCuspInterplayDoctrineWorkbench() {
                       setSaturnChoice(null);
                     }}
                     style={{
-                      background: isSelected ? `${LORD_COLOR[row.lord]}10` : "transparent",
+                      background: isSelected ? tintForLord(row.lord) : "transparent",
                       cursor: "pointer",
                     }}
                   >
@@ -386,7 +392,7 @@ export function DashaCuspInterplayDoctrineWorkbench() {
       </section>
 
       {house === 7 && selectedLord === "Saturn" && (
-        <section style={{ ...cardStyle, borderColor: `${AMBER}88`, background: `${AMBER}0A` }}>
+        <section style={{ ...cardStyle, borderColor: AMBER, background: AMBER_TINT }}>
           <p style={eyebrowStyle}>Precision check</p>
           <p style={{ color: INK_SECONDARY, lineHeight: 1.55 }}>
             Saturn rules Kavya’s 7th cusp (Capricorn) but sits in Libra, neither occupying nor aspecting it.
@@ -407,7 +413,7 @@ export function DashaCuspInterplayDoctrineWorkbench() {
                   padding: "0.75rem 1rem",
                   borderRadius: "8px",
                   border: `1px solid ${HAIRLINE}`,
-                  background: saturnChoice === opt.id ? (opt.id === "separate" ? `${GREEN}11` : `${VERMILION}11`) : SURFACE,
+                  background: saturnChoice === opt.id ? (opt.id === "separate" ? GREEN_TINT : VERMILION_TINT) : SURFACE,
                   color: INK_PRIMARY,
                   cursor: "pointer",
                 }}
@@ -440,8 +446,8 @@ export function DashaCuspInterplayDoctrineWorkbench() {
 }
 
 function HouseWheel({ house, selectedLord }: { house: number; selectedLord: Lord }) {
-  const cx = 120;
-  const cy = 120;
+  const cx = 140;
+  const cy = 140;
   const rOut = 100;
   const rIn = 55;
   const lagnaIndex = signIndex(KAVYA_LAGNA);
@@ -464,7 +470,7 @@ function HouseWheel({ house, selectedLord }: { house: number; selectedLord: Lord
   const selectedLordSign = KAVYA_POSITIONS[selectedLord];
 
   return (
-    <svg viewBox="0 0 240 240" style={{ width: "100%", maxWidth: 320, marginTop: "0.75rem" }}>
+    <svg viewBox="0 0 280 280" style={{ width: "100%", maxWidth: 360, marginTop: "0.75rem", overflow: "visible" }}>
       {SIGNS.map((sign, i) => {
         const houseNum = ((i - lagnaIndex + 12) % 12) + 1;
         const startAngle = i * 30;
@@ -479,7 +485,7 @@ function HouseWheel({ house, selectedLord }: { house: number; selectedLord: Lord
           <g key={sign}>
             <path
               d={sectorPath(startAngle, endAngle)}
-              fill={isSelected ? `${GOLD}22` : isLordSign ? `${LORD_COLOR[selectedLord]}18` : `${SURFACE}`}
+              fill={isSelected ? GOLD_TINT : isLordSign ? tintForLord(selectedLord) : SURFACE}
               stroke={isSelected ? GOLD : HAIRLINE}
               strokeWidth={isSelected ? 2 : 1}
             />
@@ -592,6 +598,27 @@ function No() {
   );
 }
 
+function tintForLord(lord: Lord): string {
+  switch (lord) {
+    case "Sun":
+    case "Jupiter":
+      return GOLD_TINT;
+    case "Mercury":
+      return GREEN_TINT;
+    case "Mars":
+    case "Ketu":
+      return VERMILION_TINT;
+    case "Moon":
+    case "Venus":
+      return BLUE_TINT;
+    case "Saturn":
+    case "Rahu":
+      return MUTED_TINT;
+    default:
+      return MUTED_TINT;
+  }
+}
+
 const cardStyle: CSSProperties = {
   background: SURFACE,
   border: `1px solid ${HAIRLINE}`,
@@ -629,7 +656,7 @@ function chipStyle(active: boolean): CSSProperties {
     padding: "0.35rem 0.75rem",
     borderRadius: "6px",
     border: `1px solid ${active ? GOLD : HAIRLINE}`,
-    background: active ? `${GOLD}15` : SURFACE,
+    background: active ? GOLD_TINT : SURFACE,
     color: active ? GOLD : INK_PRIMARY,
     fontSize: "0.8rem",
     fontWeight: 600,
@@ -642,7 +669,7 @@ function pillStyle(active: boolean): CSSProperties {
     padding: "0.4rem 0.85rem",
     borderRadius: "9999px",
     border: `1px solid ${active ? GOLD : HAIRLINE}`,
-    background: active ? `${GOLD}15` : "transparent",
+    background: active ? GOLD_TINT : "transparent",
     color: active ? GOLD : INK_SECONDARY,
     fontSize: "0.82rem",
     fontWeight: 600,

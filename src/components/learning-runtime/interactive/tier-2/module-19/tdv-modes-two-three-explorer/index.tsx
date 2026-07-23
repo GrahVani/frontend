@@ -26,6 +26,7 @@ const BLUE = "#356CAB";
 const PURPLE = "#6B5AA8";
 const AMBER = "#B88421";
 const VERMILION = "#A23A1E";
+const MISSING_FILL = "rgba(156, 122, 47, 0.10)";
 
 
 const MODE_DATA: Record<Mode, { label: string; color: string; tagline: string; signature: string; example: string; fix: string }> = {
@@ -318,14 +319,14 @@ function MirrorSvg({ activeMode }: { activeMode: Mode }) {
       <rect x="70" y="90" width="140" height="50" rx="6" fill={`${AMBER}18`} stroke={AMBER} strokeWidth="2" />
       <text x="140" y="112" textAnchor="middle" fill={AMBER} fontSize="12" fontWeight={600}>Daśā window</text>
       <text x="140" y="128" textAnchor="middle" fill={INK_SECONDARY} fontSize="10" fontWeight={600}>present</text>
-      <rect x="70" y="160" width="140" height="50" rx="6" fill={`${HAIRLINE}22`} stroke={HAIRLINE} strokeWidth="2" strokeDasharray="6 4" />
+      <rect x="70" y="160" width="140" height="50" rx="6" fill={MISSING_FILL} stroke={HAIRLINE} strokeWidth="2" strokeDasharray="6 4" />
       <text x="140" y="182" textAnchor="middle" fill={INK_MUTED} fontSize="12" fontWeight={600}>Transit trigger</text>
       <text x="140" y="198" textAnchor="middle" fill={INK_MUTED} fontSize="10" fontWeight={600}>missing</text>
 
       {/* Mode 3 box */}
       <rect x="310" y="30" width="220" height="200" rx="8" fill={activeMode === "mode3" ? `${BLUE}10` : "transparent"} stroke={activeMode === "mode3" ? BLUE : HAIRLINE} strokeWidth="2" />
       <text x="420" y="60" textAnchor="middle" fill={activeMode === "mode3" ? BLUE : INK_MUTED} fontSize="13" fontWeight={600}>Mode 3</text>
-      <rect x="350" y="90" width="140" height="50" rx="6" fill={`${HAIRLINE}22`} stroke={HAIRLINE} strokeWidth="2" strokeDasharray="6 4" />
+      <rect x="350" y="90" width="140" height="50" rx="6" fill={MISSING_FILL} stroke={HAIRLINE} strokeWidth="2" strokeDasharray="6 4" />
       <text x="420" y="112" textAnchor="middle" fill={INK_MUTED} fontSize="12" fontWeight={600}>Daśā window</text>
       <text x="420" y="128" textAnchor="middle" fill={INK_MUTED} fontSize="10" fontWeight={600}>missing</text>
       <rect x="350" y="160" width="140" height="50" rx="6" fill={`${BLUE}18`} stroke={BLUE} strokeWidth="2" />

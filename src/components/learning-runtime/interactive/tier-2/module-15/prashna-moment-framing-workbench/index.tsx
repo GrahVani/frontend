@@ -18,10 +18,15 @@ const HAIRLINE = "var(--gl-gold-hairline)";
 const SURFACE = "var(--gl-card-surface-solid)";
 const ACCENT = "var(--gl-gold-accent)";
 const VERMILION = "var(--gl-vermilion-accent)";
+const VERMILION_TINT = "#FDEBE6";
 const GREEN = "#2F7D55";
+const GREEN_TINT = "#EAF4EE";
 const BLUE = "#356CAB";
+const BLUE_TINT = "#EAF0F8";
 const GOLD = "#B88421";
+const GOLD_TINT = "#FFF8E8";
 const PURPLE = "#6B5AA8";
+const PURPLE_TINT = "#F1EEFA";
 
 const SIGNS = [
   "Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo",
@@ -190,7 +195,7 @@ export function PrashnaMomentFramingWorkbench() {
           <div style={{ marginTop: "0.75rem", display: "flex", flexWrap: "wrap", gap: "0.75rem", alignItems: "center" }}>
             <PrecisionMeter precision={precision} />
             {vāra && (
-              <div style={{ display: "flex", alignItems: "center", gap: "0.35rem", padding: "0.35rem 0.6rem", borderRadius: 999, background: vāra.isPreSunrise ? `${VERMILION}10` : `${GREEN}10`, border: `1px solid ${vāra.isPreSunrise ? VERMILION : GREEN}`, color: vāra.isPreSunrise ? VERMILION : GREEN, fontSize: "0.8rem", fontWeight: 600 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "0.35rem", padding: "0.35rem 0.6rem", borderRadius: 999, background: vāra.isPreSunrise ? VERMILION_TINT : GREEN_TINT, border: `1px solid ${vāra.isPreSunrise ? VERMILION : GREEN}`, color: vāra.isPreSunrise ? VERMILION : GREEN, fontSize: "0.8rem", fontWeight: 600 }}>
                 <Sun size={14} aria-hidden="true" />
                 <span>Vāra: {vāra.weekday} ({vāra.lord}){vāra.isPreSunrise ? " — pre-sunrise" : ""}</span>
               </div>
@@ -294,7 +299,7 @@ function ChartWheel({ ascendant, planets }: { ascendant: { degree: number; sign:
   return (
     <svg viewBox={`0 0 ${size} ${size}`} role="img" aria-label={`Zodiac wheel with Ascendant at ${ascendant.degree}° ${ascendant.sign}`} style={{ width: "100%", maxWidth: 280, margin: "0.75rem auto 0", display: "block" }}>
       <circle cx={cx} cy={cy} r={radius} fill="none" stroke={HAIRLINE} strokeWidth={1} />
-      <circle cx={cx} cy={cy} r={innerRadius} fill={`${ACCENT}08`} stroke={HAIRLINE} />
+      <circle cx={cx} cy={cy} r={innerRadius} fill={GOLD_TINT} stroke={HAIRLINE} />
 
       {/* Sign segments */}
       {Array.from({ length: 12 }).map((_, i) => {
@@ -377,6 +382,15 @@ function buttonStyle(primary: boolean, color: string): CSSProperties {
   };
 }
 
+function tintForColor(color: string): string {
+  if (color === VERMILION) return VERMILION_TINT;
+  if (color === GREEN) return GREEN_TINT;
+  if (color === BLUE) return BLUE_TINT;
+  if (color === GOLD || color === ACCENT) return GOLD_TINT;
+  if (color === PURPLE) return PURPLE_TINT;
+  return SURFACE;
+}
+
 function smallChipStyle(active: boolean, color: string): CSSProperties {
   return {
     display: "inline-flex",
@@ -385,7 +399,7 @@ function smallChipStyle(active: boolean, color: string): CSSProperties {
     padding: "0.35rem 0.6rem",
     borderRadius: 999,
     border: `1px solid ${active ? color : HAIRLINE}`,
-    background: active ? `${color}12` : SURFACE,
+    background: active ? tintForColor(color) : SURFACE,
     color: active ? color : INK_PRIMARY,
     fontSize: "0.8rem",
     fontWeight: 600,

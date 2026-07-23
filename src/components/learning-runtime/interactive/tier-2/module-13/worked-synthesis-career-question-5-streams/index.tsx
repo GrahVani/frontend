@@ -325,7 +325,7 @@ function CareerSynthesisDiagram({ stage, marsChoice, showScopedRows, methodOk }:
 function Node({ x, y, label, body, color, active }: { x: number; y: number; label: string; body: string; color: string; active: boolean }) {
   return (
     <g>
-      <circle cx={x} cy={y} r="50" fill={active ? `${color}18` : SURFACE} stroke={active ? color : HAIRLINE} strokeWidth={active ? 2.5 : 1.2} />
+      <circle cx={x} cy={y} r="50" fill={active ? color : SURFACE} fillOpacity={active ? 0.1 : 1} stroke={active ? color : HAIRLINE} strokeWidth={active ? 2.5 : 1.2} />
       <text x={x} y={y - 5} textAnchor="middle" fill={active ? color : INK_MUTED} fontSize="15" fontWeight="500">{label}</text>
       <text x={x} y={y + 17} textAnchor="middle" fill={INK_MUTED} fontSize="12">{body}</text>
     </g>

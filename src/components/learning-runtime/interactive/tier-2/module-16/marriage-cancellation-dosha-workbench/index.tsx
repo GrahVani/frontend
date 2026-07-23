@@ -322,12 +322,12 @@ function VerdictRow({ ok, label, okText, failText }: { ok: boolean; label: strin
 }
 
 function TithiCycleSvg({ selected, onSelect }: { selected: number; onSelect: (n: number) => void }) {
-  const cx = 300;
-  const cy = 155;
-  const r = 110;
+  const cx = 310;
+  const cy = 170;
+  const r = 140;
   return (
-    <svg viewBox="0 0 600 310" role="img" aria-label="Lunar month tithi cycle" style={{ width: "100%", maxHeight: 280, display: "block" }}>
-      <ellipse cx={cx} cy={cy} rx={r + 28} ry={r + 28} fill="none" stroke={HAIRLINE} strokeWidth="2" />
+    <svg viewBox="0 0 620 390" role="img" aria-label="Lunar month tithi cycle" style={{ width: "100%", maxHeight: 380, display: "block" }}>
+      <ellipse cx={cx} cy={cy} rx={r + 20} ry={r + 20} fill="none" stroke={HAIRLINE} strokeWidth="2" />
       <text x={cx} y={cy + 5} textAnchor="middle" fill={INK_MUTED} fontSize="13" fontWeight={700}>Lunar month</text>
       {TITHIS.map((t, index) => {
         const angle = (index * 12 - 90) * (Math.PI / 180);
@@ -337,19 +337,19 @@ function TithiCycleSvg({ selected, onSelect }: { selected: number; onSelect: (n:
         const color = STATUS_COLOR[t.status];
         return (
           <g key={t.n} onClick={() => onSelect(t.n)} style={{ cursor: "pointer" }}>
-            <circle cx={x} cy={y} r={isSelected ? 18 : 14} fill={isSelected ? color : color + "20"} stroke={color} strokeWidth={isSelected ? 3 : 2} />
-            <text x={x} y={y + 4} textAnchor="middle" fill={isSelected ? "#fff" : INK_PRIMARY} fontSize={isSelected ? 11 : 9} fontWeight={700}>
+            <circle cx={x} cy={y} r={isSelected ? 13 : 10} fill={isSelected ? color : color + "20"} stroke={color} strokeWidth={isSelected ? 3 : 2} />
+            <text x={x} y={y + 3.5} textAnchor="middle" fill={isSelected ? "#fff" : INK_PRIMARY} fontSize={isSelected ? 10 : 8} fontWeight={700}>
               {t.n}
             </text>
             {isSelected && (
-              <text x={x} y={y + 32} textAnchor="middle" fill={color} fontSize="11" fontWeight={700}>
+              <text x={x} y={y + 27} textAnchor="middle" fill={color} fontSize="11" fontWeight={700}>
                 {t.name}
               </text>
             )}
           </g>
         );
       })}
-      <g transform={`translate(${cx - 90} 265)`}>
+      <g transform={`translate(${cx - 90} 350)`}>
         <rect x="0" y="0" width="180" height="28" rx="6" fill={`${GOLD}10`} stroke={GOLD} />
         <text x="90" y="18" textAnchor="middle" fill={INK_SECONDARY} fontSize="11" fontWeight={700}>Click any tithi to select it</text>
       </g>

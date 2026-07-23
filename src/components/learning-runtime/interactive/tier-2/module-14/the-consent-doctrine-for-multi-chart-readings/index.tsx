@@ -21,10 +21,15 @@ const HAIRLINE = "var(--gl-gold-hairline)";
 const SURFACE = "var(--gl-card-surface-solid)";
 const ACCENT = "var(--gl-gold-accent)";
 const VERMILION = "var(--gl-vermilion-accent)";
+const VERMILION_TINT = "#FDEBE6";
 const GREEN = "#2F7D55";
+const GREEN_TINT = "#EAF4EE";
 const BLUE = "#356CAB";
+const BLUE_TINT = "#EAF0F8";
 const GOLD = "#B88421";
+const GOLD_TINT = "#FFF8E8";
 const PURPLE = "#6B5AA8";
+const PURPLE_TINT = "#F1EEFA";
 
 const TIER_META: Record<TierKey, { label: string; color: string; depth: string; note: string }> = {
   A: {
@@ -197,7 +202,7 @@ export function TheConsentDoctrineForMultiChartReadings() {
             {SCENARIOS.map((scenario) => {
               const selected = tierAnswers[scenario.id];
               return (
-                <div key={scenario.id} style={{ padding: "0.75rem", borderRadius: 8, border: `1px solid ${selected ? TIER_META[selected].color : HAIRLINE}`, background: selected ? `${TIER_META[selected].color}08` : SURFACE }}>
+                <div key={scenario.id} style={{ padding: "0.75rem", borderRadius: 8, border: `1px solid ${selected ? TIER_META[selected].color : HAIRLINE}`, background: selected ? tintForColor(TIER_META[selected].color) : SURFACE }}>
                   <div style={{ display: "flex", justifyContent: "space-between", gap: "0.5rem", alignItems: "start", flexWrap: "wrap" }}>
                     <div>
                       <p style={{ margin: 0, color: INK_MUTED, fontSize: "0.75rem", fontWeight: 700 }}>{scenario.subject}</p>
@@ -212,7 +217,7 @@ export function TheConsentDoctrineForMultiChartReadings() {
                     ))}
                   </div>
                   {selected && (
-                    <div style={{ marginTop: "0.55rem", padding: "0.55rem", borderRadius: 6, background: selected === scenario.correct ? `${GREEN}10` : `${VERMILION}10`, border: `1px solid ${selected === scenario.correct ? GREEN : VERMILION}`, color: selected === scenario.correct ? GREEN : VERMILION, fontSize: "0.85rem" }}>
+                    <div style={{ marginTop: "0.55rem", padding: "0.55rem", borderRadius: 6, background: selected === scenario.correct ? GREEN_TINT : VERMILION_TINT, border: `1px solid ${selected === scenario.correct ? GREEN : VERMILION}`, color: selected === scenario.correct ? GREEN : VERMILION, fontSize: "0.85rem" }}>
                       {selected === scenario.correct ? scenario.explanation : `This case belongs in ${TIER_META[scenario.correct].label}. ${scenario.explanation}`}
                     </div>
                   )}
@@ -222,7 +227,7 @@ export function TheConsentDoctrineForMultiChartReadings() {
           </div>
 
           {SCENARIOS.every((s) => tierAnswers[s.id]) && (
-            <div style={{ marginTop: "0.75rem", padding: "0.75rem", borderRadius: 8, background: allTierCorrect ? `${GREEN}10` : `${VERMILION}10`, border: `1px solid ${allTierCorrect ? GREEN : VERMILION}`, color: allTierCorrect ? GREEN : VERMILION, fontSize: "0.9rem" }}>
+            <div style={{ marginTop: "0.75rem", padding: "0.75rem", borderRadius: 8, background: allTierCorrect ? GREEN_TINT : VERMILION_TINT, border: `1px solid ${allTierCorrect ? GREEN : VERMILION}`, color: allTierCorrect ? GREEN : VERMILION, fontSize: "0.9rem" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                 {allTierCorrect ? <BadgeCheck size={18} aria-hidden="true" /> : <AlertTriangle size={18} aria-hidden="true" />}
                 <span style={{ fontWeight: 600 }}>{allTierCorrect ? "All tiers matched correctly." : "Some tiers need correction — review the feedback above."}</span>
@@ -241,7 +246,7 @@ export function TheConsentDoctrineForMultiChartReadings() {
               {DOCTRINE_STATEMENTS.map((statement) => {
                 const selected = doctrineAnswers[statement.id];
                 return (
-                  <div key={statement.id} style={{ padding: "0.6rem", borderRadius: 8, border: `1px solid ${selected ? doctrineColor(selected) : HAIRLINE}`, background: selected ? `${doctrineColor(selected)}08` : SURFACE }}>
+                  <div key={statement.id} style={{ padding: "0.6rem", borderRadius: 8, border: `1px solid ${selected ? doctrineColor(selected) : HAIRLINE}`, background: selected ? tintForColor(doctrineColor(selected)) : SURFACE }}>
                     <p style={{ margin: 0, color: INK_PRIMARY, fontSize: "0.85rem", lineHeight: 1.5 }}>{statement.text}</p>
                     <div style={{ display: "flex", flexWrap: "wrap", gap: "0.35rem", marginTop: "0.45rem" }}>
                       {(["consent", "confidentiality", "neither"] as DoctrineKey[]).map((doctrine) => (
@@ -251,7 +256,7 @@ export function TheConsentDoctrineForMultiChartReadings() {
                       ))}
                     </div>
                     {selected && (
-                      <div style={{ marginTop: "0.45rem", padding: "0.45rem", borderRadius: 6, background: selected === statement.correct ? `${GREEN}10` : `${VERMILION}10`, border: `1px solid ${selected === statement.correct ? GREEN : VERMILION}`, color: selected === statement.correct ? GREEN : VERMILION, fontSize: "0.78rem" }}>
+                      <div style={{ marginTop: "0.45rem", padding: "0.45rem", borderRadius: 6, background: selected === statement.correct ? GREEN_TINT : VERMILION_TINT, border: `1px solid ${selected === statement.correct ? GREEN : VERMILION}`, color: selected === statement.correct ? GREEN : VERMILION, fontSize: "0.78rem" }}>
                         {selected === statement.correct ? statement.explanation : `This statement belongs under ${statement.correct === "consent" ? "Consent" : statement.correct === "confidentiality" ? "Confidentiality" : "Neither"}. ${statement.explanation}`}
                       </div>
                     )}
@@ -264,7 +269,7 @@ export function TheConsentDoctrineForMultiChartReadings() {
           <Panel title="Tier key" icon={<ShieldCheck size={18} />} color={GREEN}>
             <div style={{ display: "grid", gap: "0.55rem" }}>
               {(Object.keys(TIER_META) as TierKey[]).map((tier) => (
-                <div key={tier} style={{ padding: "0.55rem", borderRadius: 6, border: `1px solid ${TIER_META[tier].color}`, background: `${TIER_META[tier].color}08` }}>
+                <div key={tier} style={{ padding: "0.55rem", borderRadius: 6, border: `1px solid ${TIER_META[tier].color}`, background: tintForColor(TIER_META[tier].color) }}>
                   <div style={{ color: TIER_META[tier].color, fontWeight: 600, fontSize: "0.85rem" }}>{TIER_META[tier].label}</div>
                   <div style={{ color: INK_SECONDARY, fontSize: "0.78rem", marginTop: "0.15rem" }}>{TIER_META[tier].depth}</div>
                   <div style={{ color: INK_MUTED, fontSize: "0.75rem", marginTop: "0.1rem" }}>{TIER_META[tier].note}</div>
@@ -285,7 +290,7 @@ export function TheConsentDoctrineForMultiChartReadings() {
           {SELF_AUDIT.map((item) => {
             const selected = auditAnswers[item.id];
             return (
-              <div key={item.id} style={{ padding: "0.75rem", borderRadius: 8, border: `1px solid ${selected ? TIER_META[selected].color : HAIRLINE}`, background: selected ? `${TIER_META[selected].color}08` : SURFACE }}>
+              <div key={item.id} style={{ padding: "0.75rem", borderRadius: 8, border: `1px solid ${selected ? TIER_META[selected].color : HAIRLINE}`, background: selected ? tintForColor(TIER_META[selected].color) : SURFACE }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "0.5rem" }}>
                   <span style={{ color: INK_PRIMARY, fontWeight: 600, fontSize: "0.9rem" }}>{item.lesson}</span>
                   <span style={{ color: INK_MUTED, fontSize: "0.8rem" }}>{item.subject}</span>
@@ -298,7 +303,7 @@ export function TheConsentDoctrineForMultiChartReadings() {
                   ))}
                 </div>
                 {selected && (
-                  <div style={{ marginTop: "0.55rem", padding: "0.55rem", borderRadius: 6, background: selected === item.correct ? `${GREEN}10` : `${VERMILION}10`, border: `1px solid ${selected === item.correct ? GREEN : VERMILION}`, color: selected === item.correct ? GREEN : VERMILION, fontSize: "0.78rem" }}>
+                  <div style={{ marginTop: "0.55rem", padding: "0.55rem", borderRadius: 6, background: selected === item.correct ? GREEN_TINT : VERMILION_TINT, border: `1px solid ${selected === item.correct ? GREEN : VERMILION}`, color: selected === item.correct ? GREEN : VERMILION, fontSize: "0.78rem" }}>
                     {selected === item.correct ? item.explanation : `This example belongs in ${TIER_META[item.correct].label}. ${item.explanation}`}
                   </div>
                 )}
@@ -308,7 +313,7 @@ export function TheConsentDoctrineForMultiChartReadings() {
         </div>
 
         {SELF_AUDIT.every((s) => auditAnswers[s.id]) && (
-          <div style={{ marginTop: "0.75rem", padding: "0.75rem", borderRadius: 8, background: allAuditCorrect ? `${GREEN}10` : `${VERMILION}10`, border: `1px solid ${allAuditCorrect ? GREEN : VERMILION}`, color: allAuditCorrect ? GREEN : VERMILION, fontSize: "0.9rem" }}>
+          <div style={{ marginTop: "0.75rem", padding: "0.75rem", borderRadius: 8, background: allAuditCorrect ? GREEN_TINT : VERMILION_TINT, border: `1px solid ${allAuditCorrect ? GREEN : VERMILION}`, color: allAuditCorrect ? GREEN : VERMILION, fontSize: "0.9rem" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
               {allAuditCorrect ? <BadgeCheck size={18} aria-hidden="true" /> : <AlertTriangle size={18} aria-hidden="true" />}
               <span style={{ fontWeight: 600 }}>{allAuditCorrect ? "Self-audit matches the framework." : "Some audit answers need correction — review the feedback above."}</span>
@@ -323,7 +328,7 @@ export function TheConsentDoctrineForMultiChartReadings() {
 function TierDecisionSvg() {
   return (
     <svg viewBox="0 0 560 180" role="img" aria-label="Consent tier decision flow" style={{ width: "100%", maxHeight: 260, margin: "0.4rem auto 0.75rem", display: "block" }}>
-      <rect x="12" y="12" width="536" height="156" rx="8" fill={`${ACCENT}08`} stroke={HAIRLINE} />
+      <rect x="12" y="12" width="536" height="156" rx="8" fill={GOLD_TINT} stroke={HAIRLINE} />
       <text x="280" y="32" textAnchor="middle" fill={INK_PRIMARY} fontSize="13" fontWeight={600}>
         Consent tier flow
       </text>
@@ -342,17 +347,17 @@ function TierDecisionSvg() {
       <line x1="450" y1="92" x2="450" y2="110" stroke={HAIRLINE} strokeWidth="2" />
 
       {/* Tier A */}
-      <rect x="50" y="110" width="120" height="40" rx="6" fill={`${GREEN}12`} stroke={GREEN} />
+      <rect x="50" y="110" width="120" height="40" rx="6" fill={GREEN_TINT} stroke={GREEN} />
       <text x="110" y="128" textAnchor="middle" fill={GREEN} fontSize="10" fontWeight={700}>PRESENT + CONSENTING</text>
       <text x="110" y="142" textAnchor="middle" fill={INK_PRIMARY} fontSize="10" fontWeight={600}>Tier A — full depth</text>
 
       {/* Tier B */}
-      <rect x="220" y="110" width="120" height="40" rx="6" fill={`${GOLD}12`} stroke={GOLD} />
+      <rect x="220" y="110" width="120" height="40" rx="6" fill={GOLD_TINT} stroke={GOLD} />
       <text x="280" y="128" textAnchor="middle" fill={GOLD} fontSize="10" fontWeight={700}>PROXY CONSENT KNOWN</text>
       <text x="280" y="142" textAnchor="middle" fill={INK_PRIMARY} fontSize="10" fontWeight={600}>Tier B — tendency only</text>
 
       {/* Tier C */}
-      <rect x="390" y="110" width="120" height="40" rx="6" fill={`${VERMILION}12`} stroke={VERMILION} />
+      <rect x="390" y="110" width="120" height="40" rx="6" fill={VERMILION_TINT} stroke={VERMILION} />
       <text x="450" y="128" textAnchor="middle" fill={VERMILION} fontSize="10" fontWeight={700}>NO / UNKNOWN CONSENT</text>
       <text x="450" y="142" textAnchor="middle" fill={INK_PRIMARY} fontSize="10" fontWeight={600}>Tier C — restricted</text>
     </svg>
@@ -361,6 +366,15 @@ function TierDecisionSvg() {
 
 function doctrineColor(doctrine: DoctrineKey) {
   return doctrine === "consent" ? BLUE : doctrine === "confidentiality" ? PURPLE : VERMILION;
+}
+
+function tintForColor(color: string): string {
+  if (color === VERMILION) return VERMILION_TINT;
+  if (color === GREEN) return GREEN_TINT;
+  if (color === BLUE) return BLUE_TINT;
+  if (color === GOLD || color === ACCENT) return GOLD_TINT;
+  if (color === PURPLE) return PURPLE_TINT;
+  return SURFACE;
 }
 
 function Panel({ title, icon, color, children }: { title: string; icon: ReactNode; color: string; children: ReactNode }) {
@@ -415,7 +429,7 @@ function smallChipStyle(active: boolean, color: string): CSSProperties {
     padding: "0.35rem 0.6rem",
     borderRadius: 999,
     border: `1px solid ${active ? color : HAIRLINE}`,
-    background: active ? `${color}12` : SURFACE,
+    background: active ? tintForColor(color) : SURFACE,
     color: active ? color : INK_PRIMARY,
     fontSize: "0.8rem",
     fontWeight: 600,

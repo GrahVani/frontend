@@ -32,6 +32,13 @@ const AMBER = "#B88421";
 const VERMILION = "#A23A1E";
 const PURPLE = "#6B5AA8";
 const TEAL = "#2E7D7A";
+const GOLD_TINT = "#FFF8E8";
+const GREEN_TINT = "#EAF4EE";
+const BLUE_TINT = "#EAF0F8";
+const VERMILION_TINT = "#FDEBE6";
+const PURPLE_TINT = "#F1EEFA";
+const TEAL_TINT = "#EAF6F5";
+const MUTED_TINT = "#F4EFE4";
 
 const SKILLS: Record<SkillKey, { label: string; chapter: string; icon: ReactNode; color: string; body: string; kavyaUse: string }> = {
   cascade: {
@@ -220,8 +227,8 @@ export function DashaPermutationsLiteracyExplorer() {
               marginTop: "0.75rem",
               padding: "0.75rem",
               borderRadius: 8,
-              border: `1px solid ${SKILLS[activeSkill].color}55`,
-              background: `${SKILLS[activeSkill].color}10`,
+              border: `1px solid ${SKILLS[activeSkill].color}`,
+              background: tintForColor(SKILLS[activeSkill].color),
             }}
           >
             <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: SKILLS[activeSkill].color, fontWeight: 600 }}>
@@ -256,8 +263,8 @@ export function DashaPermutationsLiteracyExplorer() {
                   marginTop: "0.65rem",
                   padding: "0.55rem 0.75rem",
                   borderRadius: 8,
-                  background: PLURALISM_OPTIONS.find((o) => o.id === pluralism)?.ok ? `${GREEN}12` : `${VERMILION}12`,
-                  border: `1px solid ${PLURALISM_OPTIONS.find((o) => o.id === pluralism)?.ok ? GREEN : VERMILION}55`,
+                  background: PLURALISM_OPTIONS.find((o) => o.id === pluralism)?.ok ? GREEN_TINT : VERMILION_TINT,
+                  border: `1px solid ${PLURALISM_OPTIONS.find((o) => o.id === pluralism)?.ok ? GREEN : VERMILION}`,
                   color: PLURALISM_OPTIONS.find((o) => o.id === pluralism)?.ok ? GREEN : VERMILION,
                 }}
               >
@@ -299,8 +306,8 @@ export function DashaPermutationsLiteracyExplorer() {
               marginTop: "0.75rem",
               padding: "0.65rem 0.85rem",
               borderRadius: 8,
-              background: allStopsHeld ? `${GREEN}12` : `${VERMILION}12`,
-              border: `1px solid ${allStopsHeld ? GREEN : VERMILION}55`,
+              background: allStopsHeld ? GREEN_TINT : VERMILION_TINT,
+              border: `1px solid ${allStopsHeld ? GREEN : VERMILION}`,
               color: allStopsHeld ? GREEN : VERMILION,
               fontWeight: 600,
             }}
@@ -329,7 +336,7 @@ export function DashaPermutationsLiteracyExplorer() {
                     textAlign: "left",
                     border: `1px solid ${on ? BLUE : HAIRLINE}`,
                     borderRadius: 8,
-                    background: on ? `${BLUE}10` : "transparent",
+                    background: on ? BLUE_TINT : "transparent",
                     color: on ? BLUE : INK_SECONDARY,
                     padding: "0.75rem",
                     cursor: "pointer",
@@ -364,7 +371,7 @@ export function DashaPermutationsLiteracyExplorer() {
                 textAlign: "left",
                 border: `1px solid ${namedGaps[idx] ? GREEN : HAIRLINE}`,
                 borderRadius: 8,
-                background: namedGaps[idx] ? `${GREEN}10` : "transparent",
+                background: namedGaps[idx] ? GREEN_TINT : "transparent",
                 color: namedGaps[idx] ? GREEN : INK_SECONDARY,
                 padding: "0.55rem 0.75rem",
                 fontWeight: 600,
@@ -380,8 +387,8 @@ export function DashaPermutationsLiteracyExplorer() {
             marginTop: "0.75rem",
             padding: "0.65rem 0.85rem",
             borderRadius: 8,
-            background: allGapsNamed ? `${GREEN}12` : `${AMBER}12`,
-            border: `1px solid ${allGapsNamed ? GREEN : AMBER}55`,
+            background: allGapsNamed ? GREEN_TINT : GOLD_TINT,
+            border: `1px solid ${allGapsNamed ? GREEN : AMBER}`,
             color: allGapsNamed ? GREEN : AMBER,
             fontWeight: 600,
           }}
@@ -419,8 +426,8 @@ export function DashaPermutationsLiteracyExplorer() {
             marginTop: "0.75rem",
             padding: "0.65rem 0.85rem",
             borderRadius: 8,
-            background: allMistakesHeld ? `${GREEN}12` : `${VERMILION}12`,
-            border: `1px solid ${allMistakesHeld ? GREEN : VERMILION}55`,
+            background: allMistakesHeld ? GREEN_TINT : VERMILION_TINT,
+            border: `1px solid ${allMistakesHeld ? GREEN : VERMILION}`,
             color: allMistakesHeld ? GREEN : VERMILION,
             fontWeight: 600,
           }}
@@ -435,12 +442,20 @@ export function DashaPermutationsLiteracyExplorer() {
 }
 
 function SkillConstellationSvg({ active, onSelect }: { active: SkillKey; onSelect: (k: SkillKey) => void }) {
-  const cx = 180;
+  const cx = 210;
   const cy = 150;
   const r = 105;
+  const labelLines: Record<SkillKey, string[]> = {
+    cascade: ["Cascade", "fluency"],
+    texture: ["Relationship", "texture"],
+    cusp: ["Cusp-interplay", "awareness"],
+    cross: ["Cross-system", "corroboration"],
+    conditional: ["Conditional", "selection"],
+  };
+
   return (
-    <svg viewBox="0 0 360 300" role="img" aria-label="Five skill constellation" style={{ width: "100%", maxHeight: 300, margin: "0.65rem auto 0.25rem", display: "block" }}>
-      <circle cx={cx} cy={cy} r={46} fill={`${GOLD}18`} stroke={GOLD} strokeWidth="3" />
+    <svg viewBox="0 0 420 310" role="img" aria-label="Five skill constellation" style={{ width: "100%", maxHeight: 320, margin: "0.65rem auto 0.25rem", display: "block" }}>
+      <circle cx={cx} cy={cy} r={46} fill={GOLD_TINT} stroke={GOLD} strokeWidth="3" />
       <text x={cx} y={cy - 4} textAnchor="middle" fill={GOLD} fontSize="11" fontWeight={600}>Kavya&apos;s</text>
       <text x={cx} y={cy + 10} textAnchor="middle" fill={GOLD} fontSize="11" fontWeight={600}>marriage</text>
       <text x={cx} y={cy + 24} textAnchor="middle" fill={GOLD} fontSize="11" fontWeight={600}>question</text>
@@ -453,9 +468,13 @@ function SkillConstellationSvg({ active, onSelect }: { active: SkillKey; onSelec
         return (
           <g key={key} style={{ cursor: "pointer" }} onClick={() => onSelect(key)}>
             <line x1={cx + 46 * Math.cos(angle)} y1={cy + 46 * Math.sin(angle)} x2={x - (isActive ? 36 : 30) * Math.cos(angle)} y2={y - (isActive ? 36 : 30) * Math.sin(angle)} stroke={isActive ? s.color : HAIRLINE} strokeWidth={isActive ? 3 : 1.5} />
-            <circle cx={x} cy={y} r={isActive ? 38 : 32} fill={isActive ? `${s.color}20` : `${s.color}10`} stroke={s.color} strokeWidth={isActive ? 3 : 2} />
-            <text x={x} y={y - 4} textAnchor="middle" fill={s.color} fontSize={isActive ? 11 : 10} fontWeight={600}>{s.label}</text>
-            <text x={x} y={y + 10} textAnchor="middle" fill={INK_SECONDARY} fontSize={isActive ? 10 : 9} fontWeight={600}>{s.chapter}</text>
+            <circle cx={x} cy={y} r={isActive ? 42 : 38} fill={tintForColor(s.color)} stroke={s.color} strokeWidth={isActive ? 3 : 2} />
+            {labelLines[key].map((line, lineIndex) => (
+              <text key={line} x={x} y={y - 12 + lineIndex * 12} textAnchor="middle" fill={s.color} fontSize={isActive ? 9.5 : 9} fontWeight={600}>
+                {line}
+              </text>
+            ))}
+            <text x={x} y={y + 18} textAnchor="middle" fill={INK_SECONDARY} fontSize={isActive ? 9 : 8.5} fontWeight={600}>{s.chapter}</text>
           </g>
         );
       })}
@@ -465,7 +484,7 @@ function SkillConstellationSvg({ active, onSelect }: { active: SkillKey; onSelec
 
 function Panel({ title, icon, color, children }: { title: string; icon: ReactNode; color: string; children: ReactNode }) {
   return (
-    <section style={{ border: `1px solid ${color}44`, borderRadius: 8, background: SURFACE, padding: "1rem" }}>
+    <section style={{ border: `1px solid ${color}`, borderRadius: 8, background: SURFACE, padding: "1rem" }}>
       <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", color, fontWeight: 600 }}>{icon}{title}</div>
       <div style={{ marginTop: "0.75rem" }}>{children}</div>
     </section>
@@ -509,11 +528,31 @@ function togglePanelStyle(active: boolean, color: string): CSSProperties {
     textAlign: "left",
     border: `1px solid ${active ? color : HAIRLINE}`,
     borderRadius: 8,
-    background: active ? `${color}14` : "transparent",
+    background: active ? tintForColor(color) : "transparent",
     color: active ? color : INK_SECONDARY,
     padding: "0.75rem",
     cursor: "pointer",
   };
+}
+
+function tintForColor(color: string): string {
+  switch (color) {
+    case BLUE:
+      return BLUE_TINT;
+    case GREEN:
+      return GREEN_TINT;
+    case GOLD:
+    case AMBER:
+      return GOLD_TINT;
+    case VERMILION:
+      return VERMILION_TINT;
+    case PURPLE:
+      return PURPLE_TINT;
+    case TEAL:
+      return TEAL_TINT;
+    default:
+      return MUTED_TINT;
+  }
 }
 
 const cardStyle: CSSProperties = {

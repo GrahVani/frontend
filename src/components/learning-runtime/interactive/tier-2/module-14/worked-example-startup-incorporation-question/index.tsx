@@ -25,10 +25,15 @@ const HAIRLINE = "var(--gl-gold-hairline)";
 const SURFACE = "var(--gl-card-surface-solid)";
 const ACCENT = "var(--gl-gold-accent)";
 const VERMILION = "var(--gl-vermilion-accent)";
+const VERMILION_TINT = "#FDEBE6";
 const GREEN = "#2F7D55";
+const GREEN_TINT = "#EAF4EE";
 const BLUE = "#356CAB";
+const BLUE_TINT = "#EAF0F8";
 const GOLD = "#B88421";
+const GOLD_TINT = "#FFF8E8";
 const PURPLE = "#6B5AA8";
+const PURPLE_TINT = "#F1EEFA";
 
 const INDICATOR_COLORS: Record<IndicatorKey, string> = {
   green: GREEN,
@@ -281,7 +286,7 @@ export function WorkedExampleStartupIncorporationQuestion() {
               {CITATION_CLAIMS.map((claim) => {
                 const selected = citations[claim.id];
                 return (
-                  <div key={claim.id} style={{ padding: "0.6rem", borderRadius: 8, border: `1px solid ${selected ? categoryColor(selected) : HAIRLINE}`, background: selected ? `${categoryColor(selected)}08` : SURFACE }}>
+                  <div key={claim.id} style={{ padding: "0.6rem", borderRadius: 8, border: `1px solid ${selected ? categoryColor(selected) : HAIRLINE}`, background: selected ? tintForColor(categoryColor(selected)) : SURFACE }}>
                     <p style={{ margin: 0, color: INK_PRIMARY, fontSize: "0.85rem", lineHeight: 1.5 }}>{claim.text}</p>
                     <div style={{ display: "flex", gap: "0.35rem", marginTop: "0.45rem", flexWrap: "wrap" }}>
                       {(["classical", "modern", "fabrication"] as CitationCategory[]).map((cat) => (
@@ -291,7 +296,7 @@ export function WorkedExampleStartupIncorporationQuestion() {
                       ))}
                     </div>
                     {selected && (
-                      <div style={{ marginTop: "0.45rem", padding: "0.45rem", borderRadius: 6, background: selected === claim.category ? `${GREEN}10` : `${VERMILION}10`, border: `1px solid ${selected === claim.category ? GREEN : VERMILION}`, color: selected === claim.category ? GREEN : VERMILION, fontSize: "0.78rem" }}>
+                      <div style={{ marginTop: "0.45rem", padding: "0.45rem", borderRadius: 6, background: selected === claim.category ? GREEN_TINT : VERMILION_TINT, border: `1px solid ${selected === claim.category ? GREEN : VERMILION}`, color: selected === claim.category ? GREEN : VERMILION, fontSize: "0.78rem" }}>
                         {selected === claim.category ? claim.explanation : `This claim belongs under ${claim.category === "classical" ? "Classical" : claim.category === "modern" ? "Modern" : "Fabrication"}. ${claim.explanation}`}
                       </div>
                     )}
@@ -351,7 +356,7 @@ export function WorkedExampleStartupIncorporationQuestion() {
             Try one-sentence summary
           </button>
           {compressedAttempted && (
-            <div style={{ marginTop: "0.55rem", padding: "0.65rem", borderRadius: 8, background: `${VERMILION}10`, border: `1px solid ${VERMILION}`, color: VERMILION, fontSize: "0.85rem" }}>
+            <div style={{ marginTop: "0.55rem", padding: "0.65rem", borderRadius: 8, background: VERMILION_TINT, border: `1px solid ${VERMILION}`, color: VERMILION, fontSize: "0.85rem" }}>
               <div style={{ display: "flex", alignItems: "start", gap: "0.5rem" }}>
                 <AlertTriangle size={16} aria-hidden="true" style={{ flexShrink: 0 }} />
                 <span>A one-sentence summary loses classification, tiering, both founders, citation honesty, scope limits, and referral language.</span>
@@ -383,7 +388,7 @@ export function WorkedExampleStartupIncorporationQuestion() {
           {auditRun && (
             <div style={{ marginTop: "0.75rem", display: "grid", gap: "0.55rem" }}>
               {auditPassed ? (
-                <div style={{ padding: "0.75rem", borderRadius: 8, background: `${GREEN}10`, border: `1px solid ${GREEN}`, color: GREEN, fontSize: "0.9rem" }}>
+                <div style={{ padding: "0.75rem", borderRadius: 8, background: GREEN_TINT, border: `1px solid ${GREEN}`, color: GREEN, fontSize: "0.9rem" }}>
                   <div style={{ display: "flex", alignItems: "start", gap: "0.5rem" }}>
                     <BadgeCheck size={18} aria-hidden="true" style={{ flexShrink: 0 }} />
                     <span>Statement passes: complete, correctly tiered, citation-honest, scoped, and referred.</span>
@@ -429,10 +434,10 @@ function SynthesisFlowSvg() {
 
   return (
     <svg viewBox="0 0 600 90" role="img" aria-label="Synthesis assembly flow from inventory to scope" style={{ width: "100%", maxHeight: 160, margin: "0.4rem auto 0.75rem", display: "block" }}>
-      <rect x="12" y="12" width="576" height="66" rx="8" fill={`${ACCENT}08`} stroke={HAIRLINE} />
+      <rect x="12" y="12" width="576" height="66" rx="8" fill={GOLD_TINT} stroke={HAIRLINE} />
       {steps.map((step, index) => (
         <g key={step.label}>
-          <circle cx={step.x} cy="45" r="18" fill={`${step.color}18`} stroke={step.color} strokeWidth="2" />
+          <circle cx={step.x} cy="45" r="18" fill={tintForColor(step.color)} stroke={step.color} strokeWidth="2" />
           <text x={step.x} y="50" textAnchor="middle" fill={step.color} fontSize="12" fontWeight={600}>
             {index + 1}
           </text>
@@ -451,7 +456,7 @@ function SynthesisFlowSvg() {
 function ClassificationBadge({ classification }: { classification: IndicatorKey }) {
   const color = INDICATOR_COLORS[classification];
   return (
-    <span style={{ padding: "0.12rem 0.45rem", borderRadius: 999, background: `${color}12`, color, fontSize: "0.7rem", fontWeight: 600, border: `1px solid ${color}` }}>
+    <span style={{ padding: "0.12rem 0.45rem", borderRadius: 999, background: tintForColor(color), color, fontSize: "0.7rem", fontWeight: 600, border: `1px solid ${color}` }}>
       {INDICATOR_LABELS[classification]}
     </span>
   );
@@ -476,7 +481,7 @@ function CheckItem({ checked, onToggle, label }: { checked: boolean; onToggle: (
 
 function AuditIssue({ children }: { children: ReactNode }) {
   return (
-    <div style={{ padding: "0.65rem", borderRadius: 8, background: `${VERMILION}10`, border: `1px solid ${VERMILION}`, color: VERMILION, fontSize: "0.85rem" }}>
+    <div style={{ padding: "0.65rem", borderRadius: 8, background: VERMILION_TINT, border: `1px solid ${VERMILION}`, color: VERMILION, fontSize: "0.85rem" }}>
       <div style={{ display: "flex", alignItems: "start", gap: "0.5rem" }}>
         <AlertTriangle size={16} aria-hidden="true" style={{ flexShrink: 0 }} />
         <span>{children}</span>
@@ -539,6 +544,15 @@ function buttonStyle(primary: boolean, color: string): CSSProperties {
   };
 }
 
+function tintForColor(color: string): string {
+  if (color === VERMILION) return VERMILION_TINT;
+  if (color === GREEN) return GREEN_TINT;
+  if (color === BLUE) return BLUE_TINT;
+  if (color === GOLD || color === ACCENT) return GOLD_TINT;
+  if (color === PURPLE) return PURPLE_TINT;
+  return SURFACE;
+}
+
 function smallChipStyle(active: boolean, color: string): CSSProperties {
   return {
     display: "inline-flex",
@@ -547,7 +561,7 @@ function smallChipStyle(active: boolean, color: string): CSSProperties {
     padding: "0.35rem 0.6rem",
     borderRadius: 999,
     border: `1px solid ${active ? color : HAIRLINE}`,
-    background: active ? `${color}12` : SURFACE,
+    background: active ? tintForColor(color) : SURFACE,
     color: active ? color : INK_PRIMARY,
     fontSize: "0.8rem",
     fontWeight: 600,

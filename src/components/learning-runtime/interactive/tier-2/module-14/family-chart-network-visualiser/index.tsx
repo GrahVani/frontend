@@ -29,8 +29,11 @@ const INK_MUTED = "var(--gl-ink-on-cream-muted)";
 const HAIRLINE = "var(--gl-gold-hairline)";
 const SURFACE = "var(--gl-card-surface-solid)";
 const ACCENT = "var(--gl-gold-accent)";
+const NODE_SURFACE = "#FFF8E8";
 const VERMILION = "var(--gl-vermilion-accent)";
+const VERMILION_TINT = "#FDEBE6";
 const GREEN = "#2F7D55";
+const GREEN_TINT = "#EAF4EE";
 const BLUE = "#356CAB";
 const PURPLE = "#6B5AA8";
 const GOLD = "#B88421";
@@ -437,7 +440,7 @@ export function FamilyChartNetworkVisualiser() {
               Add Bhavna to network
             </button>
             {scopePrompt && (
-              <div role="alert" style={{ marginTop: "0.75rem", padding: "0.75rem", borderRadius: 8, background: `${VERMILION}10`, border: `1px solid ${VERMILION}`, color: VERMILION, fontSize: "0.85rem" }}>
+              <div role="alert" style={{ marginTop: "0.75rem", padding: "0.75rem", borderRadius: 8, background: VERMILION_TINT, border: `1px solid ${VERMILION}`, color: VERMILION, fontSize: "0.85rem" }}>
                 <div style={{ display: "flex", alignItems: "start", gap: "0.5rem" }}>
                   <AlertTriangle size={16} aria-hidden="true" style={{ marginTop: "0.15rem", flexShrink: 0 }} />
                   <span>{scopePrompt}</span>
@@ -558,7 +561,7 @@ export function FamilyChartNetworkVisualiser() {
               ) : (
                 <div style={{ display: "grid", gap: "0.55rem" }}>
                   {audit.issues.map((issue, idx) => (
-                    <div key={idx} style={{ padding: "0.65rem", borderRadius: 8, background: `${VERMILION}10`, border: `1px solid ${VERMILION}`, color: VERMILION, fontSize: "0.85rem" }}>
+                    <div key={idx} style={{ padding: "0.65rem", borderRadius: 8, background: VERMILION_TINT, border: `1px solid ${VERMILION}`, color: VERMILION, fontSize: "0.85rem" }}>
                       {issue.type === "forbidden" ? (
                         <div>
                           <strong style={{ fontWeight: 600 }}>Forbidden language:</strong>
@@ -634,12 +637,12 @@ function NetworkSvg({
       <g>
         {NODES.map((node) => (
           <g key={node.key} transform={`translate(${node.x}, ${node.y})`}>
-            <circle r={28} fill={`${ACCENT}12`} stroke={ACCENT} strokeWidth={2} />
+            <circle r={28} fill={NODE_SURFACE} stroke={ACCENT} strokeWidth={2} />
             <text textAnchor="middle" y="-2" fontSize="13" fontWeight={600} fill={INK_PRIMARY}>{node.label}</text>
             <text textAnchor="middle" y="12" fontSize="8" fill={INK_MUTED}>{node.role}</text>
             {showCompleteness && (
               <g transform="translate(18, -18)">
-                <circle r={10} fill={node.completeness === "full" ? `${GREEN}15` : `${VERMILION}15`} stroke={node.completeness === "full" ? GREEN : VERMILION} strokeWidth={1} />
+                <circle r={10} fill={node.completeness === "full" ? GREEN_TINT : VERMILION_TINT} stroke={node.completeness === "full" ? GREEN : VERMILION} strokeWidth={1} />
                 <text textAnchor="middle" y="1" fontSize="7" fontWeight={600} fill={node.completeness === "full" ? GREEN : VERMILION}>
                   {node.completeness === "full" ? "F" : "P"}
                 </text>
@@ -684,7 +687,7 @@ function TierBadge({ tier }: { tier: TierKey }) {
         gap: "0.35rem",
         padding: "0.2rem 0.5rem",
         borderRadius: 999,
-        background: `${meta.color}12`,
+        background: tintForColor(meta.color),
         color: meta.color,
         fontSize: "0.75rem",
         fontWeight: 600,
@@ -706,7 +709,7 @@ function ThreadBadge({ thread }: { thread: ThreadKey }) {
         gap: "0.35rem",
         padding: "0.2rem 0.5rem",
         borderRadius: 999,
-        background: `${meta.color === INK_MUTED ? HAIRLINE : `${meta.color}12`}`,
+        background: meta.color === INK_MUTED ? HAIRLINE : tintForColor(meta.color),
         color: meta.color,
         fontSize: "0.75rem",
         fontWeight: 600,
@@ -795,6 +798,14 @@ function buttonStyle(primary: boolean, color: string): CSSProperties {
   };
 }
 
+function tintForColor(color: string): string {
+  if (color === VERMILION) return VERMILION_TINT;
+  if (color === GREEN) return GREEN_TINT;
+  if (color === ACCENT || color === GOLD) return NODE_SURFACE;
+  if (color === INK_MUTED) return HAIRLINE;
+  return `${color}12`;
+}
+
 function filterChipStyle(active: boolean, color: string): CSSProperties {
   return {
     display: "flex",
@@ -804,7 +815,7 @@ function filterChipStyle(active: boolean, color: string): CSSProperties {
     padding: "0.45rem 0.65rem",
     borderRadius: 6,
     border: `1px solid ${active ? color : HAIRLINE}`,
-    background: active ? `${color}10` : SURFACE,
+    background: active ? tintForColor(color) : SURFACE,
     color: active ? color : INK_PRIMARY,
     fontSize: "0.85rem",
     cursor: "pointer",
@@ -820,7 +831,7 @@ function togglePanelStyle(active: boolean, color: string): CSSProperties {
     padding: "0.55rem 0.75rem",
     borderRadius: 6,
     border: `1px solid ${active ? color : HAIRLINE}`,
-    background: active ? `${color}10` : SURFACE,
+    background: active ? tintForColor(color) : SURFACE,
     color: INK_PRIMARY,
     fontSize: "0.85rem",
     textAlign: "left",
@@ -837,7 +848,7 @@ function iconButtonStyle(active: boolean, color: string): CSSProperties {
     height: 26,
     borderRadius: 6,
     border: `1px solid ${active ? color : HAIRLINE}`,
-    background: active ? `${color}12` : SURFACE,
+    background: active ? tintForColor(color) : SURFACE,
     color: active ? color : INK_MUTED,
     cursor: "pointer",
   };
