@@ -13,6 +13,10 @@ export interface StreamOptions {
   lessonSlug: string;
   message: string;
   clientMessageId: string;
+  context?: {
+    sectionNumber?: number;
+    componentType?: string;
+  };
   onToken: (token: string) => void;
   onDone: (data: { messageId: string; citations: string[] }) => void;
   onError: (err: any) => void;
@@ -38,6 +42,7 @@ export async function fetchTutorStream(
       lessonSlug: options.lessonSlug,
       message: options.message,
       clientMessageId: options.clientMessageId,
+      context: options.context,
     }),
     signal: options.signal,
   });

@@ -467,6 +467,10 @@ export const useTutorStore = create<TutorState>((set, get) => ({
         lessonSlug,
         sessionId,
         message: enrichedMessage,
+        context: {
+          sectionNumber: get().currentSection ? parseInt(get().currentSection as string) : undefined,
+          componentType: get().currentInteractive || undefined,
+        },
       });
 
       const assistantMessage: Message = {
@@ -623,6 +627,10 @@ export const useTutorStore = create<TutorState>((set, get) => ({
         lessonSlug,
         message: enrichedMessage,
         clientMessageId,
+        context: {
+          sectionNumber: get().currentSection ? parseInt(get().currentSection as string) : undefined,
+          componentType: get().currentInteractive || undefined,
+        },
         signal: abortController.signal,
         onToken: (token) => {
           const newBuffer = get().streamBuffer + token;
@@ -752,6 +760,10 @@ export const useTutorStore = create<TutorState>((set, get) => ({
         lessonSlug,
         message: enrichedMessage,
         clientMessageId,
+        context: {
+          sectionNumber: get().currentSection ? parseInt(get().currentSection as string) : undefined,
+          componentType: get().currentInteractive || undefined,
+        },
         signal: abortController.signal,
         onToken: (token) => {
           const newBuffer = get().streamBuffer + token;

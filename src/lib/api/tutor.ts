@@ -6,6 +6,10 @@ export interface TutorChatRequest {
   lessonSlug: string;
   sessionId: string;
   message: string;
+  context?: {
+    sectionNumber?: number;
+    componentType?: string;
+  };
 }
 
 export interface TutorChatResponse {
