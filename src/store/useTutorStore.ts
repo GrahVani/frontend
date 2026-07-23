@@ -95,7 +95,7 @@ interface TutorState {
   setIsOpen: (open: boolean) => void;
   setInputValue: (val: string) => void;
   clearError: () => void;
-  loadHistory: (lessonSlug: string) => void;
+  loadHistory: (lessonSlug: string) => Promise<void>;
   sendMessage: (lessonSlug: string, sections?: LessonSection[], overrideMessageText?: string) => Promise<void>;
   clearConversation: (lessonSlug: string) => void;
 
@@ -359,7 +359,7 @@ export const useTutorStore = create<TutorState>((set, get) => ({
   setInputValue: (inputValue) => set({ inputValue }),
   clearError: () => set({ error: null }),
 
-  loadHistory: (lessonSlug) => {
+  loadHistory: async (lessonSlug) => {
     if (typeof window === "undefined") return;
 
     const { loadedHistoryLessonSlug, isStreaming, messages } = get();
@@ -372,39 +372,70 @@ export const useTutorStore = create<TutorState>((set, get) => ({
 
     const storageKey = `grahvani-tutor-session-${lessonSlug}`;
     let sessId = localStorage.getItem(storageKey);
-    if (!sessId) {
-      sessId = crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2, 15);
-      localStorage.setItem(storageKey, sessId);
-    }
+    let historyMessages: Message[] = [];
+
+    const defaultGreeting: Message = {
+      id: "greeting",
+      role: "assistant",
+      content: "Hari Om! I am Gyaneshwara, your AI tutor. Ask me anything about this lesson to deepen your understanding of Jyotiṣa.",
+    };
 
     const historyKey = `grahvani-tutor-history-${lessonSlug}`;
     const savedHistory = localStorage.getItem(historyKey);
-    let historyMessages: Message[] = [];
+
     if (savedHistory) {
       try {
         historyMessages = JSON.parse(savedHistory);
       } catch (e) {
         historyMessages = [];
       }
-    } else {
-      historyMessages = [
-        {
-          id: "greeting",
-          role: "assistant",
-          content: "Hari Om! I am Gyaneshwara, your AI tutor. Ask me anything about this lesson to deepen your understanding of Jyotiṣa.",
-        },
-      ];
     }
 
-    if (!historyMessages || !Array.isArray(historyMessages) || historyMessages.length === 0) {
-      historyMessages = [
-        {
-          id: "greeting",
-          role: "assistant",
-          content: "Hari Om! I am Gyaneshwara, your AI tutor. Ask me anything about this lesson to deepen your understanding of Jyotiṣa.",
-        },
-      ];
+    // Try to sync from backend if local history is empty or invalid
+    if (historyMessages.length === 0) {
+      try {
+        set({ isLoading: true });
+        // Fetch sessions for this lesson
+        const { sessions } = await tutorApi.listSessions(lessonSlug);
+        if (sessions && sessions.length > 0) {
+          // Find the most recent session
+          const latestSession = sessions.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())[0];
+          sessId = latestSession.id;
+          
+          // Fetch messages for this session
+          const { messages: dbMessages } = await tutorApi.getMessages(sessId as string);
+          
+          if (dbMessages && dbMessages.length > 0) {
+            // Transform backend messages to frontend format
+            historyMessages = dbMessages
+              .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+              .map((msg) => ({
+                id: msg.id,
+                role: msg.role === "ASSISTANT" ? "assistant" : "user",
+                content: msg.content,
+              }));
+          }
+        }
+      } catch (err) {
+        console.warn("Failed to sync chat history from backend:", err);
+      } finally {
+        set({ isLoading: false });
+      }
     }
+
+    // If still empty (new user, or no db history), use default greeting
+    if (!historyMessages || !Array.isArray(historyMessages) || historyMessages.length === 0) {
+      historyMessages = [defaultGreeting];
+    }
+
+    // If we didn't have a session ID locally and didn't get one from the DB, generate a new one
+    if (!sessId) {
+      sessId = crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2, 15);
+    }
+    
+    // Save to local storage for fast subsequent loads
+    localStorage.setItem(storageKey, sessId);
+    localStorage.setItem(historyKey, JSON.stringify(historyMessages));
 
     set({
       sessionId: sessId,

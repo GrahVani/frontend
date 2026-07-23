@@ -27,6 +27,15 @@ export const tutorApi = {
     });
   },
 
+  async listSessions(lessonSlug?: string): Promise<{ sessions: any[] }> {
+    const query = lessonSlug ? `?lessonSlug=${lessonSlug}` : "";
+    return apiFetch<{ sessions: any[] }>(`${BASE_URL}/tutor/sessions${query}`);
+  },
+
+  async getMessages(sessionId: string): Promise<{ messages: any[] }> {
+    return apiFetch<{ messages: any[] }>(`${BASE_URL}/tutor/sessions/${sessionId}/messages`);
+  },
+
   async submitFeedback(
     sessionId: string,
     messageId: string,
