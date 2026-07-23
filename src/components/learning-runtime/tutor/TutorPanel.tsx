@@ -290,11 +290,11 @@ export function TutorPanel({ lessonSlug, sections = [] }: TutorPanelProps) {
           >
             {/* Drag Handle Top-Left */}
             <div 
-              className="absolute top-0 left-0 w-8 h-8 z-[100] cursor-nwse-resize group flex items-start justify-start p-1"
+              className="absolute top-0 left-0 w-12 h-12 z-[100] cursor-nwse-resize group flex items-start justify-start p-2"
               onMouseDown={handleDragStart}
               title="Drag to resize panel"
             >
-              <div className="w-0 h-0 border-t-[12px] border-l-[12px] border-t-transparent border-l-stone-500/30 group-hover:border-l-amber-400/80 transition-colors" />
+              <div className="w-4 h-4 border-t-2 border-l-2 border-stone-500/50 group-hover:border-amber-400/90 rounded-tl-sm transition-colors" />
             </div>
 
             {/* 1. Divine Header */}
