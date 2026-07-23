@@ -251,7 +251,7 @@ export function FourthHousePropertyWorkbench() {
         </div>
       </section>
 
-      <div style={responsiveTwoColumnStyle}>
+      <div style={chartWorkbenchGridStyle}>
         <section style={cardStyle}>
           <div style={{ display: "flex", justifyContent: "space-between", gap: "1rem", alignItems: "center", flexWrap: "wrap" }}>
             <div>
@@ -329,38 +329,38 @@ function PropertyChartSvg({
 }) {
   const karakaColor = karakaMode === "property" ? GREEN : VERMILION;
   return (
-    <svg viewBox="0 0 760 420" role="img" aria-label="Chart P1 fourth house property reading map" style={{ width: "100%", minHeight: 320, margin: "0.7rem 0" }}>
+    <svg viewBox="0 0 760 420" role="img" aria-label="Chart P1 fourth house property reading map" style={{ width: "100%", minHeight: 390, margin: "0.8rem 0", display: "block" }}>
       <rect x="18" y="18" width="724" height="384" rx="8" fill={SURFACE} stroke={HAIRLINE} />
-      <text x="380" y="52" textAnchor="middle" fill={GOLD} fontSize="13" fontWeight="600">CHART P1: FOURTH HOUSE PROPERTY THREAD</text>
+      <text x="380" y="54" textAnchor="middle" fill={GOLD} fontSize="16" fontWeight="600">CHART P1: FOURTH HOUSE PROPERTY THREAD</text>
 
       <rect x="260" y="92" width="240" height="150" rx="8" fill={`${GREEN}10`} stroke={GREEN} strokeWidth="3" />
-      <text x="380" y="124" textAnchor="middle" fill={GREEN} fontSize="15" fontWeight="600">Capricorn 4th</text>
-      <text x="380" y="149" textAnchor="middle" fill={INK_SECONDARY} fontSize="12">home, land, property container</text>
+      <text x="380" y="126" textAnchor="middle" fill={GREEN} fontSize="18" fontWeight="600">Capricorn 4th</text>
+      <text x="380" y="152" textAnchor="middle" fill={INK_SECONDARY} fontSize="14">home, land, property container</text>
       <circle cx="380" cy="190" r="34" fill={`${strengthColor(occupantStrength)}18`} stroke={strengthColor(occupantStrength)} strokeWidth="3" />
-      <text x="380" y="186" textAnchor="middle" fill={strengthColor(occupantStrength)} fontSize="12" fontWeight="600">Mars</text>
-      <text x="380" y="204" textAnchor="middle" fill={INK_MUTED} fontSize="10">exalted occupant</text>
+      <text x="380" y="186" textAnchor="middle" fill={strengthColor(occupantStrength)} fontSize="14" fontWeight="600">Mars</text>
+      <text x="380" y="205" textAnchor="middle" fill={INK_MUTED} fontSize="12">exalted occupant</text>
 
       <rect x="64" y="112" width="148" height="88" rx="8" fill={`${strengthColor(lordStrength)}12`} stroke={strengthColor(lordStrength)} />
-      <text x="138" y="140" textAnchor="middle" fill={strengthColor(lordStrength)} fontSize="12" fontWeight="600">4th lord Saturn</text>
-      <text x="138" y="162" textAnchor="middle" fill={INK_MUTED} fontSize="11">{lordStrength} signal</text>
-      <text x="138" y="181" textAnchor="middle" fill={INK_MUTED} fontSize="11">8th-house process</text>
+      <text x="138" y="140" textAnchor="middle" fill={strengthColor(lordStrength)} fontSize="14" fontWeight="600">4th lord Saturn</text>
+      <text x="138" y="163" textAnchor="middle" fill={INK_MUTED} fontSize="12">{lordStrength} signal</text>
+      <text x="138" y="183" textAnchor="middle" fill={INK_MUTED} fontSize="12">8th-house process</text>
       <path d="M 213 156 C 238 150, 244 144, 260 136" fill="none" stroke={strengthColor(lordStrength)} strokeWidth="4" strokeLinecap="round" />
 
       <rect x="548" y="112" width="148" height="88" rx="8" fill={`${strengthColor(aspectStrength)}12`} stroke={strengthColor(aspectStrength)} />
-      <text x="622" y="140" textAnchor="middle" fill={strengthColor(aspectStrength)} fontSize="12" fontWeight="600">Moon + Jupiter</text>
-      <text x="622" y="162" textAnchor="middle" fill={INK_MUTED} fontSize="11">{aspectStrength} aspect</text>
-      <text x="622" y="181" textAnchor="middle" fill={INK_MUTED} fontSize="11">from the 10th</text>
+      <text x="622" y="140" textAnchor="middle" fill={strengthColor(aspectStrength)} fontSize="14" fontWeight="600">Moon + Jupiter</text>
+      <text x="622" y="163" textAnchor="middle" fill={INK_MUTED} fontSize="12">{aspectStrength} aspect</text>
+      <text x="622" y="183" textAnchor="middle" fill={INK_MUTED} fontSize="12">from the 10th</text>
       <path d="M 548 156 C 522 150, 516 144, 500 136" fill="none" stroke={strengthColor(aspectStrength)} strokeWidth="4" strokeLinecap="round" />
 
       <rect x="140" y="292" width="210" height="58" rx="8" fill={`${karakaColor}12`} stroke={karakaColor} />
-      <text x="245" y="316" textAnchor="middle" fill={karakaColor} fontSize="12" fontWeight="600">Live karaka thread</text>
-      <text x="245" y="336" textAnchor="middle" fill={INK_MUTED} fontSize="11">{karakaLabel(karakaMode)}</text>
+      <text x="245" y="316" textAnchor="middle" fill={karakaColor} fontSize="14" fontWeight="600">Live karaka thread</text>
+      <text x="245" y="337" textAnchor="middle" fill={INK_MUTED} fontSize="12">{karakaLabel(karakaMode)}</text>
 
       <rect x="410" y="292" width="210" height="58" rx="8" fill={`${processComplication ? GOLD : BLUE}12`} stroke={processComplication ? GOLD : BLUE} />
-      <text x="515" y="316" textAnchor="middle" fill={processComplication ? GOLD : BLUE} fontSize="12" fontWeight="600">Synthesis note</text>
-      <text x="515" y="336" textAnchor="middle" fill={INK_MUTED} fontSize="11">{processComplication ? "capacity plus friction" : "friction minimized"}</text>
+      <text x="515" y="316" textAnchor="middle" fill={processComplication ? GOLD : BLUE} fontSize="14" fontWeight="600">Synthesis note</text>
+      <text x="515" y="337" textAnchor="middle" fill={INK_MUTED} fontSize="12">{processComplication ? "capacity plus friction" : "friction minimized"}</text>
 
-      <text x="380" y="380" textAnchor="middle" fill={INK_SECONDARY} fontSize="12">Property is centered on the 4th house, read through its lord, occupants, aspects, and Mars/Saturn.</text>
+      <text x="380" y="382" textAnchor="middle" fill={INK_SECONDARY} fontSize="14">Property is centered on the 4th house, read through its lord, occupants, aspects, and Mars/Saturn.</text>
     </svg>
   );
 }
@@ -442,6 +442,12 @@ const cardStyle: CSSProperties = {
 const responsiveTwoColumnStyle: CSSProperties = {
   display: "grid",
   gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 330px), 1fr))",
+  gap: "1rem",
+};
+
+const chartWorkbenchGridStyle: CSSProperties = {
+  display: "grid",
+  gridTemplateColumns: "1fr",
   gap: "1rem",
 };
 

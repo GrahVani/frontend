@@ -152,7 +152,7 @@ export function D4CompletePropertyReadingAssemblyLab() {
         </div>
       </section>
 
-      <section style={{ display: "grid", gridTemplateColumns: "minmax(0, 1.08fr) minmax(300px, 0.92fr)", gap: "1rem" }}>
+      <section style={{ display: "grid", gridTemplateColumns: "minmax(0, 1.35fr) minmax(280px, 0.65fr)", gap: "1rem", alignItems: "start" }}>
         <div style={cardStyle}>
           <AssemblySvg activeThread={threadKey} threadCount={threadCount} verdict={verdict} includeVenusThread={includeVenusThread} />
         </div>
@@ -204,29 +204,29 @@ export function D4CompletePropertyReadingAssemblyLab() {
 function AssemblySvg({ activeThread, threadCount, verdict, includeVenusThread }: { activeThread: ThreadKey; threadCount: number; verdict: { label: string; color: string }; includeVenusThread: boolean }) {
   const visibleThreads = (Object.keys(THREADS) as ThreadKey[]).filter((key) => includeVenusThread || key !== "venus");
   return (
-    <svg viewBox="0 0 760 460" role="img" aria-label="Complete D1 and D4 property reading assembly diagram" style={{ width: "100%", minHeight: 360, display: "block" }}>
-      <rect x="12" y="12" width="736" height="436" rx="20" fill={SURFACE} stroke={HAIRLINE} />
-      <text x="380" y="48" textAnchor="middle" fill={GOLD} fontSize="13" fontWeight="600">CHART P1 D1 + D4 ASSEMBLY</text>
-      <text x="380" y="78" textAnchor="middle" fill={verdict.color} fontSize="18" fontWeight="600">{verdict.label}</text>
+    <svg viewBox="0 0 760 520" role="img" aria-label="Complete D1 and D4 property reading assembly diagram" style={{ width: "100%", minHeight: 440, display: "block" }}>
+      <rect x="12" y="12" width="736" height="496" rx="20" fill={SURFACE} stroke={HAIRLINE} />
+      <text x="380" y="56" textAnchor="middle" fill={GOLD} fontSize="18" fontWeight="700">CHART P1 D1 + D4 ASSEMBLY</text>
+      <text x="380" y="92" textAnchor="middle" fill={verdict.color} fontSize="22" fontWeight="700">{verdict.label}</text>
 
       {visibleThreads.map((key, index) => {
         const thread = THREADS[key];
-        const x = 135 + (index % 2) * 490;
-        const y = 165 + Math.floor(index / 2) * 110;
+        const x = 136 + (index % 2) * 488;
+        const y = 184 + Math.floor(index / 2) * 126;
         const active = key === activeThread;
         return (
           <g key={key}>
-            <rect x={x - 108} y={y - 42} width="216" height="84" rx="16" fill={thread.color} fillOpacity={active ? "0.18" : "0.1"} stroke={active ? thread.color : HAIRLINE} />
-            <text x={x} y={y - 13} textAnchor="middle" fill={thread.color} fontSize="12" fontWeight="600">{thread.label}</text>
-            <text x={x} y={y + 10} textAnchor="middle" fill={INK_PRIMARY} fontSize="12">{thread.short}</text>
-            <text x={x} y={y + 30} textAnchor="middle" fill={INK_MUTED} fontSize="10">{thread.independence}</text>
+            <rect x={x - 118} y={y - 50} width="236" height="100" rx="16" fill={thread.color} fillOpacity={active ? "0.18" : "0.1"} stroke={active ? thread.color : HAIRLINE} strokeWidth={active ? "2" : "1.5"} />
+            <text x={x} y={y - 17} textAnchor="middle" fill={thread.color} fontSize="15" fontWeight="700">{thread.label}</text>
+            <text x={x} y={y + 10} textAnchor="middle" fill={INK_PRIMARY} fontSize="14" fontWeight="600">{thread.short}</text>
+            <text x={x} y={y + 35} textAnchor="middle" fill={INK_MUTED} fontSize="12" fontWeight="600">{thread.independence}</text>
           </g>
         );
       })}
 
-      <path d="M154 374 C260 335 311 335 380 374 S522 416 606 374" fill="none" stroke={verdict.color} strokeWidth="3" strokeLinecap="round" />
-      <text x="380" y="410" textAnchor="middle" fill={verdict.color} fontSize="12" fontWeight="600">Independent thread count: {threadCount}</text>
-      <text x="380" y="434" textAnchor="middle" fill={INK_MUTED} fontSize="11">Count findings, not lessons or table rows.</text>
+      <path d="M154 428 C260 376 311 376 380 428 S522 480 606 428" fill="none" stroke={verdict.color} strokeWidth="5" strokeLinecap="round" />
+      <text x="380" y="460" textAnchor="middle" fill={verdict.color} fontSize="15" fontWeight="700">Independent thread count: {threadCount}</text>
+      <text x="380" y="486" textAnchor="middle" fill={INK_MUTED} fontSize="13" fontWeight="600">Count findings, not lessons or table rows.</text>
     </svg>
   );
 }

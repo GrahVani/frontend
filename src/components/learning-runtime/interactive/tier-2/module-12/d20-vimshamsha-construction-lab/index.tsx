@@ -116,7 +116,7 @@ export function D20VimshamshaConstructionLab() {
       </section>
 
       <section style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(330px, 100%), 1fr))", gap: "1rem" }}>
-        <div style={cardStyle}>
+        <div style={{ ...cardStyle, gridColumn: "1 / -1" }}>
           <D20Svg row={row} status={status} />
         </div>
 
@@ -166,32 +166,31 @@ export function D20VimshamshaConstructionLab() {
 
 function D20Svg({ row, status }: { row: (typeof ROWS)[RowKey]; status: { label: string; color: string } }) {
   return (
-    <svg viewBox="0 0 820 500" role="img" aria-label="D20 Vimshamsha construction diagram" style={{ width: "100%", minHeight: 390, display: "block" }}>
-      <rect x="12" y="12" width="796" height="476" rx="20" fill={SURFACE} stroke={HAIRLINE} />
-      <text x="410" y="48" textAnchor="middle" fill={GOLD} fontSize="13" fontWeight="600">D20 THREE-STEP CONSTRUCTION</text>
-      <text x="410" y="78" textAnchor="middle" fill={status.color} fontSize="18" fontWeight="600">{status.label}</text>
+    <svg viewBox="0 0 920 420" role="img" aria-label="D20 Vimshamsha construction diagram" style={{ width: "100%", minHeight: 420, display: "block" }}>
+      <rect x="12" y="12" width="896" height="396" rx="20" fill={SURFACE} stroke={HAIRLINE} />
+      <text x="460" y="50" textAnchor="middle" fill={GOLD} fontSize="18" fontWeight="700">D20 THREE-STEP CONSTRUCTION</text>
+      <text x="460" y="84" textAnchor="middle" fill={status.color} fontSize="24" fontWeight="700">{status.label}</text>
 
-      <rect x="72" y="132" width="184" height="110" rx="16" fill={BLUE} fillOpacity="0.1" stroke={BLUE} />
-      <text x="164" y="162" textAnchor="middle" fill={BLUE} fontSize="13" fontWeight="600">1. Classify</text>
-      <text x="164" y="191" textAnchor="middle" fill={INK_PRIMARY} fontSize="13">{row.d1}</text>
-      <text x="164" y="214" textAnchor="middle" fill={INK_SECONDARY} fontSize="11">{row.className}</text>
+      <rect x="70" y="128" width="220" height="116" rx="16" fill={BLUE} fillOpacity="0.1" stroke={BLUE} strokeWidth="1.5" />
+      <text x="180" y="161" textAnchor="middle" fill={BLUE} fontSize="17" fontWeight="700">1. Classify</text>
+      <text x="180" y="194" textAnchor="middle" fill={INK_PRIMARY} fontSize="17" fontWeight="600">{row.d1}</text>
+      <text x="180" y="220" textAnchor="middle" fill={INK_SECONDARY} fontSize="14" fontWeight="600">{row.className}</text>
 
-      <rect x="318" y="132" width="184" height="110" rx="16" fill={GREEN} fillOpacity="0.1" stroke={GREEN} />
-      <text x="410" y="162" textAnchor="middle" fill={GREEN} fontSize="13" fontWeight="600">2. Find part</text>
-      <text x="410" y="194" textAnchor="middle" fill={INK_PRIMARY} fontSize="18" fontWeight="600">#{row.part}</text>
-      <text x="410" y="216" textAnchor="middle" fill={INK_SECONDARY} fontSize="11">1d30m per part</text>
+      <rect x="350" y="128" width="220" height="116" rx="16" fill={GREEN} fillOpacity="0.1" stroke={GREEN} strokeWidth="1.5" />
+      <text x="460" y="161" textAnchor="middle" fill={GREEN} fontSize="17" fontWeight="700">2. Find part</text>
+      <text x="460" y="197" textAnchor="middle" fill={INK_PRIMARY} fontSize="26" fontWeight="700">#{row.part}</text>
+      <text x="460" y="224" textAnchor="middle" fill={INK_SECONDARY} fontSize="14" fontWeight="600">1d30m per part</text>
 
-      <rect x="564" y="132" width="184" height="110" rx="16" fill={row.color} fillOpacity="0.1" stroke={row.color} />
-      <text x="656" y="162" textAnchor="middle" fill={row.color} fontSize="13" fontWeight="600">3. Count</text>
-      <text x="656" y="191" textAnchor="middle" fill={INK_PRIMARY} fontSize="13">from {row.start}</text>
-      <text x="656" y="214" textAnchor="middle" fill={INK_SECONDARY} fontSize="11">D20 {row.d20}</text>
+      <rect x="630" y="128" width="220" height="116" rx="16" fill={row.color} fillOpacity="0.1" stroke={row.color} strokeWidth="1.5" />
+      <text x="740" y="161" textAnchor="middle" fill={row.color} fontSize="17" fontWeight="700">3. Count</text>
+      <text x="740" y="194" textAnchor="middle" fill={INK_PRIMARY} fontSize="17" fontWeight="600">from {row.start}</text>
+      <text x="740" y="220" textAnchor="middle" fill={INK_SECONDARY} fontSize="14" fontWeight="600">D20 {row.d20}</text>
 
-      <path d="M164 282 C250 332 570 332 656 282" fill="none" stroke={status.color} strokeWidth="4" strokeLinecap="round" />
-      <circle cx="410" cy="318" r="38" fill={status.color} fillOpacity="0.14" stroke={status.color} />
-      <text x="410" y="314" textAnchor="middle" fill={status.color} fontSize="12" fontWeight="600">{row.graha}</text>
-      <text x="410" y="334" textAnchor="middle" fill={INK_PRIMARY} fontSize="12">{row.d20}</text>
-      <text x="410" y="420" textAnchor="middle" fill={INK_SECONDARY} fontSize="12">Movable starts Aries; fixed starts Sagittarius; dual starts Leo.</text>
-      <text x="410" y="454" textAnchor="middle" fill={INK_MUTED} fontSize="11">Tie D20 confidence to birth-time confidence.</text>
+      <path d="M180 284 C290 326 630 326 740 284" fill="none" stroke={status.color} strokeWidth="5" strokeLinecap="round" />
+      <circle cx="460" cy="314" r="48" fill={status.color} fillOpacity="0.14" stroke={status.color} strokeWidth="1.5" />
+      <text x="460" y="310" textAnchor="middle" fill={status.color} fontSize="16" fontWeight="700">{row.graha}</text>
+      <text x="460" y="334" textAnchor="middle" fill={INK_PRIMARY} fontSize="16" fontWeight="600">{row.d20}</text>
+      <text x="460" y="384" textAnchor="middle" fill={INK_SECONDARY} fontSize="15" fontWeight="600">Movable starts Aries; fixed starts Sagittarius; dual starts Leo. Tie D20 confidence to birth-time confidence.</text>
     </svg>
   );
 }

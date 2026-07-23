@@ -125,7 +125,7 @@ export function CrossStreamPropertySynthesisLab() {
         </div>
       </section>
 
-      <section style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(330px, 100%), 1fr))", gap: "1rem" }}>
+      <section style={{ display: "grid", gridTemplateColumns: "minmax(0, 1.35fr) minmax(280px, 0.65fr)", gap: "1rem", alignItems: "start" }}>
         <div style={cardStyle}>
           <SynthesisSvg activeCategory={activeCategory} status={status} includeTiming={includeTiming} />
         </div>
@@ -190,27 +190,27 @@ function SynthesisSvg({ activeCategory, status, includeTiming }: { activeCategor
   ];
 
   return (
-    <svg viewBox="0 0 800 500" role="img" aria-label="Cross-stream property synthesis diagram" style={{ width: "100%", minHeight: 380, display: "block" }}>
-      <rect x="12" y="12" width="776" height="476" rx="20" fill={SURFACE} stroke={HAIRLINE} />
-      <text x="400" y="48" textAnchor="middle" fill={GOLD} fontSize="13" fontWeight="600">CHART P1 CROSS-STREAM PROPERTY READING</text>
-      <text x="400" y="78" textAnchor="middle" fill={status.color} fontSize="18" fontWeight="600">{status.label}</text>
+    <svg viewBox="0 0 800 560" role="img" aria-label="Cross-stream property synthesis diagram" style={{ width: "100%", minHeight: 480, display: "block" }}>
+      <rect x="12" y="12" width="776" height="536" rx="20" fill={SURFACE} stroke={HAIRLINE} />
+      <text x="400" y="56" textAnchor="middle" fill={GOLD} fontSize="18" fontWeight="700">CHART P1 CROSS-STREAM PROPERTY READING</text>
+      <text x="400" y="92" textAnchor="middle" fill={status.color} fontSize="22" fontWeight="700">{status.label}</text>
 
       {nodes.map((node) => (
         <g key={node.label}>
-          <circle cx={node.x} cy={node.y} r="62" fill={node.color} fillOpacity="0.12" stroke={node.color} strokeWidth="3" />
-          <text x={node.x} y={node.y - 8} textAnchor="middle" fill={node.color} fontSize="14" fontWeight="600">{node.label}</text>
-          <text x={node.x} y={node.y + 15} textAnchor="middle" fill={INK_SECONDARY} fontSize="11">{node.text}</text>
+          <circle cx={node.x} cy={node.y + 28} r="72" fill={node.color} fillOpacity="0.12" stroke={node.color} strokeWidth="4" />
+          <text x={node.x} y={node.y + 17} textAnchor="middle" fill={node.color} fontSize="16" fontWeight="700">{node.label}</text>
+          <text x={node.x} y={node.y + 45} textAnchor="middle" fill={INK_SECONDARY} fontSize="12" fontWeight="600">{node.text}</text>
         </g>
       ))}
 
-      <path d="M206 174 C275 238 525 238 594 174" fill="none" stroke={CATEGORY[activeCategory].color} strokeWidth="4" strokeLinecap="round" />
-      <path d="M400 212 L400 286" stroke={CATEGORY[activeCategory].color} strokeWidth="4" strokeLinecap="round" />
-      <rect x="190" y="286" width="420" height="106" rx="16" fill={CATEGORY[activeCategory].color} fillOpacity="0.1" stroke={CATEGORY[activeCategory].color} />
-      <text x="400" y="320" textAnchor="middle" fill={CATEGORY[activeCategory].color} fontSize="14" fontWeight="600">{CATEGORY[activeCategory].label}</text>
-      <text x="400" y="350" textAnchor="middle" fill={INK_PRIMARY} fontSize="13">capacity + complication + disagreement</text>
-      <text x="400" y="374" textAnchor="middle" fill={INK_SECONDARY} fontSize="12">{includeTiming ? "timing retained: Moon, Mars, Saturn windows" : "timing layer currently omitted"}</text>
+      <path d="M218 206 C286 278 514 278 582 206" fill="none" stroke={CATEGORY[activeCategory].color} strokeWidth="6" strokeLinecap="round" />
+      <path d="M400 248 L400 322" stroke={CATEGORY[activeCategory].color} strokeWidth="6" strokeLinecap="round" />
+      <rect x="172" y="322" width="456" height="122" rx="16" fill={CATEGORY[activeCategory].color} fillOpacity="0.1" stroke={CATEGORY[activeCategory].color} strokeWidth="1.5" />
+      <text x="400" y="360" textAnchor="middle" fill={CATEGORY[activeCategory].color} fontSize="17" fontWeight="700">{CATEGORY[activeCategory].label}</text>
+      <text x="400" y="394" textAnchor="middle" fill={INK_PRIMARY} fontSize="15" fontWeight="600">capacity + complication + disagreement</text>
+      <text x="400" y="424" textAnchor="middle" fill={INK_SECONDARY} fontSize="13" fontWeight="600">{includeTiming ? "timing retained: Moon, Mars, Saturn windows" : "timing layer currently omitted"}</text>
 
-      <text x="400" y="444" textAnchor="middle" fill={INK_SECONDARY} fontSize="12">Do not force agreement; make each claim traceable to its own stream.</text>
+      <text x="400" y="510" textAnchor="middle" fill={INK_SECONDARY} fontSize="14" fontWeight="600">Do not force agreement; make each claim traceable to its own stream.</text>
     </svg>
   );
 }

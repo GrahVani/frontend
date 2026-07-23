@@ -246,7 +246,7 @@ export function SecondaryPropertyIndicatorsSynthesisLab() {
         </div>
       </section>
 
-      <div style={responsiveTwoColumnStyle}>
+      <div style={synthesisMapGridStyle}>
         <section style={cardStyle}>
           <div style={{ display: "flex", justifyContent: "space-between", gap: "1rem", alignItems: "center", flexWrap: "wrap" }}>
             <div>
@@ -327,28 +327,28 @@ function SynthesisSvg({
   keepVenusSeparate: boolean;
 }) {
   return (
-    <svg viewBox="0 0 760 430" role="img" aria-label="Chart P1 chapter one property synthesis map" style={{ width: "100%", minHeight: 330, margin: "0.7rem 0" }}>
-      <rect x="18" y="18" width="724" height="394" rx="8" fill={SURFACE} stroke={HAIRLINE} />
-      <text x="380" y="52" textAnchor="middle" fill={GOLD} fontSize="13" fontWeight="600">CHART P1: ONE ACCOUNT WITHOUT ERASING DISTINCTNESS</text>
-      <FactorNode x={128} y={150} title="4th house" body={houseSupport} color={strengthColor(houseSupport)} />
-      <FactorNode x={296} y={150} title="Mars" body={marsCapacity} color={strengthColor(marsCapacity)} />
-      <FactorNode x={464} y={150} title="Saturn" body={saturnProcess} color={strengthColor(saturnProcess)} />
-      <FactorNode x={632} y={150} title="Venus" body={venusComfort} color={strengthColor(venusComfort)} />
+    <svg viewBox="0 0 760 500" role="img" aria-label="Chart P1 chapter one property synthesis map" style={{ width: "100%", minHeight: 430, margin: "1rem 0" }}>
+      <rect x="18" y="18" width="724" height="464" rx="10" fill={SURFACE} stroke={HAIRLINE} />
+      <text x="380" y="60" textAnchor="middle" fill={GOLD} fontSize="18" fontWeight="700">CHART P1: ONE ACCOUNT WITHOUT ERASING DISTINCTNESS</text>
+      <FactorNode x={122} y={170} title="4th house" body={houseSupport} color={strengthColor(houseSupport)} />
+      <FactorNode x={294} y={170} title="Mars" body={marsCapacity} color={strengthColor(marsCapacity)} />
+      <FactorNode x={466} y={170} title="Saturn" body={saturnProcess} color={strengthColor(saturnProcess)} />
+      <FactorNode x={638} y={170} title="Venus" body={venusComfort} color={strengthColor(venusComfort)} />
 
-      <path d="M 128 202 C 198 268, 258 268, 318 316" fill="none" stroke={strengthColor(houseSupport)} strokeWidth="4" strokeLinecap="round" />
-      <path d="M 296 202 C 320 252, 332 278, 340 316" fill="none" stroke={strengthColor(marsCapacity)} strokeWidth="4" strokeLinecap="round" />
-      <path d="M 464 202 C 440 252, 428 278, 420 316" fill="none" stroke={strengthColor(saturnProcess)} strokeWidth="4" strokeLinecap="round" />
-      <path d={keepVenusSeparate ? "M 632 202 C 608 260, 608 286, 608 316" : "M 632 202 C 560 258, 500 286, 440 316"} fill="none" stroke={keepVenusSeparate ? PURPLE : VERMILION} strokeWidth="4" strokeLinecap="round" />
+      <path d="M 122 236 C 190 304, 258 314, 318 354" fill="none" stroke={strengthColor(houseSupport)} strokeWidth="6" strokeLinecap="round" />
+      <path d="M 294 236 C 322 290, 338 318, 350 354" fill="none" stroke={strengthColor(marsCapacity)} strokeWidth="6" strokeLinecap="round" />
+      <path d="M 466 236 C 438 290, 422 318, 410 354" fill="none" stroke={strengthColor(saturnProcess)} strokeWidth="6" strokeLinecap="round" />
+      <path d={keepVenusSeparate ? "M 638 236 C 610 298, 610 324, 610 354" : "M 638 236 C 560 300, 500 328, 440 354"} fill="none" stroke={keepVenusSeparate ? PURPLE : VERMILION} strokeWidth="6" strokeLinecap="round" />
 
-      <rect x="252" y="316" width="258" height="54" rx="8" fill={`${countSaturnOnce ? GREEN : GOLD}12`} stroke={countSaturnOnce ? GREEN : GOLD} />
-      <text x="381" y="338" textAnchor="middle" fill={countSaturnOnce ? GREEN : GOLD} fontSize="12" fontWeight="600">Land picture</text>
-      <text x="381" y="357" textAnchor="middle" fill={INK_MUTED} fontSize="11">{countSaturnOnce ? "capacity plus one Saturn process caution" : "Saturn is being counted twice"}</text>
+      <rect x="238" y="354" width="286" height="66" rx="10" fill={`${countSaturnOnce ? GREEN : GOLD}12`} stroke={countSaturnOnce ? GREEN : GOLD} strokeWidth="1.5" />
+      <text x="381" y="381" textAnchor="middle" fill={countSaturnOnce ? GREEN : GOLD} fontSize="15" fontWeight="700">Land picture</text>
+      <text x="381" y="405" textAnchor="middle" fill={INK_MUTED} fontSize="13" fontWeight="600">{countSaturnOnce ? "capacity plus one Saturn process caution" : "Saturn is being counted twice"}</text>
 
-      <rect x="538" y="316" width="150" height="54" rx="8" fill={`${keepVenusSeparate ? PURPLE : VERMILION}12`} stroke={keepVenusSeparate ? PURPLE : VERMILION} />
-      <text x="613" y="338" textAnchor="middle" fill={keepVenusSeparate ? PURPLE : VERMILION} fontSize="12" fontWeight="600">Comfort thread</text>
-      <text x="613" y="357" textAnchor="middle" fill={INK_MUTED} fontSize="11">{keepVenusSeparate ? "separate Venus" : "folded into land"}</text>
+      <rect x="542" y="354" width="166" height="66" rx="10" fill={`${keepVenusSeparate ? PURPLE : VERMILION}12`} stroke={keepVenusSeparate ? PURPLE : VERMILION} strokeWidth="1.5" />
+      <text x="625" y="381" textAnchor="middle" fill={keepVenusSeparate ? PURPLE : VERMILION} fontSize="15" fontWeight="700">Comfort thread</text>
+      <text x="625" y="405" textAnchor="middle" fill={INK_MUTED} fontSize="13" fontWeight="600">{keepVenusSeparate ? "separate Venus" : "folded into land"}</text>
 
-      <text x="380" y="402" textAnchor="middle" fill={INK_SECONDARY} fontSize="12">Saturn confirms one process finding; Venus speaks to vehicles and comforts separately.</text>
+      <text x="380" y="462" textAnchor="middle" fill={INK_SECONDARY} fontSize="14">Saturn confirms one process finding; Venus speaks to vehicles and comforts separately.</text>
     </svg>
   );
 }
@@ -356,9 +356,9 @@ function SynthesisSvg({
 function FactorNode({ x, y, title, body, color }: { x: number; y: number; title: string; body: string; color: string }) {
   return (
     <g>
-      <circle cx={x} cy={y} r="46" fill={`${color}14`} stroke={color} strokeWidth="3" />
-      <text x={x} y={y - 5} textAnchor="middle" fill={color} fontSize="12" fontWeight="600">{title}</text>
-      <text x={x} y={y + 16} textAnchor="middle" fill={INK_MUTED} fontSize="11">{body}</text>
+      <circle cx={x} cy={y} r="58" fill={`${color}14`} stroke={color} strokeWidth="4" />
+      <text x={x} y={y - 7} textAnchor="middle" fill={color} fontSize="15" fontWeight="700">{title}</text>
+      <text x={x} y={y + 20} textAnchor="middle" fill={INK_MUTED} fontSize="13" fontWeight="600">{body}</text>
     </g>
   );
 }
@@ -427,6 +427,13 @@ const responsiveTwoColumnStyle: CSSProperties = {
   display: "grid",
   gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 330px), 1fr))",
   gap: "1rem",
+};
+
+const synthesisMapGridStyle: CSSProperties = {
+  display: "grid",
+  gridTemplateColumns: "minmax(0, 1.35fr) minmax(260px, 0.65fr)",
+  gap: "1rem",
+  alignItems: "start",
 };
 
 const eyebrowStyle: CSSProperties = {

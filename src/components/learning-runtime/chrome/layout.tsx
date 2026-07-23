@@ -87,8 +87,9 @@ export function LessonShell({
     });
     setCurrentLesson(frontMatter.slug);
 
-    if (frontMatter.interactive?.enabled && frontMatter.interactive?.componentType) {
-      setInteractive(frontMatter.interactive.componentType);
+    const activeInteractive = frontMatter.interactive?.component || frontMatter.interactive?.componentType;
+    if (frontMatter.interactive?.enabled && activeInteractive) {
+      setInteractive(activeInteractive);
     } else {
       setInteractive(null);
     }
@@ -102,11 +103,12 @@ export function LessonShell({
   useEffect(() => {
     setCurrentSection(activeSectionNumber);
 
+    const activeInteractive = frontMatter.interactive?.component || frontMatter.interactive?.componentType;
     // If active section has an interactive or is flagship (§7), update currentInteractive
-    if (activeSectionNumber === "7" && frontMatter.interactive?.enabled && frontMatter.interactive?.componentType) {
-      setInteractive(frontMatter.interactive.componentType);
-    } else if (activeSectionNumber === "4" && frontMatter.interactive?.enabled && frontMatter.interactive?.componentType) {
-      setInteractive(frontMatter.interactive.componentType);
+    if (activeSectionNumber === "7" && frontMatter.interactive?.enabled && activeInteractive) {
+      setInteractive(activeInteractive);
+    } else if (activeSectionNumber === "4" && frontMatter.interactive?.enabled && activeInteractive) {
+      setInteractive(activeInteractive);
     }
   }, [activeSectionNumber, frontMatter, setCurrentSection, setInteractive]);
 

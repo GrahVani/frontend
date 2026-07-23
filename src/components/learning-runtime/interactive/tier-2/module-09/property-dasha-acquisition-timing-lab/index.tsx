@@ -125,7 +125,7 @@ export function PropertyDashaAcquisitionTimingLab() {
         </div>
       </section>
 
-      <section style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(330px, 100%), 1fr))", gap: "1rem" }}>
+      <section style={{ display: "grid", gridTemplateColumns: "minmax(0, 1.35fr) minmax(280px, 0.65fr)", gap: "1rem", alignItems: "start" }}>
         <div style={cardStyle}>
           <TimingSvg windows={visibleWindows} status={status} />
         </div>
@@ -175,27 +175,27 @@ export function PropertyDashaAcquisitionTimingLab() {
 
 function TimingSvg({ windows, status }: { windows: typeof WINDOWS; status: { label: string; color: string } }) {
   return (
-    <svg viewBox="0 0 820 500" role="img" aria-label="Classical property dasha timing scan diagram" style={{ width: "100%", minHeight: 390, display: "block" }}>
-      <rect x="12" y="12" width="796" height="476" rx="20" fill={SURFACE} stroke={HAIRLINE} />
-      <text x="410" y="48" textAnchor="middle" fill={GOLD} fontSize="13" fontWeight="600">CLASSICAL PROPERTY DASHA SCAN</text>
-      <text x="410" y="78" textAnchor="middle" fill={status.color} fontSize="18" fontWeight="600">{status.label}</text>
-      <line x1="72" y1="250" x2="748" y2="250" stroke={HAIRLINE} strokeWidth="2" />
+    <svg viewBox="0 0 820 560" role="img" aria-label="Classical property dasha timing scan diagram" style={{ width: "100%", minHeight: 480, display: "block" }}>
+      <rect x="12" y="12" width="796" height="536" rx="20" fill={SURFACE} stroke={HAIRLINE} />
+      <text x="410" y="56" textAnchor="middle" fill={GOLD} fontSize="18" fontWeight="700">CLASSICAL PROPERTY DASHA SCAN</text>
+      <text x="410" y="92" textAnchor="middle" fill={status.color} fontSize="22" fontWeight="700">{status.label}</text>
+      <line x1="72" y1="280" x2="748" y2="280" stroke={HAIRLINE} strokeWidth="2" />
       {windows.map((window, index) => {
         const x = 90 + index * (640 / Math.max(windows.length - 1, 1));
-        const y = window.lord === "Mars" ? 208 : 292;
+        const y = window.lord === "Mars" ? 230 : 330;
         return (
           <g key={`${window.md}-${window.lord}-${window.age}`}>
-            <line x1={x} y1="250" x2={x} y2={y} stroke={window.color} strokeWidth="3" strokeLinecap="round" />
-            <circle cx={x} cy={y} r="24" fill={window.color} fillOpacity="0.15" stroke={window.color} strokeWidth="3" />
-            <text x={x} y={y + 4} textAnchor="middle" fill={window.color} fontSize="11" fontWeight="600">{window.lord}</text>
-            <text x={x} y={window.lord === "Mars" ? y - 42 : y + 45} textAnchor="middle" fill={INK_PRIMARY} fontSize="11">{window.age}</text>
-            <text x={x} y={window.lord === "Mars" ? y - 25 : y + 62} textAnchor="middle" fill={INK_SECONDARY} fontSize="10">{window.md}</text>
+            <line x1={x} y1="280" x2={x} y2={y} stroke={window.color} strokeWidth="4" strokeLinecap="round" />
+            <circle cx={x} cy={y} r="30" fill={window.color} fillOpacity="0.15" stroke={window.color} strokeWidth="4" />
+            <text x={x} y={y + 6} textAnchor="middle" fill={window.color} fontSize="13" fontWeight="700">{window.lord}</text>
+            <text x={x} y={window.lord === "Mars" ? y - 54 : y + 56} textAnchor="middle" fill={INK_PRIMARY} fontSize="13" fontWeight="700">{window.age}</text>
+            <text x={x} y={window.lord === "Mars" ? y - 34 : y + 78} textAnchor="middle" fill={INK_SECONDARY} fontSize="12" fontWeight="600">{window.md}</text>
           </g>
         );
       })}
-      <rect x="204" y="382" width="412" height="48" rx="12" fill={status.color} fillOpacity="0.1" stroke={status.color} />
-      <text x="410" y="411" textAnchor="middle" fill={status.color} fontSize="12" fontWeight="600">transit confirmation remains conceptual until verified</text>
-      <text x="410" y="462" textAnchor="middle" fill={INK_SECONDARY} fontSize="12">Mars and Saturn windows are candidates; practical relevance is a separate judgement.</text>
+      <rect x="178" y="426" width="464" height="58" rx="12" fill={status.color} fillOpacity="0.1" stroke={status.color} strokeWidth="1.5" />
+      <text x="410" y="461" textAnchor="middle" fill={status.color} fontSize="15" fontWeight="700">transit confirmation remains conceptual until verified</text>
+      <text x="410" y="526" textAnchor="middle" fill={INK_SECONDARY} fontSize="14" fontWeight="600">Mars and Saturn windows are candidates; practical relevance is a separate judgement.</text>
     </svg>
   );
 }

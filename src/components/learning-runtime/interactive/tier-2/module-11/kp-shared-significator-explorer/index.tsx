@@ -520,8 +520,8 @@ function SharedSignificatorSvg({
   includeJupiter: boolean;
 }) {
   const houseXs = [120, 360, 600];
-  const houseY = 70;
-  const itemSpacing = 52;
+  const houseY = 108;
+  const itemSpacing = 70;
 
   const grahaPositions: Record<string, { x: number; y: number }> = {};
   HOUSES.forEach((house, hIndex) => {
@@ -537,17 +537,18 @@ function SharedSignificatorSvg({
   const activeShared = SHARED_GRAHAS.filter((s) => s.graha === "Saturn" || includeJupiter);
 
   return (
-    <svg viewBox="0 0 720 260" role="img" aria-label="Shared significators across house hierarchies" style={{ width: "100%", minHeight: 240, margin: "0.7rem 0" }}>
-      <rect x="18" y="18" width="684" height="224" rx="8" fill={SURFACE} stroke={HAIRLINE} />
+    <svg viewBox="0 0 720 380" role="img" aria-label="Shared significators across house hierarchies" style={{ width: "100%", minHeight: 380, margin: "0.7rem 0", display: "block" }}>
+      <rect x="18" y="18" width="684" height="344" rx="8" fill={SURFACE} stroke={HAIRLINE} />
 
       {HOUSES.map((house) => {
         const x = houseXs[house.id === 1 ? 0 : house.id === 6 ? 1 : 2];
         return (
           <g key={house.id}>
-            <text x={x} y={44} textAnchor="middle" fill={house.color} fontSize="17" fontWeight="600">
+            <rect x={x - 86} y={42} width={172} height={48} rx={8} fill={`${house.color}${"0D"}`} stroke={`${house.color}${"44"}`} />
+            <text x={x} y={61} textAnchor="middle" fill={house.color} fontSize="16" fontWeight="600">
               {house.label}
             </text>
-            <text x={x} y={62} textAnchor="middle" fill={INK_MUTED} fontSize="13">
+            <text x={x} y={80} textAnchor="middle" fill={INK_MUTED} fontSize="11">
               {house.role}
             </text>
             {house.significators.map((sig) => {
@@ -559,26 +560,28 @@ function SharedSignificatorSvg({
               const isSelected = selected === sig.graha;
               return (
                 <g key={sig.graha}>
-                  <circle
-                    cx={pos.x}
-                    cy={pos.y}
-                    r={shared ? 22 : 18}
-                    fill={isSelected ? (shared ? sharedColor : house.color) : shared ? `${sharedColor}1A` : "transparent"}
+                  <rect
+                    x={pos.x - 62}
+                    y={pos.y - 22}
+                    width={124}
+                    height={44}
+                    rx={8}
+                    fill={isSelected ? (shared ? sharedColor : house.color) : shared ? `${sharedColor}14` : `${house.color}08`}
                     stroke={shared ? sharedColor : house.color}
-                    strokeWidth={isSelected ? 3 : 2}
+                    strokeWidth={isSelected ? 3 : 1.5}
                   />
                   <text
                     x={pos.x}
-                    y={pos.y + 5}
+                    y={pos.y - 2}
                     textAnchor="middle"
                     fill={isSelected ? "#fff" : shared ? sharedColor : house.color}
-                    fontSize="15"
+                    fontSize="14"
                     fontWeight="600"
                   >
                     {sig.graha}
                   </text>
-                  <text x={pos.x} y={pos.y + 38} textAnchor="middle" fill={INK_MUTED} fontSize="12">
-                    #{sig.rank}
+                  <text x={pos.x} y={pos.y + 15} textAnchor="middle" fill={isSelected ? "#fff" : INK_MUTED} fontSize="11" fontWeight="600">
+                    rank #{sig.rank}
                   </text>
                 </g>
               );
@@ -593,11 +596,11 @@ function SharedSignificatorSvg({
         if (!posA || !posB) return null;
         const isSelected = selected === shared.graha;
         const midX = (posA.x + posB.x) / 2;
-        const midY = (posA.y + posB.y) / 2 - (shared.graha === "Saturn" ? 18 : 12);
+        const midY = (posA.y + posB.y) / 2 - (shared.graha === "Saturn" ? 42 : 30);
         return (
           <g key={shared.graha}>
             <path
-              d={`M ${posA.x} ${posA.y - 22} Q ${midX} ${midY} ${posB.x} ${posB.y - 22}`}
+              d={`M ${posA.x + 62} ${posA.y} Q ${midX} ${midY} ${posB.x - 62} ${posB.y}`}
               fill="none"
               stroke={shared.color}
               strokeWidth={isSelected ? 4 : 2.5}
@@ -606,11 +609,99 @@ function SharedSignificatorSvg({
               markerStart={`url(#arrow-${shared.graha}-start)`}
             />
             <g>
-              <circle cx={midX} cy={midY} r={shared.strength === "strong" ? 26 : 20} fill={`${shared.color}22`} stroke={shared.color} strokeWidth={2} />
+              <rect
+                x={midX - (shared.strength === "strong" ? 46 : 34)}
+                y={midY - 16}
+                width={shared.strength === "strong" ? 92 : 68}
+                height={32}
+                rx={8}
+                fill={SURFACE}
+                stroke={shared.color}
+                strokeWidth={2}
+              />
               <text x={midX} y={midY + 4} textAnchor="middle" fill={shared.color} fontSize="12" fontWeight="600">
                 {shared.strength === "strong" ? "shared" : "weak"}
               </text>
             </g>
+          </g>
+        );
+      })}
+
+      <rect x="0" y="0" width="720" height="380" fill={SURFACE} />
+      <rect x="18" y="18" width="684" height="344" rx="8" fill={`${GOLD}${"06"}`} stroke={HAIRLINE} />
+
+      {HOUSES.map((house, index) => {
+        const x = houseXs[index];
+        return (
+          <g key={`clean-${house.id}`}>
+            <rect x={x - 88} y="38" width="176" height="44" rx="8" fill={`${house.color}${"0D"}`} stroke={`${house.color}${"44"}`} />
+            <text x={x} y="56" textAnchor="middle" fill={house.color} fontSize="15" fontWeight="700">
+              {house.label}
+            </text>
+            <text x={x} y="74" textAnchor="middle" fill={INK_MUTED} fontSize="10" fontWeight="600">
+              {house.role}
+            </text>
+
+            {house.significators.map((sig, sigIndex) => {
+              const y = 112 + sigIndex * 50;
+              const shared = activeShared.some(
+                (item) => item.graha === sig.graha && item.houses.includes(house.id)
+              );
+              const sharedColor = sig.graha === "Saturn" ? GOLD : BLUE;
+              const color = shared ? sharedColor : house.color;
+              const isSelected = selected === sig.graha;
+              return (
+                <g key={`clean-${house.id}-${sig.graha}`}>
+                  <rect
+                    x={x - 70}
+                    y={y - 19}
+                    width="140"
+                    height="38"
+                    rx="8"
+                    fill={isSelected ? color : shared ? `${color}${"14"}` : `${house.color}08`}
+                    stroke={color}
+                    strokeWidth={isSelected ? 2.5 : 1.5}
+                  />
+                  <text x={x} y={y - 2} textAnchor="middle" fill={isSelected ? "#fff" : color} fontSize="13" fontWeight="700">
+                    {sig.graha}
+                  </text>
+                  <text x={x} y={y + 13} textAnchor="middle" fill={isSelected ? "#fff" : INK_MUTED} fontSize="10" fontWeight="600">
+                    rank #{sig.rank}
+                  </text>
+                </g>
+              );
+            })}
+          </g>
+        );
+      })}
+
+      <line x1="58" y1="270" x2="662" y2="270" stroke={HAIRLINE} strokeWidth="1.5" />
+      <text x="360" y="292" textAnchor="middle" fill={INK_MUTED} fontSize="13" fontWeight="700">
+        Shared significators
+      </text>
+
+      {activeShared.map((shared, index) => {
+        const x = activeShared.length === 1 ? 360 : index === 0 ? 250 : 470;
+        const isSelected = selected === shared.graha;
+        return (
+          <g key={`clean-shared-${shared.graha}`}>
+            <rect
+              x={x - 112}
+              y="306"
+              width="224"
+              height="38"
+              rx="8"
+              fill={isSelected ? `${shared.color}22` : SURFACE}
+              stroke={shared.color}
+              strokeWidth={isSelected ? 2.5 : 1.5}
+              strokeDasharray={shared.strength === "weak" ? "5 4" : undefined}
+            />
+            <text x={x} y="322" textAnchor="middle" fill={shared.color} fontSize="13" fontWeight="700">
+              {shared.graha}: {shared.strength === "strong" ? "strong shared" : "weak shared"}
+            </text>
+            <text x={x} y="338" textAnchor="middle" fill={INK_MUTED} fontSize="10" fontWeight="600">
+              House {shared.houses[0]} rank #{shared.ranks[shared.houses[0]]} + House {shared.houses[1]} rank #{shared.ranks[shared.houses[1]]}
+            </text>
           </g>
         );
       })}

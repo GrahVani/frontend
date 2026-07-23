@@ -22,6 +22,8 @@ const VERMILION = "#A23A1E";
 const BLUE = "#356CAB";
 const PURPLE = "#6B5AA8";
 const GREEN = "#2F7D55";
+const NEUTRAL = "#6B5330";
+const NEUTRAL_SOFT = "#FFF7E8";
 
 type Tier = "triple" | "two" | "doctrine" | "none";
 
@@ -63,8 +65,18 @@ const TIER_META: Record<Tier, { label: string; color: string; description: strin
   triple: { label: "Triple indicator", color: GREEN, description: "Three independent connections to the significator set." },
   two: { label: "Two-yes", color: BLUE, description: "Lord + occupant of one relevant house." },
   doctrine: { label: "Doctrine-dependent", color: GOLD, description: "Conditional under extended nodal-aspect doctrine." },
-  none: { label: "No connection", color: INK_MUTED, description: "No verified connection in this sweep." },
+  none: { label: "No connection", color: NEUTRAL, description: "No verified connection in this sweep." },
 };
+
+function tierFill(tier: Tier, selected = false) {
+  if (tier === "none") return selected ? NEUTRAL_SOFT : "#F7EBD6";
+  return selected ? TIER_META[tier].color : `${TIER_META[tier].color}2B`;
+}
+
+function tierTextColor(tier: Tier, selected = false) {
+  if (selected && tier !== "none") return "#fff";
+  return TIER_META[tier].color;
+}
 
 const DISCIPLINE_STATEMENTS = [
   {
@@ -184,9 +196,11 @@ export function DashaConflictTimingSweep() {
       </section>
 
       <div style={responsiveTwoColumnStyle}>
-        <section style={cardStyle}>
+        <section style={{ ...cardStyle, gridColumn: "1 / -1", minWidth: 0 }}>
           <p style={eyebrowStyle}>Sweep timeline</p>
-          <TimelineSvg bhuktis={visibleBhuktis} selected={selectedBhukti} onSelect={setSelectedBhukti} />
+          <div style={{ overflowX: "auto", marginTop: "0.55rem", maxWidth: "100%", minWidth: 0 }}>
+            <TimelineSvg bhuktis={visibleBhuktis} selected={selectedBhukti} onSelect={setSelectedBhukti} />
+          </div>
         </section>
 
         <section style={cardStyle}>
@@ -434,10 +448,11 @@ function TimelineSvg({
   const minAge = 26.5;
   const maxAge = 44;
   const total = maxAge - minAge;
-  const rowHeight = 28;
-  const trackY = 60;
-  const width = 720;
-  const padding = 40;
+  const rowHeight = 34;
+  const trackYs: Record<string, number> = { Moon: 88, Mars: 146 };
+  const axisY = 200;
+  const width = 1180;
+  const padding = 88;
   const plotWidth = width - padding * 2;
 
   function xForAge(age: number) {
@@ -445,25 +460,32 @@ function TimelineSvg({
   }
 
   return (
-    <svg viewBox={`0 0 ${width} 160`} role="img" aria-label="Daśā sweep timeline showing tier strength by bhukti" style={{ width: "100%", minHeight: 160, margin: "0.7rem 0" }}>
-      <rect x="18" y="18" width={width - 36} height="124" rx="8" fill={SURFACE} stroke={HAIRLINE} />
+    <svg viewBox={`0 0 ${width} 260`} role="img" aria-label="Daśā sweep timeline showing tier strength by bhukti" style={{ width: "100%", minWidth: 980, minHeight: 260, margin: "0.7rem 0", display: "block" }}>
+      <rect x="18" y="18" width={width - 36} height="218" rx="8" fill={SURFACE} stroke={HAIRLINE} />
 
       {/* Axis labels */}
       {[27, 30, 33, 36, 39, 42, 44].map((age) => (
         <g key={age}>
-          <line x1={xForAge(age)} y1={trackY - 4} x2={xForAge(age)} y2={trackY + 4} stroke={HAIRLINE} />
-          <text x={xForAge(age)} y={trackY + 22} textAnchor="middle" fill={INK_MUTED} fontSize="12" fontWeight="600">
+          <line x1={xForAge(age)} y1={axisY - 8} x2={xForAge(age)} y2={axisY + 8} stroke={HAIRLINE} />
+          <text x={xForAge(age)} y={axisY + 30} textAnchor="middle" fill={INK_SECONDARY} fontSize="16" fontWeight="700">
             {age}
           </text>
         </g>
       ))}
-      <text x={padding} y={trackY - 16} fill={INK_MUTED} fontSize="12" fontWeight="600">
+      <line x1={padding} y1={axisY} x2={width - padding} y2={axisY} stroke={HAIRLINE} strokeWidth="1.5" />
+      <text x={padding} y={54} fill={INK_SECONDARY} fontSize="15" fontWeight="700">
         Age
+      </text>
+      <text x={padding - 16} y={trackYs.Moon + 10} textAnchor="end" fill={INK_SECONDARY} fontSize="14" fontWeight="700">
+        Moon MD
+      </text>
+      <text x={padding - 16} y={trackYs.Mars + 10} textAnchor="end" fill={INK_SECONDARY} fontSize="14" fontWeight="700">
+        Mars MD
       </text>
 
       {/* MD divider at Mars MD start */}
-      <line x1={xForAge(36.70)} y1={trackY - 12} x2={xForAge(36.70)} y2={trackY + 50} stroke={HAIRLINE} strokeDasharray="5 4" />
-      <text x={xForAge(36.70)} y={trackY + 64} textAnchor="middle" fill={INK_MUTED} fontSize="11" fontWeight="600">
+      <line x1={xForAge(36.70)} y1={trackYs.Moon - 18} x2={xForAge(36.70)} y2={axisY + 16} stroke={HAIRLINE} strokeDasharray="5 4" />
+      <text x={xForAge(36.70)} y={axisY + 52} textAnchor="middle" fill={INK_SECONDARY} fontSize="14" fontWeight="700">
         Mars MD begins
       </text>
 
@@ -473,22 +495,23 @@ function TimelineSvg({
         const w = Math.max(2, xForAge(b.endAge) - x);
         const isSelected = selected?.md === b.md && selected?.lord === b.lord;
         const color = TIER_META[b.tier].color;
+        const y = trackYs[b.md] ?? trackYs.Moon;
         return (
           <g key={`${b.md}-${b.lord}`}>
             <rect
               x={x}
-              y={trackY - 10}
+              y={y - 17}
               width={w}
               height={rowHeight}
               rx={4}
-              fill={isSelected ? color : `${color}55`}
-              stroke={isSelected ? color : "transparent"}
-              strokeWidth={2}
+              fill={tierFill(b.tier, isSelected)}
+              stroke={isSelected || b.tier === "none" ? color : "transparent"}
+              strokeWidth={isSelected ? 2.5 : 1.5}
               style={{ cursor: "pointer" }}
               onClick={() => onSelect(isSelected ? null : b)}
             />
-            {w > 28 ? (
-              <text x={x + w / 2} y={trackY + 7} textAnchor="middle" fill="#fff" fontSize="11" fontWeight="600" pointerEvents="none">
+            {w > 52 ? (
+              <text x={x + w / 2} y={y + 5} textAnchor="middle" fill={tierTextColor(b.tier, isSelected)} fontSize="13" fontWeight="800" pointerEvents="none">
                 {b.lord}
               </text>
             ) : null}
@@ -497,11 +520,11 @@ function TimelineSvg({
       })}
 
       {/* Legend */}
-      <g transform={`translate(${padding}, 118)`}>
+      <g transform={`translate(${padding}, 230)`}>
         {(Object.keys(TIER_META) as Tier[]).map((tier, i) => (
-          <g key={tier} transform={`translate(${i * 140}, 0)`}>
-            <rect width="14" height="14" rx="3" fill={TIER_META[tier].color} />
-            <text x="20" y="12" fill={INK_SECONDARY} fontSize="11" fontWeight="600">
+          <g key={tier} transform={`translate(${i * 210}, 0)`}>
+            <rect width="18" height="18" rx="4" fill={tierFill(tier)} stroke={TIER_META[tier].color} />
+            <text x="26" y="15" fill={INK_PRIMARY} fontSize="14" fontWeight="700">
               {TIER_META[tier].label}
             </text>
           </g>
@@ -549,3 +572,5 @@ const eyebrowStyle: CSSProperties = {
   letterSpacing: "0.06em",
   textTransform: "uppercase",
 };
+
+

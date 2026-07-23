@@ -261,7 +261,7 @@ export function FourthLordPropertyPermutationLab() {
         </div>
       </section>
 
-      <div style={responsiveTwoColumnStyle}>
+      <div style={chartWorkbenchGridStyle}>
         <section style={cardStyle}>
           <div style={{ display: "flex", justifyContent: "space-between", gap: "1rem", alignItems: "center", flexWrap: "wrap" }}>
             <div>
@@ -339,9 +339,9 @@ function PermutationSvg({
   const center = { x: 380, y: 162 };
   const radius = 104;
   return (
-    <svg viewBox="0 0 760 430" role="img" aria-label="Fourth lord property permutation wheel and tie breaker" style={{ width: "100%", minHeight: 330, margin: "0.7rem 0" }}>
+    <svg viewBox="0 0 760 430" role="img" aria-label="Fourth lord property permutation wheel and tie breaker" style={{ width: "100%", maxWidth: 820, minHeight: 340, margin: "0.8rem auto", display: "block" }}>
       <rect x="18" y="18" width="724" height="394" rx="8" fill={SURFACE} stroke={HAIRLINE} />
-      <text x="380" y="52" textAnchor="middle" fill={GOLD} fontSize="13" fontWeight="600">4TH LORD PLACEMENT: ANGULAR CLASS PLUS QUALITY CLASS</text>
+      <text x="380" y="40" textAnchor="middle" fill={GOLD} fontSize="14" fontWeight="600">4TH LORD PLACEMENT: ANGULAR CLASS PLUS QUALITY CLASS</text>
       {(Object.keys(HOUSE_DATA).map(Number) as HouseNum[]).map((houseNum, index) => {
         const angle = ((index - 3) / 12) * Math.PI * 2;
         const x = center.x + Math.cos(angle) * radius;
@@ -350,27 +350,27 @@ function PermutationSvg({
         return (
           <g key={houseNum}>
             <circle cx={x} cy={y} r={active ? 23 : 18} fill={active ? `${HOUSE_DATA[houseNum].color}22` : `${HOUSE_DATA[houseNum].color}10`} stroke={active ? HOUSE_DATA[houseNum].color : HAIRLINE} strokeWidth={active ? 3 : 1.5} />
-            <text x={x} y={y + 4} textAnchor="middle" fill={active ? HOUSE_DATA[houseNum].color : INK_SECONDARY} fontSize="12" fontWeight="600">{houseNum}</text>
+            <text x={x} y={y + 5} textAnchor="middle" fill={active ? HOUSE_DATA[houseNum].color : INK_SECONDARY} fontSize="13" fontWeight="600">{houseNum}</text>
           </g>
         );
       })}
       <circle cx={center.x} cy={center.y} r="46" fill={`${selected.color}14`} stroke={selected.color} strokeWidth="3" />
-      <text x={center.x} y={center.y - 4} textAnchor="middle" fill={selected.color} fontSize="13" fontWeight="600">{selectedHouse}th house</text>
-      <text x={center.x} y={center.y + 17} textAnchor="middle" fill={INK_MUTED} fontSize="11">{selected.quality}</text>
+      <text x={center.x} y={center.y - 4} textAnchor="middle" fill={selected.color} fontSize="14" fontWeight="600">{selectedHouse}th house</text>
+      <text x={center.x} y={center.y + 18} textAnchor="middle" fill={INK_MUTED} fontSize="12">{selected.quality}</text>
 
       <rect x="92" y="308" width="230" height="58" rx="8" fill={`${strengthColor(occupantKaraka)}12`} stroke={strengthColor(occupantKaraka)} />
-      <text x="207" y="332" textAnchor="middle" fill={strengthColor(occupantKaraka)} fontSize="12" fontWeight="600">Occupant / karaka</text>
-      <text x="207" y="352" textAnchor="middle" fill={INK_MUTED} fontSize="11">capacity and desire: {occupantKaraka}</text>
+      <text x="207" y="332" textAnchor="middle" fill={strengthColor(occupantKaraka)} fontSize="13" fontWeight="600">Occupant / karaka</text>
+      <text x="207" y="353" textAnchor="middle" fill={INK_MUTED} fontSize="12">capacity and desire: {occupantKaraka}</text>
 
       <rect x="438" y="308" width="230" height="58" rx="8" fill={`${strengthColor(lordDignity)}12`} stroke={strengthColor(lordDignity)} />
-      <text x="553" y="332" textAnchor="middle" fill={strengthColor(lordDignity)} fontSize="12" fontWeight="600">4th lord placement</text>
-      <text x="553" y="352" textAnchor="middle" fill={INK_MUTED} fontSize="11">process and unfolding: {lordDignity}</text>
+      <text x="553" y="332" textAnchor="middle" fill={strengthColor(lordDignity)} fontSize="13" fontWeight="600">4th lord placement</text>
+      <text x="553" y="353" textAnchor="middle" fill={INK_MUTED} fontSize="12">process and unfolding: {lordDignity}</text>
 
       <path d="M 322 337 C 364 292, 396 292, 438 337" fill="none" stroke={separateClaims ? GREEN : VERMILION} strokeWidth="5" strokeLinecap="round" />
-      <text x="380" y="288" textAnchor="middle" fill={separateClaims ? GREEN : VERMILION} fontSize="12" fontWeight="600">
+      <text x="380" y="300" textAnchor="middle" fill={separateClaims ? GREEN : VERMILION} fontSize="13" fontWeight="600">
         {separateClaims ? "hold both claims" : "single-winner error"}
       </text>
-      <text x="380" y="395" textAnchor="middle" fill={INK_SECONDARY} fontSize="12">Chart P1: Mars shows real property capacity; Saturn in the 8th shows process friction.</text>
+      <text x="380" y="395" textAnchor="middle" fill={INK_SECONDARY} fontSize="13">Chart P1: Mars shows real property capacity; Saturn in the 8th shows process friction.</text>
     </svg>
   );
 }
@@ -425,6 +425,12 @@ const cardStyle: CSSProperties = {
 const responsiveTwoColumnStyle: CSSProperties = {
   display: "grid",
   gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 330px), 1fr))",
+  gap: "1rem",
+};
+
+const chartWorkbenchGridStyle: CSSProperties = {
+  display: "grid",
+  gridTemplateColumns: "1fr",
   gap: "1rem",
 };
 
