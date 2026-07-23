@@ -36,6 +36,7 @@ export const useAuthTokenStore = create<AuthTokenState>((set) => ({
       localStorage.removeItem("refreshToken");
       localStorage.removeItem("accessToken"); // Clean up legacy storage
       localStorage.removeItem("user");
+      localStorage.removeItem("user_meta"); // Clear cached profile
     }
     set({ accessToken: null, refreshToken: null });
   },

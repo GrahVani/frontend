@@ -111,6 +111,8 @@ function normalizeAndDeduplicateCitations(citations: any[], lessonSlug: string) 
 export function TutorPanel({ lessonSlug, sections = [] }: TutorPanelProps) {
   const [isClient, setIsClient] = useState(false);
   const [dismissGuidance, setDismissGuidance] = useState(false);
+  const [panelSize, setPanelSize] = useState({ width: 400, height: 540 });
+  const [isDragging, setIsDragging] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -243,6 +245,35 @@ export function TutorPanel({ lessonSlug, sections = [] }: TutorPanelProps) {
     }
   };
 
+  const handleDragStart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+    
+    const startX = e.clientX;
+    const startY = e.clientY;
+    const startWidth = panelSize.width;
+    const startHeight = panelSize.height;
+
+    const handleMouseMove = (moveEvent: MouseEvent) => {
+      const deltaX = startX - moveEvent.clientX;
+      const deltaY = startY - moveEvent.clientY;
+      
+      setPanelSize({
+        width: Math.max(300, Math.min(startWidth + deltaX, window.innerWidth - 48)),
+        height: Math.max(400, Math.min(startHeight + deltaY, window.innerHeight - 48))
+      });
+    };
+
+    const handleMouseUp = () => {
+      setIsDragging(false);
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+  };
+
   if (!isClient) {
     return null;
   }
@@ -254,8 +285,18 @@ export function TutorPanel({ lessonSlug, sections = [] }: TutorPanelProps) {
           <div
             role="dialog"
             aria-label="Gyaneshwara AI Tutor Session"
-            className="flex flex-col w-[92vw] sm:w-[380px] md:w-[400px] h-[540px] max-h-[80vh] rounded-2xl overflow-hidden shadow-[0_24px_70px_rgba(0,0,0,0.85)] border border-[#B27F44]/40 bg-[#12100E] text-stone-100 transition-all duration-300"
+            className={`relative flex flex-col max-w-[92vw] max-h-[90vh] rounded-2xl overflow-hidden shadow-[0_24px_70px_rgba(0,0,0,0.85)] border border-[#B27F44]/40 bg-[#12100E] text-stone-100 ${isDragging ? '' : 'transition-all duration-300'}`}
+            style={{ width: `${panelSize.width}px`, height: `${panelSize.height}px` }}
           >
+            {/* Drag Handle Top-Left */}
+            <div 
+              className="absolute top-0 left-0 w-8 h-8 z-[100] cursor-nwse-resize group flex items-start justify-start p-1"
+              onMouseDown={handleDragStart}
+              title="Drag to resize panel"
+            >
+              <div className="w-0 h-0 border-t-[12px] border-l-[12px] border-t-transparent border-l-stone-500/30 group-hover:border-l-amber-400/80 transition-colors" />
+            </div>
+
             {/* 1. Divine Header */}
             <div className="flex items-center justify-between px-4 py-3.5 bg-gradient-to-r from-[#1A1714] via-[#1E1914] to-[#241D15] border-b border-[#B27F44]/30">
               <div className="flex items-center gap-2.5">

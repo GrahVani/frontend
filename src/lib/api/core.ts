@@ -210,7 +210,8 @@ export async function apiFetch<T = unknown>(url: string, options: RequestInit = 
                     return textBody ? { message: textBody } : {};
                 });
 
-                if (response.status === 401 && typeof window !== 'undefined') {
+                const isAuthEndpoint = url.includes('/auth/login') || url.includes('/auth/refresh') || url.includes('/auth/register');
+                if (response.status === 401 && typeof window !== 'undefined' && !isAuthEndpoint) {
                     try {
                         const newToken = await refreshAccessToken();
                         if (newToken) {
