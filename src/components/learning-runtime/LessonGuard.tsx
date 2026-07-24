@@ -9,6 +9,8 @@ interface LessonGuardProps {
 }
 
 export function LessonGuard({ prerequisites }: LessonGuardProps) {
+  // Temporarily bypass the lock system while the 80% rule is discussed
+  return null;
   const router = useRouter();
   const isLessonLocked = useProgressStore((state) => state.isLessonLocked);
   const [locked, setLocked] = useState(false);
@@ -16,12 +18,11 @@ export function LessonGuard({ prerequisites }: LessonGuardProps) {
   useEffect(() => {
     if (isLessonLocked(prerequisites)) {
       setLocked(true);
-      // In a real implementation we would find the specific prerequisite that is missing
-      // and route them there. For now, route back to the dashboard if locked.
-      const timer = setTimeout(() => {
-        router.push("/learn/dashboard");
-      }, 3000);
-      return () => clearTimeout(timer);
+      // Temporarily disabled while the locking rule is being discussed
+      // const timer = setTimeout(() => {
+      //   router.push("/learn/dashboard");
+      // }, 3000);
+      // return () => clearTimeout(timer);
     }
   }, [prerequisites, isLessonLocked, router]);
 

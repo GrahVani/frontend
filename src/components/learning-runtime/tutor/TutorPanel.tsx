@@ -26,6 +26,7 @@ function formatReadableName(raw?: string | null): string {
 
 function renderAssistantContent(content: string) {
   if (!content) return null;
+  const cleanedContent = content.split(/(\r?\n)*\[Context:/)[0].trim();
   return (
     <div className="text-sm leading-relaxed text-stone-200 space-y-2.5 break-words">
       <ReactMarkdown
@@ -66,7 +67,7 @@ function renderAssistantContent(content: string) {
           td: ({ children }) => <td className="p-1.5 border border-amber-500/20">{children}</td>,
         }}
       >
-        {content}
+        {cleanedContent}
       </ReactMarkdown>
     </div>
   );
@@ -499,15 +500,9 @@ export function TutorPanel({ lessonSlug, sections = [] }: TutorPanelProps) {
                       <Sparkles className="w-3 h-3 text-amber-400" />
                     </div>
                   )}
-                  <div
-                    className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-sm ${
-                      msg.role === "user"
-                        ? "bg-gradient-to-r from-[#8C5E2B] to-[#9D6B34] text-amber-50 border border-amber-600/40 rounded-br-sm shadow-md"
-                        : "bg-[#1E1A16] text-stone-200 border border-[#B27F44]/30 rounded-tl-sm shadow-md flex-1"
-                    }`}
-                  >
+                  <div className={`max-w-[85%] rounded-2xl p-4 shadow-sm ${msg.role === 'user' ? 'bg-amber-100 text-amber-900 rounded-tr-none' : 'bg-white text-slate-700 rounded-tl-none border border-slate-100'}`}>
                     {msg.role === "user" ? (
-                      <p className="whitespace-pre-wrap">{msg.content.split("\n\n[Context:")[0].trim()}</p>
+                      <p className="whitespace-pre-wrap">{msg.content.split(/(\r?\n)*\[Context:/)[0].trim()}</p>
                     ) : (
                       <>
                         {renderAssistantContent(msg.content)}
