@@ -335,7 +335,7 @@ export function TutorPanel({ lessonSlug, sections = [] }: TutorPanelProps) {
             )}
 
             {/* 3. Continuous Round Auto-Scrolling Headline Ticker */}
-            {(currentLesson || lessonSlug) && (
+            {(currentLesson || lessonSlug) && process.env.NODE_ENV === "development" && (
               <div
                 data-testid="tutor-active-context"
                 className="bg-[#1A1612] px-4 py-2 border-b border-[#C48C46]/25 flex items-center gap-2.5 overflow-hidden whitespace-nowrap text-xs select-none"
@@ -500,7 +500,7 @@ export function TutorPanel({ lessonSlug, sections = [] }: TutorPanelProps) {
                       <Sparkles className="w-3 h-3 text-amber-400" />
                     </div>
                   )}
-                  <div className={`max-w-[85%] rounded-2xl p-4 shadow-sm ${msg.role === 'user' ? 'bg-amber-100 text-amber-900 rounded-tr-none' : 'bg-white text-slate-700 rounded-tl-none border border-slate-100'}`}>
+                  <div className={`max-w-[85%] rounded-2xl p-4 shadow-sm ${msg.role === 'user' ? 'bg-[#2E251E] text-[#F3E5AB] rounded-tr-none border border-[#C48C46]/30' : 'bg-[#1E1A16] text-stone-200 rounded-tl-none border border-[#B27F44]/30'}`}>
                     {msg.role === "user" ? (
                       <p className="whitespace-pre-wrap">{msg.content.split(/(\r?\n)*\[Context:/)[0].trim()}</p>
                     ) : (

@@ -249,6 +249,12 @@ export async function apiFetch<T = unknown>(url: string, options: RequestInit = 
                             console.warn(`[apiFetch] Token refresh temporarily failed due to network/server error for ${url}. Retaining session.`);
                             throw refreshErr;
                         }
+                        // If the retry fetch itself threw a network error (TypeError) or parsing error (SyntaxError), do NOT clear session!
+                        if (refreshErr instanceof TypeError || refreshErr instanceof SyntaxError) {
+                            console.warn(`[apiFetch] Network or parsing error during retry for ${url}. Retaining session.`);
+                            throw refreshErr;
+                        }
+                        
                         // Refresh itself failed due to true auth expiration/revocation — fall through to clear tokens
                         console.error(`[apiFetch] Token refresh failed for ${url}:`, refreshErr);
                     }

@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { useProgressStore } from "@/lib/learning-runtime/progress-store";
-import { Lock, ArrowLeft, LayoutDashboard, ShieldAlert } from "lucide-react";
+import { Lock, ArrowLeft, LayoutDashboard, AlertCircle } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface LessonGuardProps {
   prerequisites: string[];
@@ -27,6 +28,7 @@ function toCanonicalUrl(slug: string): string {
 export function LessonGuard({ prerequisites }: LessonGuardProps) {
   const isLessonLocked = useProgressStore((state) => state.isLessonLocked);
   const [locked, setLocked] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     if (isLessonLocked(prerequisites)) {
@@ -36,55 +38,46 @@ export function LessonGuard({ prerequisites }: LessonGuardProps) {
 
   if (!locked) return null;
 
-  const firstPrereqUrl = prerequisites && prerequisites.length > 0 ? toCanonicalUrl(prerequisites[0]) : null;
+  const prereqUrl = prerequisites && prerequisites.length > 0 ? toCanonicalUrl(prerequisites[0]) : null;
 
   return (
-    <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#0C0A09] backdrop-blur-xl p-6">
-      <div className="max-w-xl w-full mx-auto bg-gradient-to-b from-[#1E1A16] to-[#16120E] p-8 md:p-10 rounded-2xl border border-[#B27F44]/30 shadow-2xl relative overflow-hidden">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-[#0C0A09]/80 backdrop-blur-md px-4">
+      <div className="relative w-full max-w-md overflow-hidden rounded-2xl bg-gradient-to-b from-[#1C1A17] to-[#141210] p-1 shadow-2xl border border-white/5 ring-1 ring-white/10">
         
-        {/* Decorative Top Accent */}
-        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#D97706] via-[#FBBF24] to-[#D97706] opacity-80" />
-
-        <div className="flex flex-col items-center text-center">
-          <div className="w-20 h-20 rounded-full bg-[#78350F]/20 flex items-center justify-center mb-6 border border-[#B27F44]/30 shadow-[0_0_30px_rgba(217,119,6,0.15)]">
-            <Lock className="w-10 h-10 text-[#F59E0B]" />
+        {/* Glow effect */}
+        <div className="absolute -top-24 -left-24 h-48 w-48 rounded-full bg-amber-500/10 blur-[80px]"></div>
+        
+        <div className="relative flex flex-col items-center justify-center p-8 text-center">
+          <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-red-500/10 shadow-[0_0_40px_rgba(239,68,68,0.15)] ring-1 ring-red-500/20">
+            <Lock className="h-10 w-10 text-red-400" />
           </div>
           
-          <h2 className="text-3xl md:text-4xl font-serif text-[#FEF3C7] mb-4 tracking-wide">
+          <h2 className="mb-3 font-serif text-3xl font-medium tracking-tight text-white">
             Lesson Locked
           </h2>
           
-          <p className="text-lg text-stone-300 mb-8 font-serif italic max-w-md leading-relaxed">
-            You must achieve <strong className="text-[#FBBF24] font-semibold not-italic">Mastery</strong> in the prerequisite lesson before accessing this content.
+          <p className="mb-6 text-sm leading-relaxed text-zinc-400">
+            You must demonstrate mastery before proceeding. Please complete the previous lesson and achieve a score of <span className="font-semibold text-amber-400">at least 80%</span> to unlock this content.
           </p>
 
-          <div className="bg-[#12100E] border border-[#B27F44]/20 rounded-xl p-5 mb-8 w-full text-left flex items-start gap-4">
-             <ShieldAlert className="w-6 h-6 text-[#F59E0B] shrink-0 mt-0.5" />
-             <div className="text-sm text-stone-300 leading-relaxed">
-                <span className="block font-semibold text-[#FDE68A] mb-1 text-base">A note on Mastery:</span>
-                The <strong className="text-stone-200">80% progress</strong> shown in the sidebar tracks your <em>reading</em>. 
-                However, to unlock the next lesson, you must also pass the <strong className="text-[#FDE68A]">Practice Quiz</strong> at the bottom of the previous lesson with a score of <strong className="text-[#FDE68A]">80% or higher</strong>.
-             </div>
-          </div>
-
-          <div className="flex flex-col sm:flex-row items-center gap-4 w-full">
-            {firstPrereqUrl && (
-              <Link
-                href={firstPrereqUrl}
-                className="flex-1 w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-[#D97706] to-[#B45309] hover:from-[#F59E0B] hover:to-[#D97706] text-amber-950 font-bold tracking-wide flex items-center justify-center gap-2 transition-all shadow-[0_4px_20px_rgba(217,119,6,0.25)] hover:shadow-[0_4px_25px_rgba(217,119,6,0.4)]"
+          <div className="flex w-full flex-col gap-3">
+            {prereqUrl ? (
+              <button
+                onClick={() => router.push(prereqUrl)}
+                className="group flex w-full items-center justify-center gap-2 rounded-xl bg-amber-500/10 px-4 py-3.5 text-sm font-medium text-amber-400 ring-1 ring-inset ring-amber-500/20 transition-all hover:bg-amber-500/20 hover:ring-amber-500/30"
               >
-                <ArrowLeft className="w-5 h-5" />
-                Return to Prerequisite
-              </Link>
-            )}
+                <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
+                Go to Previous Lesson
+              </button>
+            ) : null}
             
-            <Link
-              href="/learn/dashboard"
-              className="flex-1 w-full py-3.5 px-6 rounded-xl bg-stone-800/60 hover:bg-stone-800 border border-stone-700/80 text-stone-200 font-medium flex items-center justify-center gap-2 transition-colors"
+            <button
+              onClick={() => router.push("/learn")}
+              className="flex w-full items-center justify-center gap-2 rounded-xl bg-white/5 px-4 py-3.5 text-sm font-medium text-white ring-1 ring-inset ring-white/10 transition-all hover:bg-white/10"
             >
-              <LayoutDashboard className="w-5 h-5 opacity-70" />
-              Go to Dashboard
-            </Link>
+              <LayoutDashboard className="h-4 w-4" />
+              Return to Dashboard
+            </button>
           </div>
         </div>
       </div>

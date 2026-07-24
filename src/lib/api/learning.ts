@@ -80,6 +80,7 @@ export interface LessonProgressRow {
   startedAt?: string | null;
   completedAt?: string | null;
   lastAttemptedAt?: string | null;
+  cooldownUntil?: string | null;
   sectionsViewedJson?: number[];
 }
 

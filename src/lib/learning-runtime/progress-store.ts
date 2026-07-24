@@ -191,6 +191,11 @@ export const useProgressStore = create<ProgressState>()(
       getTotalTimeMs: () => get().totalTimeMs,
 
       isLessonLocked: (prerequisiteSlugs) => {
+        // [TEMPORARILY DISABLED FOR TESTING]
+        // Uncomment the logic below to re-enable lesson locking.
+        return false;
+        
+        /*
         if (!prerequisiteSlugs || prerequisiteSlugs.length === 0) return false;
         const lessons = get().lessons;
         // If ANY prerequisite is NOT Mastered, the lesson is locked.
@@ -198,6 +203,7 @@ export const useProgressStore = create<ProgressState>()(
           const l = lessons[slug];
           return !l || l.masteryStatus !== "Mastered";
         });
+        */
       },
 
       recordAttempt: (slug, scorePct, wrongQuestionIds) => {

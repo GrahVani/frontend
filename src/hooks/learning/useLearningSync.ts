@@ -34,7 +34,8 @@ const MAX_QUEUE_ATTEMPTS = 6;
 function adaptServerRow(row: LessonProgressRow): LessonProgress {
   const lessonSlug = row.lessonSlug ?? row.lessonId;
   const attempts: AttemptRecord[] = [];
-  if (row.lastAttemptedAt && (row.score ?? 0) > 0) {
+  
+  if (row.lastAttemptedAt) {
     attempts.push({
       attemptedAt: new Date(row.lastAttemptedAt).getTime(),
       scorePct: row.score ?? 0,
@@ -42,11 +43,26 @@ function adaptServerRow(row: LessonProgressRow): LessonProgress {
       wrongQuestionIds: [],
     });
   }
+
+  let cooldownUntil: number | null = null;
+  if (row.cooldownUntil) {
+    cooldownUntil = new Date(row.cooldownUntil).getTime();
+  }
+
+  let masteryStatus: "Untouched" | "InProgress" | "Mastered" | "OnCooldown" = "Untouched";
+  if (row.status === "MASTERED") {
+    masteryStatus = "Mastered";
+  } else if (cooldownUntil && cooldownUntil > Date.now()) {
+    masteryStatus = "OnCooldown";
+  } else if (row.status === "COMPLETED" || row.status === "IN_PROGRESS" || attempts.length > 0) {
+    masteryStatus = "InProgress";
+  }
+
   return {
     lessonSlug,
     attempts,
-    cooldownUntil: null,
-    masteryStatus: row.status === "MASTERED" ? "Mastered" : row.status === "IN_PROGRESS" ? "InProgress" : row.status === "COMPLETED" ? "InProgress" : "Untouched",
+    cooldownUntil,
+    masteryStatus,
     sectionsViewed: (row.sectionsViewedJson ?? []).map((n) => String(n)),
     lessonCompletedAt: row.completedAt ? new Date(row.completedAt).getTime() : null,
   };
