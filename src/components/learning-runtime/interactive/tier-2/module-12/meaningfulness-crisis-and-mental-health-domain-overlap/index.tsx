@@ -1,7 +1,5 @@
 "use client";
 
-import { MentalHealthRoutingWorkbench } from "../../module-22/spiritual-case-4-meaningfulness-crisis-with-mental-health-routing-rehearsal";
-
 export function MeaningfulnessCrisisAndMentalHealthDomainOverlap() {
-  return <MentalHealthRoutingWorkbench />;
+  return <div className="p-4 border rounded-md">Mental Health Routing Workbench - Coming Soon</div>;
 }
