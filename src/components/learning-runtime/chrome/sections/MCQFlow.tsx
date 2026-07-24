@@ -25,6 +25,7 @@ import { ApiError } from "@/lib/api/core";
 import { enqueueMutation } from "@/lib/learning-runtime/mutation-queue";
 import { Citation } from "../reading";
 import { renderInline } from "../lib/inline-markdown";
+import { useTutorStore } from "@/store/useTutorStore";
 
 interface MCQFlowProps {
   section: LessonSection;
@@ -41,6 +42,7 @@ export function MCQFlow({ section, frontMatter: fm, bank }: MCQFlowProps) {
   const isOnCooldown = useProgressStore((s) => s.isOnCooldown);
   const cooldownRemainingMs = useProgressStore((s) => s.cooldownRemainingMs);
   const lesson = useProgressStore((s) => s.lessons[lessonSlug]);
+  const setQuizAttemptContext = useTutorStore((s) => s.setQuizAttemptContext);
 
   const [phase, setPhase] = useState<FlowPhase>("idle");
   const [currentIdx, setCurrentIdx] = useState(0);
@@ -108,6 +110,8 @@ export function MCQFlow({ section, frontMatter: fm, bank }: MCQFlowProps) {
     // fall back gracefully if the server is unreachable.
     const wrong: string[] = [];
     let correct = 0;
+    const failedQuestionsData: Array<{ question: string; chosenAnswer: string; correctAnswer: string; }> = [];
+
     for (const q of bank.questions) {
       const chosen = selections[q.id];
       const correctOpt = q.options.find((o) => o.isCorrect);
@@ -115,9 +119,22 @@ export function MCQFlow({ section, frontMatter: fm, bank }: MCQFlowProps) {
         correct += 1;
       } else {
         wrong.push(q.id);
+        const chosenOpt = q.options.find((o) => o.id === chosen);
+        failedQuestionsData.push({
+          question: q.stem,
+          chosenAnswer: chosenOpt?.text || "No answer chosen",
+          correctAnswer: correctOpt?.text || "Unknown correct answer",
+        });
       }
     }
     const localScorePct = Math.round((correct / bank.questions.length) * 100);
+
+    const quizContext = {
+      score: localScorePct,
+      totalQuestions: bank.questions.length,
+      failedQuestions: failedQuestionsData
+    };
+    setQuizAttemptContext(quizContext);
 
     // Optimistic local write so the UI doesn't stall on the round-trip.
     recordAttempt(lessonSlug, localScorePct, wrong);

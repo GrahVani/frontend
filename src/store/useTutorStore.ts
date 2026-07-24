@@ -62,6 +62,16 @@ export interface LessonContextPayload {
   prerequisites?: string[];
 }
 
+export interface QuizAttemptContext {
+  score: number;
+  totalQuestions: number;
+  failedQuestions: Array<{
+    question: string;
+    chosenAnswer: string;
+    correctAnswer: string;
+  }>;
+}
+
 interface TutorState {
   isOpen: boolean;
   messages: Message[];
@@ -92,6 +102,9 @@ interface TutorState {
   // PR P6-4 Additions
   tutorRecommendation: TutorRecommendation | null;
 
+  // MCQ Integration Additions
+  quizAttemptContext: QuizAttemptContext | null;
+
   setIsOpen: (open: boolean) => void;
   setInputValue: (val: string) => void;
   clearError: () => void;
@@ -121,6 +134,9 @@ interface TutorState {
   // PR P6-4 Actions
   setTutorRecommendation: (rec: TutorRecommendation | null) => void;
 
+  // MCQ Integration Actions
+  setQuizAttemptContext: (context: QuizAttemptContext | null) => void;
+
   // PR P9-4 Additions
   activePresetId: string;
   activeConfiguration: RuntimeConfiguration;
@@ -137,7 +153,7 @@ function _computeEnrichedMessage(
   progressStoreState: any,
   sections?: LessonSection[]
 ): string {
-  const { currentLesson, currentSection, currentInteractive, interactiveContext, interactionState, tutorRecommendation } = tutorState;
+  const { currentLesson, currentSection, currentInteractive, interactiveContext, interactionState, tutorRecommendation, quizAttemptContext } = tutorState;
 
   let progressPct = 0;
   let completedSections: string[] = [];
@@ -199,6 +215,7 @@ function _computeEnrichedMessage(
     `  Current Learning Status: ${masteryStatus}`,
     `  Next Suggested Activity: ${nextSuggested}`,
     `  Active Tutor Recommendation: ${tutorRecommendation ? JSON.stringify(tutorRecommendation) : ""}`,
+    `  Latest Quiz Attempt: ${quizAttemptContext ? JSON.stringify(quizAttemptContext) : ""}`,
     `  Learner Memory:`,
     `    Preferred Explanation: ${memory.preferredExplanation === "visual" ? "Visual" : memory.preferredExplanation === "step_by_step" ? "Step-by-Step" : memory.preferredExplanation === "short" ? "Short" : "Detailed"}`,
     `    Preferred Difficulty: ${memory.preferredDifficulty === "easy" ? "Easy" : memory.preferredDifficulty === "medium" ? "Medium" : "Advanced"}`,
@@ -314,6 +331,7 @@ export function getEnrichedMessage(
     tutorState?.interactiveContext,
     tutorState?.interactionState,
     tutorState?.tutorRecommendation,
+    tutorState?.quizAttemptContext,
     progressStoreState,
     sections,
     "enrichedMessage"
@@ -350,6 +368,9 @@ export const useTutorStore = create<TutorState>((set, get) => ({
 
   // PR P6-4 Initial values
   tutorRecommendation: null,
+
+  // MCQ Integration Initial values
+  quizAttemptContext: null,
 
   // PR P9-4 Initial values
   activePresetId: getActivePresetId(),
@@ -924,7 +945,10 @@ export const useTutorStore = create<TutorState>((set, get) => ({
   syncInteractiveState: (state) => set({ interactionState: state }),
 
   // PR P6-4 Actions implementation
-  setTutorRecommendation: (tutorRecommendation) => set({ tutorRecommendation }),
+  setTutorRecommendation: (rec) => set({ tutorRecommendation: rec }),
+
+  // MCQ Integration Actions implementation
+  setQuizAttemptContext: (context) => set({ quizAttemptContext: context }),
 
   // PR P9-4 Actions implementation
   setActivePresetId: (presetId) => {

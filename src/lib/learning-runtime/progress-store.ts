@@ -78,6 +78,7 @@ interface ProgressState {
   getReviewDeckCount: () => number;
   getModuleTimeMs: (lessonSlugs: string[]) => number;
   getTotalTimeMs: () => number;
+  isLessonLocked: (prerequisiteSlugs: string[]) => boolean;
 
   // — Actions —
   recordAttempt: (slug: string, scorePct: number, wrongQuestionIds: string[]) => AttemptRecord;
@@ -189,6 +190,16 @@ export const useProgressStore = create<ProgressState>()(
 
       getTotalTimeMs: () => get().totalTimeMs,
 
+      isLessonLocked: (prerequisiteSlugs) => {
+        if (!prerequisiteSlugs || prerequisiteSlugs.length === 0) return false;
+        const lessons = get().lessons;
+        // If ANY prerequisite is NOT Mastered, the lesson is locked.
+        return prerequisiteSlugs.some(slug => {
+          const l = lessons[slug];
+          return !l || l.masteryStatus !== "Mastered";
+        });
+      },
+
       recordAttempt: (slug, scorePct, wrongQuestionIds) => {
         const passed = scorePct >= PASS_THRESHOLD * 100;
         const now = Date.now();
@@ -222,8 +233,20 @@ export const useProgressStore = create<ProgressState>()(
             longestStreak = Math.max(longestStreak, streakDays);
             lastCompletedDate = today;
           } else {
-            lesson.masteryStatus = "OnCooldown";
-            lesson.cooldownUntil = now + COOLDOWN_HOURS * 60 * 60 * 1000;
+            // If already mastered, don't penalize practice attempts
+            if (lesson.masteryStatus !== "Mastered") {
+              lesson.masteryStatus = "OnCooldown";
+              
+              const failCount = lesson.attempts.filter(a => !a.passed).length;
+              let cooldownMs = 15 * 60 * 1000; // 15 mins
+              if (failCount === 2) {
+                cooldownMs = 8 * 60 * 60 * 1000; // 8 hours
+              } else if (failCount >= 3) {
+                cooldownMs = 24 * 60 * 60 * 1000; // 24 hours
+              }
+              
+              lesson.cooldownUntil = now + cooldownMs;
+            }
           }
           lessons[slug] = lesson;
           return { lessons, streakDays, longestStreak, lastCompletedDate };

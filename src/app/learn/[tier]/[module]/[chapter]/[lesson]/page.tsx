@@ -34,6 +34,7 @@ import { LessonTimeTracker } from "@/components/learning-runtime/LessonTimeTrack
 import { presentationFor } from "@/components/learning-runtime/lib/section-meta";
 import { MarkdownContent } from "@/components/learning-runtime/chrome/MarkdownContent";
 
+import { LessonGuard } from "@/components/learning-runtime/LessonGuard";
 import { getReflectionPrompts } from "./lesson-scene-data";
 
 const LessonScenes = dynamic(() =>
@@ -201,6 +202,9 @@ export default async function LessonPage({
 
   return (
     <LessonShell sections={railSections} canonicalPath={fm.canonicalPath} frontMatter={fm}>
+      {fm.prerequisites && fm.prerequisites.length > 0 && (
+        <LessonGuard prerequisites={fm.prerequisites} />
+      )}
       <LessonTimeTracker slug={fm.slug} />
       {/* §1 — Cold Open (full-bleed hook) */}
       {sec1 && (

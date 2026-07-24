@@ -507,7 +507,7 @@ export function TutorPanel({ lessonSlug, sections = [] }: TutorPanelProps) {
                     }`}
                   >
                     {msg.role === "user" ? (
-                      <p className="whitespace-pre-wrap">{msg.content}</p>
+                      <p className="whitespace-pre-wrap">{msg.content.split("\n\n[Context:")[0].trim()}</p>
                     ) : (
                       <>
                         {renderAssistantContent(msg.content)}
